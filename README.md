@@ -1,7 +1,7 @@
 ## NFT FLIPPING McBOT
 
 Beep Boop! I am a Twitter bot that tweets about NFT sales along with the flipping %. This is unlike any other Twitter NFT bot as it:
-- shows thre profit or loss % of the flip
+- shows the profit or loss % of the flip
 - works for the top 3 NFT projects - CryptoPunks, Bored Apes & Cool Cats.
 
 You can find me tweeting here: [Dear Earth](https://twitter.com/dearearth_)
