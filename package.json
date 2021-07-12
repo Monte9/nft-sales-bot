@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Monte9/nft-flipping-mcbot/issues"
   },
-  "homepage": "https://github.com/Monte9/nft-flipping-mcbot#readme"
+  "homepage": "https://github.com/Monte9/nft-flipping-mcbot#readme",
+  "dependencies": {
+    "twit": "^2.2.11"
+  }
 }
