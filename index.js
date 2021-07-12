@@ -1,40 +1,12 @@
-const Twit = require('twit');
+const TwitterAPI = require('./src/TwitterAPI');
 
-class TwitterAPI {
-  constructor(consumer_key, consumer_secret, access_token, access_token_secret) {
-    this.consumer_key = consumer_key;
-    this.consumer_secret = consumer_secret;
-    this.access_token = access_token;
-    this.access_token_secret = access_token_secret;
-
-    this.api = new Twit({
-      consumer_key: this.consumer_key,
-      consumer_secret: this.consumer_secret,
-      access_token: this.access_token,
-      access_token_secret: this.access_token_secret,
-      timeout_ms: 60 * 1000,
-      strictSSL: true,
-    });
-  }
-
-  postTweet(content) {
-    this.api.post('statuses/update', { status: content }, function(err, data, response) {
-      if (err != null) {
-        console.log("Oops! Unable to post the Tweet:", err.allErrors[0] && err.allErrors[0].message)
-      } else {
-        console.log("Tweet posted!")
-      }
-    })
-  }
-}
-
-class McBot {
+class TwitterMcBot {
   constructor() {
     this.asset_range = 10
   }
 
   runInstance() {
-    console.log("Running McBot")
+    console.log("Running Twitter McBot")
 
     const twitterAPI = new TwitterAPI(
       'H8uM5UikvJpbfBVyqwoNfK5au',
@@ -47,5 +19,5 @@ class McBot {
   }
 }
 
-const bot = new McBot()
-bot.runInstance()
+const twitterBot = new TwitterMcBot()
+twitterBot.runInstance()
