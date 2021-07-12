@@ -4,6 +4,7 @@
   "description": "A Twitter bot that tweets about NFT sales along with the flipping %",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "clean-install": "rm -rf node_modules && yarn"
   },
   "repository": {
