@@ -22,6 +22,7 @@
   "homepage": "https://github.com/Monte9/nft-flipping-mcbot#readme",
   "dependencies": {
     "@babel/cli": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "twit": "^2.2.11"
@@ -29,7 +30,6 @@
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@babel/node": "^7.14.7",
-    "@babel/plugin-transform-runtime": "^7.14.5",
     "@babel/preset-env": "^7.14.7",
     "nodemon": "^2.0.12"
   }
