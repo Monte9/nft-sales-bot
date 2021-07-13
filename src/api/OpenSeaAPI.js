@@ -8,7 +8,9 @@ export default class OpenSeaAPI {
   }
 
   async getNFT() {
-    const url = `https://api.opensea.io/api/v1/events?only_opensea=false&offset=0&limit=20&asset_contract_address=${this.boredApeContract}&token_id=${this.blueBeamsApeId}&event_type=${this.eventType}`;
+    const url = 'https://api.opensea.io/api/v1/events';
+    const params = `only_opensea=false&offset=0&limit=20&asset_contract_address=${this.boredApeContract}&token_id=${this.blueBeamsApeId}&event_type=${this.eventType}`
+    
     const options = {
       method: 'GET', 
       headers: {
@@ -16,7 +18,7 @@ export default class OpenSeaAPI {
       }
     };
     
-    return await fetch(url, options)
+    return await fetch(`${url}?${params}`, options)
       .then(res => res.json())
       .catch(err => console.error('error:' + err));
   }
