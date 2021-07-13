@@ -25,16 +25,28 @@ class TwitterMcBot {
     console.log("Running Twitter McBot")
 
     // Get latest events for the NFT
-    let saleEvents: [OpenSeaSale] = await this.openSeaAPI.getNFT()
+    let data = await this.openSeaAPI.getNFT()
 
-    console.log(saleEvents)
+    if (data == null || data["asset_events"] == null) {
+      console.log("missing asset_events")
+      return
+    }
 
-    // saleEvents.map(sale => {
-    //   console.log(sale.amount)
-    // })
+    const saleEvents = data["asset_events"]
+    let sales: OpenSeaSale[] = []
+
+    saleEvents.map(saleEvent => {
+      let sale: OpenSeaSale = {
+        amount: saleEvent.total_price / 1000000000000000000
+      }
+      
+      console.log(sale.amount)
+
+      sales.push(sale)
+    })
 
     // Post a tweet
-    this.twitterAPI.postTweet("NFT Flipping McBot on Heroku + Typescript!")
+    // this.twitterAPI.postTweet("NFT Flipping McBot on Heroku + Typescript!")
   }
 }
 

@@ -1,6 +1,12 @@
 import Twit from 'twit';
 
 export default class TwitterAPI {
+  consumer_key = null
+  consumer_secret = null
+  access_token = null
+  access_token_secret = null
+  api = null
+
   constructor(consumer_key, consumer_secret, access_token, access_token_secret) {
     this.consumer_key = consumer_key;
     this.consumer_secret = consumer_secret;
