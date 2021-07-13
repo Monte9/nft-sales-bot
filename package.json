@@ -2,13 +2,14 @@
   "name": "nft-flipping-mcbot",
   "version": "1.0.0",
   "description": "A Twitter bot that tweets about NFT sales along with the flipping %",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "clean": "rm -rf build && mkdir build",
     "clean-install": "rm -rf node_modules && yarn clean && yarn",
-    "build": "npm run clean && babel -d ./build ./src -s",
+    "build": "npm run clean && babel -d ./build ./src -s --extensions '.js,.ts,.tsx'",
+    "tsc": "tsc",
     "start": "node build/index.js",
-    "start:dev": "nodemon --exec babel-node src/index.js"
+    "start:dev": "nodemon --exec babel-node src/index.ts --extensions '.js,.ts,.tsx'"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,8 @@
     "@babel/core": "^7.14.6",
     "@babel/node": "^7.14.7",
     "@babel/preset-env": "^7.14.7",
-    "nodemon": "^2.0.12"
+    "@babel/preset-typescript": "^7.14.5",
+    "nodemon": "^2.0.12",
+    "typescript": "^4.3.5"
   }
 }

@@ -10,6 +10,8 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 require("dotenv/config");
 
 var _OpenSeaAPI = _interopRequireDefault(require("./api/OpenSeaAPI"));
@@ -19,7 +21,9 @@ var _TwitterAPI = _interopRequireDefault(require("./api/TwitterAPI"));
 var TwitterMcBot = /*#__PURE__*/function () {
   function TwitterMcBot() {
     (0, _classCallCheck2["default"])(this, TwitterMcBot);
-    this.asset_range = 10;
+    (0, _defineProperty2["default"])(this, "asset_range", 10);
+    (0, _defineProperty2["default"])(this, "twitterAPI", null);
+    (0, _defineProperty2["default"])(this, "openSeaAPI", null);
     this.twitterAPI = new _TwitterAPI["default"](process.env.TWITTER_CONSUMER_KEY, process.env.TWITTER_CONSUMER_SECRET, process.env.TWITTER_ACCESS_TOKEN, process.env.TWITTER_ACCESS_TOKEN_SECRET);
     this.openSeaAPI = new _OpenSeaAPI["default"]();
   }
@@ -40,11 +44,13 @@ var TwitterMcBot = /*#__PURE__*/function () {
 
               case 3:
                 saleEvents = _context.sent;
-                console.log(saleEvents); // Post a tweet
+                console.log(saleEvents); // saleEvents.map(sale => {
+                //   console.log(sale.amount)
+                // })
+                // Post a tweet
+                // this.twitterAPI.postTweet("Another one.. from the NFT Flipping McBot!")
 
-                this.twitterAPI.postTweet("Another one.. from the NFT Flipping McBot!");
-
-              case 6:
+              case 5:
               case "end":
                 return _context.stop();
             }

@@ -15,14 +15,16 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _nodeFetch = _interopRequireDefault(require("node-fetch"));
 
 var OpenSeaAPI = /*#__PURE__*/function () {
   function OpenSeaAPI() {
     (0, _classCallCheck2["default"])(this, OpenSeaAPI);
-    this.boredApeContract = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';
-    this.blueBeamsApeId = '5828';
-    this.eventType = 'successful';
+    (0, _defineProperty2["default"])(this, "boredApeContract", '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d');
+    (0, _defineProperty2["default"])(this, "blueBeamsApeId", '5828');
+    (0, _defineProperty2["default"])(this, "eventType", 'successful');
   }
 
   (0, _createClass2["default"])(OpenSeaAPI, [{
