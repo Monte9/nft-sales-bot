@@ -4,8 +4,11 @@
   "description": "A Twitter bot that tweets about NFT sales along with the flipping %",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
-    "clean-install": "rm -rf node_modules && yarn"
+    "clean": "rm -rf build && mkdir build",
+    "clean-install": "rm -rf node_modules && yarn clean && yarn",
+    "build": "npm run clean && babel -d ./build ./src -s",
+    "start": "node build/index.js",
+    "start:dev": "nodemon --exec babel-node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +21,7 @@
   },
   "homepage": "https://github.com/Monte9/nft-flipping-mcbot#readme",
   "dependencies": {
+    "@babel/cli": "^7.14.5",
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "twit": "^2.2.11"
@@ -25,6 +29,7 @@
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@babel/node": "^7.14.7",
+    "@babel/plugin-transform-runtime": "^7.14.5",
     "@babel/preset-env": "^7.14.7",
     "nodemon": "^2.0.12"
   }

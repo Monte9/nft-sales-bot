@@ -26,7 +26,7 @@ class TwitterMcBot {
     console.log(saleEvents)
 
     // Post a tweet
-    this.twitterAPI.postTweet("Another one.. from the NFT Flipping McBot!")
+    this.twitterAPI.postTweet("Another one.. from the NFT Flipping McBot! (from Heroku)")
   }
 }
 
