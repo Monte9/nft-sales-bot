@@ -1,6 +1,6 @@
-const Twit = require('twit');
+import Twit from 'twit';
 
-module.exports = class TwitterAPI {
+export default class TwitterAPI {
   constructor(consumer_key, consumer_secret, access_token, access_token_secret) {
     this.consumer_key = consumer_key;
     this.consumer_secret = consumer_secret;

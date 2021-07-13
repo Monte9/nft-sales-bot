@@ -1,5 +1,5 @@
-const OpenSeaAPI = require('./src/OpenSeaAPI');
-const TwitterAPI = require('./src/TwitterAPI');
+import OpenSeaAPI from './OpenSeaAPI';
+import TwitterAPI from './TwitterAPI';
 
 class TwitterMcBot {
   constructor() {

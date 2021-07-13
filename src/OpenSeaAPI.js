@@ -1,6 +1,6 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
-module.exports = class OpenSeaAPI {
+export default class OpenSeaAPI {
   constructor() {
     this.boredApeContract = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'
     this.blueBeamsApeId = '5828'

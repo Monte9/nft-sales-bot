@@ -4,7 +4,7 @@
   "description": "A Twitter bot that tweets about NFT sales along with the flipping %",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon --exec babel-node src/index.js",
     "clean-install": "rm -rf node_modules && yarn"
   },
   "repository": {
@@ -20,5 +20,11 @@
   "dependencies": {
     "node-fetch": "^2.6.1",
     "twit": "^2.2.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.7",
+    "@babel/preset-env": "^7.14.7",
+    "nodemon": "^2.0.12"
   }
 }
