@@ -60,6 +60,9 @@ typings/
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 
+# babel build output
+build/
+
 # next.js build output
 .next
 
