@@ -12,7 +12,7 @@ export default class OpenSeaAPI {
   
   async getNFT() {
     const url = 'https://api.opensea.io/api/v1/events';
-    const params = `only_opensea=false&offset=0&limit=20&asset_contract_address=${this.smartContract}&token_id=${this.tokenId}&event_type=${this.eventType}`
+    const params = `only_opensea=false&offset=0&limit=20&asset_contract_address=${this.smartContract}&event_type=${this.eventType}`
     
     const options = {
       method: 'GET', 
