@@ -6,14 +6,19 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
   // Get Seller & Sale Price
   const seller = sale.seller
   const salePrice = sale.salePrice
+
+  // Missing SalePrice or BoughtPrice
+  if (salePrice < 1 || boughtPrice < 1 ) {
+    return null
+  }
   
   // Get the Profit/Loss value in USD
   const profitLossValue = Math.abs(salePrice - boughtPrice)
   const profitLossUSD = Math.round(profitLossValue * sale.paymentToken.usdPrice)
   const profitLossUSDFormatted = addCommas(profitLossUSD)
 
-  // Missing SalePrice or BoughtPrice
-  if (salePrice < 1 || boughtPrice < 1 ) {
+  // Only report sales where profit is > $5000
+  if (profitLossUSD < 5000 ) {
     return null
   }
 
@@ -27,9 +32,7 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
 
   // Get Twitter Username of the NFT Collection
   let twitterUsername = sale.asset.collection.twitterUsername
-  if (twitterUsername) {
-    twitterUsername = `@${twitterUsername}`
-  } else {
+  if (!twitterUsername) {
     twitterUsername = sale.asset.collection.name
   }
 
