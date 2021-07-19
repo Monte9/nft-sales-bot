@@ -28,7 +28,7 @@ export interface Sale {
   asset: Asset
   seller: User
   buyer: User
-  paymentToken: PaymentToken
+  paymentToken?: PaymentToken
   salePrice: number
   saleId: number
 }

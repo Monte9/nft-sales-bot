@@ -7,8 +7,11 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
   const seller = sale.seller
   const salePrice = sale.salePrice
 
+  console.log(salePrice, boughtPrice)
+
   // Missing SalePrice or BoughtPrice
-  if (salePrice < 1 || boughtPrice < 1 ) {
+  if (salePrice <= 0 || boughtPrice <= 0 ) {
+    console.log("Sale Price or Bought Price missing")
     return null
   }
   
@@ -18,7 +21,8 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
   const profitLossUSDFormatted = addCommas(profitLossUSD)
 
   // Only report sales where profit is > $5000
-  if (profitLossUSD < 5000 ) {
+  if (profitLossUSD < 1000 ) {
+    console.log("Profit/Loss USD value under $5K")
     return null
   }
 
@@ -37,7 +41,7 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
   }
 
   // Get Seller Username or Wallet address 
-  const sellerAddressShort = seller.address.slice(0, 5) + '...' + seller.address.substr(seller.address.length - 4);
+  const sellerAddressShort = seller.address.slice(0, 6) + '..' + seller.address.substr(seller.address.length - 4);
   const sellerName = seller.username || sellerAddressShort
 
   // Compose the Tweet content

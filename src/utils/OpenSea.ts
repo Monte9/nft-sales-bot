@@ -25,12 +25,15 @@ export function parseSales(saleEvents): [Sale] {
       username: saleEvent.seller && saleEvent.seller.user && saleEvent.seller.user.username || null
     }
 
-    let paymentToken: PaymentToken = {
-      symbol: saleEvent.payment_token.symbol,
-      name: saleEvent.payment_token.name,
-      imageUrl: saleEvent.payment_token.image_url,
-      decimals: saleEvent.payment_token.decimals,
-      usdPrice: Math.round(Number(saleEvent.payment_token.usd_price) * 100) / 100
+    let paymentToken: PaymentToken = null
+    if (saleEvent.payment_token !== null) {
+      paymentToken = {
+        symbol: saleEvent.payment_token.symbol,
+        name: saleEvent.payment_token.name,
+        imageUrl: saleEvent.payment_token.image_url,
+        decimals: saleEvent.payment_token.decimals,
+        usdPrice: Math.round(Number(saleEvent.payment_token.usd_price) * 100) / 100
+      } 
     }
 
     return {
@@ -38,7 +41,7 @@ export function parseSales(saleEvents): [Sale] {
       buyer,
       seller,
       paymentToken,
-      salePrice: saleEvent.total_price / Math.pow(10, paymentToken.decimals),
+      salePrice: saleEvent.total_price / Math.pow(10, paymentToken && paymentToken.decimals || 18),
       saleId: saleEvent.id
     }
   })

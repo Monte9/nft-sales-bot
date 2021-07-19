@@ -1,19 +1,51 @@
 import fetch from 'node-fetch';
 
+import { Sale } from '../types/OpenSeaSale';
+import { parseSales } from '../utils/OpenSea';
+
 export default class OpenSeaAPI {
-  smartContract = null
-  tokenId = null
+  assetRange = null
+  smartContracts = []
   eventType = 'successful'
 
-  constructor(smartContract, tokenId) {
-    this.smartContract = smartContract;
-    this.tokenId = tokenId;
+  constructor(range: number, smartContracts: string[]) {
+    this.assetRange = range
+    this.smartContracts = smartContracts;
+  }
+
+  async fetchParsedSaleEvents(): Promise<[Sale]> {
+    let data = null
+
+    // Get latest sale events from OpenSea
+    try {
+      data = await this.getSaleEvents()
+    } catch (error) {
+      throw error
+    }
+    
+    const saleEvents = data && data.asset_events
+
+    // If missing saleEvents - nothing to do further
+    if (saleEvents == null || saleEvents.length == 0) {
+      throw("Missing events from OpenSea Events API")
+    }
+
+    return parseSales(saleEvents)
   }
   
-  async getNFT() {
+  async getSaleEvents() {
     const url = 'https://api.opensea.io/api/v1/events';
-    const params = `only_opensea=false&offset=0&limit=20&asset_contract_address=${this.smartContract}&event_type=${this.eventType}`
+    let params = `only_opensea=false&offset=0&limit=${this.assetRange}&event_type=${this.eventType}&`
     
+    this.smartContracts.map((contract, index) => {
+      params =  params + `asset_contract_addresses=${contract}`
+      
+      // if it's not the last element append the & for the next query param
+      if (index + 1 !== this.smartContracts.length) {
+        params = params + '&'
+      }
+    })
+
     const options = {
       method: 'GET', 
       headers: {
@@ -22,7 +54,13 @@ export default class OpenSeaAPI {
     };
     
     return await fetch(`${url}?${params}`, options)
-      .then(res => res.json())
-      .catch(err => console.error('error:' + err));
+      .then(response => {
+        if (response.status >= 200 && response.status <= 299) {
+          return response.json();
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .catch(error => console.error(error));
   }
 }
