@@ -3,9 +3,11 @@ import { Collection, Asset, User, PaymentToken, Sale } from "../types/OpenSeaSal
 export function parseSales(saleEvents): [Sale] {
   let sales: [Sale] = saleEvents.map(saleEvent => {
     let collection: Collection = {
+      address: saleEvent.asset.asset_contract.address,
+      symbol: saleEvent.asset.asset_contract.symbol,
       name: saleEvent.asset.collection.name,
       twitterUsername: saleEvent.asset.collection.twitter_username,
-      slug: saleEvent.asset.collection.slug
+      slug: saleEvent.asset.collection.slug,
     }
 
     let asset: Asset = {

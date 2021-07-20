@@ -1,4 +1,6 @@
 export interface Collection {
+  address?: string
+  symbol?: string
   name: string
   twitterUsername?: string
   slug: string

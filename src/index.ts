@@ -21,7 +21,7 @@ class TwitterMcBot {
       process.env.TWITTER_ACCESS_TOKEN_SECRET,
     )
 
-    this.openSeaAPI = new OpenSeaAPI(this.range, OPENSEA_CONTRACTS);
+    this.openSeaAPI = new OpenSeaAPI(OPENSEA_CONTRACTS[0]);
   }
 
   async runInstance() {
@@ -69,11 +69,27 @@ class TwitterMcBot {
 
           for (let j=0; j<newSales.length; j++) {
             if (newSales[j].saleId == newSalesIds[i]) {
-              const tweetText = composeTweet(newSales[0], 0.02)
 
-              if (tweetText) {
-                console.log(tweetText)
-                // this.twitterAPI.postTweet(tweetText)
+              const smartContract = newSales[j].asset.collection.slug
+              const tokenId = newSales[j].asset.tokenId
+
+              console.log(smartContract)
+              console.log(tokenId)
+
+              try {
+                const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(tokenId)
+
+                if (tokenSales.length > 1) {
+                  const tweetText = composeTweet(tokenSales[tokenSales.length-2], tokenSales[tokenSales.length-1].salePrice)
+            
+                  if (tweetText) {
+                    console.log(tweetText)
+                    this.twitterAPI.postTweet(tweetText)
+                  }
+                }
+              } catch (error) {
+                console.log(error, "\n")
+                continue
               }
             }
           }
@@ -85,8 +101,8 @@ class TwitterMcBot {
       oldSales = newSales
       oldSalesIds = newSalesIds
 
-      // Polls the OpenSea API every 5 seconds
-      await delayBy(5000);
+      // Polls the OpenSea API every 10 seconds
+      await delayBy(10000);
     }
   }
 }
