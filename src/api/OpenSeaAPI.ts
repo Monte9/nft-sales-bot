@@ -16,7 +16,7 @@ export default class OpenSeaAPI {
     }
   }
 
-  async fetchParsedSaleEvents(tokenId?: string): Promise<[Sale]> {
+  async fetchParsedSaleEvents(tokenId?: string): Promise<Sale[]> {
     let data = null
 
     // Get latest sale events from OpenSea

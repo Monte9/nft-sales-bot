@@ -7,12 +7,12 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
   const seller = sale.seller
   const salePrice = sale.salePrice
 
-  console.log(salePrice, boughtPrice)
-
   // Missing SalePrice or BoughtPrice
   if (salePrice <= 0 || boughtPrice <= 0 ) {
-    console.log("Sale Price or Bought Price missing")
-    return null
+    console.log("Sale Price:", salePrice)
+    console.log("Bought Price:", boughtPrice)
+    console.log("OpenSea Link:", sale.asset.link)
+    throw new Error("Sale Price or Bought Price missing")
   }
   
   // Get the Profit/Loss value in USD
@@ -20,10 +20,13 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
   const profitLossUSD = Math.round(profitLossValue * sale.paymentToken.usdPrice)
   const profitLossUSDFormatted = addCommas(profitLossUSD)
 
-  // Only report sales where profit is > $5000
-  if (profitLossUSD < 1000 ) {
-    console.log("Profit/Loss USD value under $5K")
-    return null
+  // Only report sales where profit is > $2000
+  if (profitLossUSD < 2000 ) {
+    console.log("Sale Price:", salePrice)
+    console.log("Bought Price:", boughtPrice)
+    console.log("Profit Loss:", profitLossUSDFormatted)
+    console.log("OpenSea Link:", sale.asset.link)
+    throw new Error("Profit/Loss USD value under $2K")
   }
 
   // Get the Flip Percentage

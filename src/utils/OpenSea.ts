@@ -1,7 +1,7 @@
 import { Collection, Asset, User, PaymentToken, Sale } from "../types/OpenSeaSale";
 
-export function parseSales(saleEvents): [Sale] {
-  let sales: [Sale] = saleEvents.map(saleEvent => {
+export function parseSales(saleEvents): Sale[] {
+  let sales: Sale[] = saleEvents.map(saleEvent => {
     let collection: Collection = {
       address: saleEvent.asset.asset_contract.address,
       symbol: saleEvent.asset.asset_contract.symbol,

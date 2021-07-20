@@ -27,7 +27,7 @@ class TwitterMcBot {
   async runInstance() {
     console.log("Started NFT Flipping McBot")
 
-    let oldSales: [Sale] = null;
+    let oldSales: Sale[] = null;
     let oldSalesIds: number[] = []
 
     try {
@@ -37,12 +37,12 @@ class TwitterMcBot {
         oldSalesIds.push(oldSales[i].saleId)
       }
     } catch (error) {
-      console.log(error)
+      console.log("Unable to get Sales Events:", error.message, "\n")
       return
     }
 
     while(true) {
-      let newSales: [Sale] = null;
+      let newSales: Sale[] = null;
       let newSalesIds: number[] = []
 
       const date = new Date();
@@ -55,7 +55,7 @@ class TwitterMcBot {
           newSalesIds.push(oldSales[i].saleId)
         }
       } catch (error) {
-        console.log(error, "\n")
+        console.log("Unable to get Sales Events:", error.message, "\n")
         continue
       }
 
@@ -69,26 +69,19 @@ class TwitterMcBot {
 
           for (let j=0; j<newSales.length; j++) {
             if (newSales[j].saleId == newSalesIds[i]) {
-
-              const smartContract = newSales[j].asset.collection.slug
-              const tokenId = newSales[j].asset.tokenId
-
-              console.log(smartContract)
-              console.log(tokenId)
-
               try {
-                const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(tokenId)
+                const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents('2158')
 
                 if (tokenSales.length > 1) {
-                  const tweetText = composeTweet(tokenSales[tokenSales.length-2], tokenSales[tokenSales.length-1].salePrice)
-            
-                  if (tweetText) {
-                    console.log(tweetText)
+                  try {
+                    const tweetText = composeTweet(tokenSales[0], tokenSales[1].salePrice)
                     this.twitterAPI.postTweet(tweetText)
+                  } catch (error) {
+                    console.log("Unable to post Tweet:", error.message, "\n")
                   }
                 }
               } catch (error) {
-                console.log(error, "\n")
+                console.log("Unable to get Token Sales Events:", error.message, "\n")
                 continue
               }
             }
@@ -101,8 +94,8 @@ class TwitterMcBot {
       oldSales = newSales
       oldSalesIds = newSalesIds
 
-      // Polls the OpenSea API every 10 seconds
-      await delayBy(10000);
+      // Polls the OpenSea API every 60 seconds
+      await delayBy(60000);
     }
   }
 }

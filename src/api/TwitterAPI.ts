@@ -28,7 +28,7 @@ export default class TwitterAPI {
       if (err != null) {
         console.log("Oops! Unable to post the Tweet:", err.allErrors[0] && err.allErrors[0].message)
       } else {
-        console.log("Tweet posted!")
+        console.log("Tweet posted:", content)
       }
     })
   }
