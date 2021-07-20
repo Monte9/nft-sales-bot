@@ -70,7 +70,7 @@ class TwitterMcBot {
           for (let j=0; j<newSales.length; j++) {
             if (newSales[j].saleId == newSalesIds[i]) {
               try {
-                const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents('2158')
+                const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(newSales[j].asset.tokenId)
 
                 if (tokenSales.length > 1) {
                   try {
