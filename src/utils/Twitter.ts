@@ -3,8 +3,7 @@ import { addCommas } from "../shared/Formatters";
 
 // Composes a tweet using the Sale information
 export function composeTweet(sale: Sale, boughtPrice: number): String | null {
-  // Get Seller & Sale Price
-  const seller = sale.seller
+  // Get Sale Price
   const salePrice = sale.salePrice
 
   // Missing SalePrice or BoughtPrice
@@ -20,18 +19,18 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
   const profitLossUSD = Math.round(profitLossValue * sale.paymentToken.usdPrice)
   const profitLossUSDFormatted = addCommas(profitLossUSD)
 
-  // Only report sales where profit is > $2000
-  if (profitLossUSD < 2000 ) {
+  // Get the Flip Percentage
+  const flipPercentage = ((salePrice - boughtPrice) / boughtPrice) * 100
+  const flipPercentageRounded = Math.round(flipPercentage * 100) / 100
+
+  // Report all losses OR only if profit is > $5000
+  if (flipPercentageRounded > 0 && profitLossUSD < 5000) {
     console.log("Sale Price:", salePrice)
     console.log("Bought Price:", boughtPrice)
     console.log("Profit Loss:", profitLossUSDFormatted)
     console.log("OpenSea Link:", sale.asset.link)
-    throw new Error("Profit/Loss USD value under $2K")
+    throw new Error("Profit/Loss USD value under $5K")
   }
-
-  // Get the Flip Percentage
-  const flipPercentage = ((salePrice - boughtPrice) / boughtPrice) * 100
-  const flipPercentageRounded = Math.round(flipPercentage * 100) / 100
 
   // Get the Profit/Loss labels
   const isProfitLoss = flipPercentageRounded > 0 ? 'PROFIT' : 'LOSS'
@@ -43,11 +42,12 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
     twitterUsername = sale.asset.collection.name
   }
 
-  // Get Seller Username or Wallet address 
+  // Get Seller Username or Wallet address
+  const seller = sale.seller
   const sellerAddressShort = seller.address.slice(0, 6) + '..' + seller.address.substr(seller.address.length - 4);
   const sellerName = seller.username || sellerAddressShort
 
-  // Compose the Tweet content
+  // Format the Tweet content
   const line1 = `${sellerName} FLIPPED ${twitterUsername} #${sale.asset.tokenId} for a ${isProfitLoss} of $${profitLossUSDFormatted} (${isProfitLossEmoji}${Math.abs(flipPercentageRounded)}%)\n`
   const line2 = `Bought @ ${boughtPrice} ${sale.paymentToken.symbol} => Sold @ ${salePrice} ${sale.paymentToken.symbol}\n`
   const openSeaLink = `${sale.asset.link}`

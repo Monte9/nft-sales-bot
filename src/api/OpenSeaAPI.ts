@@ -23,7 +23,6 @@ export default class OpenSeaAPI {
     try {
       data = await this.getSaleEvents(tokenId)
     } catch (error) {
-      console.log(error)
       throw error
     }
     
@@ -31,7 +30,7 @@ export default class OpenSeaAPI {
 
     // If missing saleEvents - nothing to do further
     if (saleEvents == null || saleEvents.length == 0) {
-      throw("Missing events from OpenSea Events API")
+      throw new Error("Missing events from OpenSea Events API")
     }
 
     return parseSales(saleEvents)
