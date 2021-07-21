@@ -81,7 +81,7 @@ class TwitterMcBot {
                   }
                 }
               } catch (error) {
-                console.log("Unable to get Token Sales Events:", error.message, "\n")
+                console.log(`Unable to get Sales Events for ${newSales[j].asset.tokenId}:`, error.message, "\n")
                 continue
               }
             }

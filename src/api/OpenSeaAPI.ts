@@ -23,6 +23,7 @@ export default class OpenSeaAPI {
     try {
       data = await this.getSaleEvents(tokenId)
     } catch (error) {
+      console.log(error)
       throw error
     }
     

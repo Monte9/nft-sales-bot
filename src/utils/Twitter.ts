@@ -48,5 +48,8 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
   const sellerName = seller.username || sellerAddressShort
 
   // Compose the Tweet content
-  return `${sellerName} FLIPPED ${twitterUsername} #${sale.asset.tokenId} for a ${isProfitLoss} of $${profitLossUSDFormatted} (${isProfitLossEmoji}${Math.abs(flipPercentageRounded)}%)\n${sale.asset.link}`
+  const line1 = `${sellerName} FLIPPED ${twitterUsername} #${sale.asset.tokenId} for a ${isProfitLoss} of $${profitLossUSDFormatted} (${isProfitLossEmoji}${Math.abs(flipPercentageRounded)}%)\n`
+  const line2 = `Bought @ ${boughtPrice} ${sale.paymentToken.symbol} => Sold @ ${salePrice} ${sale.paymentToken.symbol}\n`
+  const openSeaLink = `${sale.asset.link}`
+  return line1 + line2 + openSeaLink
 }
