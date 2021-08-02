@@ -1,4 +1,4 @@
-import { Collection, Asset, User, PaymentToken, Sale } from "../types/OpenSeaSale";
+import { Collection, Asset, User, PaymentToken, Sale, Transaction } from "../types/OpenSeaSale";
 
 export function parseSales(saleEvents): Sale[] {
   let sales: Sale[] = saleEvents.map(saleEvent => {
@@ -38,13 +38,23 @@ export function parseSales(saleEvents): Sale[] {
       } 
     }
 
+    let transaction: Transaction = {
+      id: saleEvent.transaction.id,
+      block_hash: saleEvent.transaction.block_hash,
+      block_number: saleEvent.transaction.block_number,
+      timestamp: saleEvent.transaction.timestamp,
+      transaction_hash: saleEvent.transaction.transaction_hash,
+      transaction_index: saleEvent.transaction.transaction_index,
+    }
+
     return {
       asset,
       buyer,
       seller,
       paymentToken,
       salePrice: saleEvent.total_price / Math.pow(10, paymentToken && paymentToken.decimals || 18),
-      saleId: saleEvent.id
+      saleId: saleEvent.id,
+      transaction
     }
   })
 

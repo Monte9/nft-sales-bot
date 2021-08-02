@@ -74,7 +74,7 @@ class TwitterMcBot {
 
                 if (tokenSales.length > 1) {
                   try {
-                    const tweetText = composeTweet(tokenSales[0], tokenSales[1].salePrice)
+                    const tweetText = composeTweet(tokenSales[1], tokenSales[0])
                     this.twitterAPI.postTweet(tweetText)
                   } catch (error) {
                     console.log("Unable to post Tweet:", error.message, "\n")

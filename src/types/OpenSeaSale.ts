@@ -18,6 +18,15 @@ export interface User {
   address: string
 }
 
+export interface Transaction {
+  id: number
+  block_hash: string
+  block_number: string
+  timestamp: string
+  transaction_hash: string
+  transaction_index: string
+}
+
 export interface PaymentToken {
   symbol: string
   name: string
@@ -33,4 +42,5 @@ export interface Sale {
   paymentToken?: PaymentToken
   salePrice: number
   saleId: number
+  transaction: Transaction
 }
