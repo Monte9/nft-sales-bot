@@ -4,14 +4,16 @@ import OpenSeaAPI from './api/OpenSeaAPI';
 import TwitterAPI from './api/TwitterAPI';
 
 import { Sale } from './types/OpenSeaSale';
-import { composeTweet } from './utils/Twitter';
+
 import { OPENSEA_CONTRACTS } from './shared/Constants';
+import { getCurrentTime } from './shared/Formatters';
+
+import { composeTweet } from './utils/Twitter';
 import { delayBy } from './utils/Helpers';
 
 class TwitterMcBot {
   twitterAPI: TwitterAPI = null
   openSeaAPI: OpenSeaAPI = null
-  range: number = 20
 
   constructor() {
     this.twitterAPI = new TwitterAPI(
@@ -33,7 +35,7 @@ class TwitterMcBot {
     try {
       oldSales = await this.openSeaAPI.fetchParsedSaleEvents()
 
-      for (let i=0; i<this.range; i++) {
+      for (let i=0; i<oldSales.length; i++) {
         oldSalesIds.push(oldSales[i].saleId)
       }
     } catch (error) {
@@ -45,50 +47,62 @@ class TwitterMcBot {
       let newSales: Sale[] = null;
       let newSalesIds: number[] = []
 
-      const date = new Date();
-      const formattedTime = date.toLocaleTimeString("en-US")
-
       try {
         newSales = await this.openSeaAPI.fetchParsedSaleEvents()
 
-        for (let i=0; i<this.range; i++) {
-          newSalesIds.push(oldSales[i].saleId)
+        for (let i=0; i<newSales.length; i++) {
+          newSalesIds.push(newSales[i].saleId)
         }
       } catch (error) {
-        console.log("Unable to get Sales Events:", error.message, "\n")
+        console.log(`Unable to get New Sales Events @ ${getCurrentTime()}:`, error.message, "\n")
         continue
       }
 
-      let latestSalesIds: number[] = newSalesIds
-        .filter(id => !oldSalesIds.includes(id))
+      console.log('New Sales IDs', newSalesIds)
+      console.log('')
+
+      let latestSalesIds: number[] = newSalesIds.filter(id => !oldSalesIds.includes(id))
         .concat(oldSalesIds.filter(id => !newSalesIds.includes(id)));
+
+      console.log('Latest Sales IDs', latestSalesIds)
+      console.log('')
 
       if (latestSalesIds.length > 0) {
         for (let i=0; i<latestSalesIds.length; i++) {
-          console.log(`${formattedTime} - New Sale ID#${latestSalesIds[i]}`)
+          console.log(`${getCurrentTime()} - New Sale ID#${latestSalesIds[i]}`)
+          console.log('')
 
           for (let j=0; j<newSales.length; j++) {
-            if (newSales[j].saleId == newSalesIds[i]) {
+            console.log('Latest Sale ID', latestSalesIds[i])
+            console.log('')
+            const tokenID = newSales[j].asset.tokenId
+
+            if (latestSalesIds[i] === newSales[j].saleId) {
               try {
-                const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(newSales[j].asset.tokenId)
+                console.log('')
+                console.log(newSales[j])
+                const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(tokenID)
 
                 if (tokenSales.length > 1) {
                   try {
                     const tweetText = composeTweet(tokenSales[1], tokenSales[0])
                     this.twitterAPI.postTweet(tweetText)
+                    // console.log(tweetText)
                   } catch (error) {
                     console.log("Unable to post Tweet:", error.message, "\n")
                   }
+                } else {
+                  console.log(`Token #${tokenID} only has 1 Sales Event`, "\n")
                 }
               } catch (error) {
-                console.log(`Unable to get Sales Events for ${newSales[j].asset.tokenId}:`, error.message, "\n")
+                console.log(`Unable to get Sales Events for ${tokenID}:`, error.message, "\n")
                 continue
               }
             }
           }
         }
       } else {
-        console.log(`${formattedTime} - No new sales!`)
+        console.log(`${getCurrentTime()} - No new sales!`)
       }
 
       oldSales = newSales

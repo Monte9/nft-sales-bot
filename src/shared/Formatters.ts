@@ -1,7 +1,11 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 export function addCommas(value: number): String {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
+export const getCurrentTime = (): string => {
+  return moment.tz('Asia/Kolkata').format("MMM Do, hh:mm A")
 }
 
 export const getDateFromISOString = (isoStringDate): string => {

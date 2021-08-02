@@ -30,6 +30,7 @@ export default class OpenSeaAPI {
 
     // If missing saleEvents - nothing to do further
     if (saleEvents == null || saleEvents.length == 0) {
+      console.log('Data', data)
       throw new Error("Missing events from OpenSea Events API")
     }
 
