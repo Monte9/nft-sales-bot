@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import OpenSeaAPI from './api/OpenSeaAPI';
 import TwitterAPI from './api/TwitterAPI';
+import CoinbaseAPI from './api/CoinbaseAPI';
 
 import { Sale } from './types/OpenSeaSale';
 
@@ -14,6 +15,7 @@ import { delayBy } from './utils/Helpers';
 class TwitterMcBot {
   twitterAPI: TwitterAPI = null
   openSeaAPI: OpenSeaAPI = null
+  coinbaseAPI: CoinbaseAPI = null
 
   constructor() {
     this.twitterAPI = new TwitterAPI(
@@ -24,6 +26,7 @@ class TwitterMcBot {
     )
 
     this.openSeaAPI = new OpenSeaAPI(OPENSEA_CONTRACTS[0]);
+    this.coinbaseAPI = new CoinbaseAPI();
   }
 
   async runInstance() {
@@ -42,6 +45,29 @@ class TwitterMcBot {
       console.log("Unable to get Sales Events:", error.message, "\n")
       return
     }
+
+    // DEBUG CODE ONLY
+    // const tokenID = '8888'
+    // try {
+    //   const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(tokenID)
+
+    //   if (tokenSales.length > 1) {
+    //     try {
+    //       const tweetText = await composeTweet({
+    //         purchase: tokenSales[1], 
+    //         sale: tokenSales[0], 
+    //         coinbaseAPI: this.coinbaseAPI
+    //       })
+    //       // this.twitterAPI.postTweet(tweetText)
+    //       console.log(tweetText)
+    //     } catch (error) {
+    //       console.log("Unable to post Tweet:", error.message, "\n")
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.log(`Unable to get Sales Events for ${tokenID}:`, error.message, "\n")
+    // }
+    // return
 
     while(true) {
       let newSales: Sale[] = null;
@@ -74,9 +100,12 @@ class TwitterMcBot {
 
                 if (tokenSales.length > 1) {
                   try {
-                    const tweetText = composeTweet(tokenSales[1], tokenSales[0])
+                    const tweetText = composeTweet({
+                      purchase: tokenSales[1], 
+                      sale: tokenSales[0], 
+                      coinbaseAPI: this.coinbaseAPI
+                    })
                     this.twitterAPI.postTweet(tweetText)
-                    // console.log(tweetText)
                   } catch (error) {
                     console.log("Unable to post Tweet:", error.message, "\n")
                   }

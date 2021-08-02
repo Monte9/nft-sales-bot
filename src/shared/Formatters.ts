@@ -8,10 +8,6 @@ export const getCurrentTime = (): string => {
   return moment.tz('Asia/Kolkata').format("MMM Do, hh:mm A")
 }
 
-export const getDateFromISOString = (isoStringDate): string => {
-  return moment(isoStringDate).format('MMMM Do, YYYY')
-}
-
 export const getDaysBetween = (start: string, end: string): string => {
   const startDate = moment(start)
   const endDate = moment(end)

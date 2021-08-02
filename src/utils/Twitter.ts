@@ -1,41 +1,65 @@
+import CoinbaseAPI from "../api/CoinbaseAPI";
+
 import { Sale } from "../types/OpenSeaSale";
-import { addCommas, getDateFromISOString, getDaysBetween, getShortWalletAddress } from "../shared/Formatters";
+import { addCommas, getDaysBetween, getShortWalletAddress } from "../shared/Formatters";
+import { isError } from "./Helpers";
+
+interface NamedParameters {
+  purchase: Sale
+  sale: Sale
+  coinbaseAPI: CoinbaseAPI
+}
 
 // Composes a tweet using the Sale information
-export function composeTweet(purchase: Sale, sale: Sale): String | null {
-  // Get rounded Bought & Sold price
+export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParameters): Promise<String | Error> {
+  // Get rounded Bought & Sold price in ETH
   const boughtPrice = Math.round(purchase.salePrice * 100) / 100
   const soldPrice = Math.round(sale.salePrice * 100) / 100
 
-  // Get formatted Bought & Sold date
-  const boughtDate = getDateFromISOString(purchase.transaction.timestamp)
-  const soldDate = getDateFromISOString(sale.transaction.timestamp)
+  // Get formatted Bought & Sold dates
+  const boughtDate = purchase.transaction.timestamp
+  const soldDate = sale.transaction.timestamp
 
-  console.log('Bought', boughtDate)
-  console.log('Sold', soldDate)
-  const hodlDuration = getDaysBetween(sale.transaction.timestamp, purchase.transaction.timestamp)
+  // Get HODL Duration
+  const hodlDuration = getDaysBetween(soldDate, boughtDate)
+
+  // Get the ETH price for Bought & Sold dates
+  const boughtETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate)
+  const soldETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate)
+  if (isError(boughtETHPrice) || isError(soldETHPrice)) {
+    throw new Error("Unable to get ETH/USD value from Coinbase API")
+  }
+
+  // Get formatted ETH price for Bought & Sold dates
+  const boughtETHPriceNumber = Number(boughtETHPrice)
+  const boughtETHPriceFormatted = addCommas(boughtETHPriceNumber)
+  const soldETHPriceNumber = Number(soldETHPrice)
+  const soldETHPriceFormatted = addCommas(soldETHPriceNumber)
+
+  // Get absolute Bought & Sold price in USD
+  const boughtPriceUSD = purchase.salePrice * boughtETHPriceNumber
+  const soldPriceUSD = sale.salePrice * soldETHPriceNumber
 
   // Missing BoughtPrice or SoldPrice
   if (boughtPrice <= 0 || soldPrice <= 0) {
-    console.log("Bought Price:", boughtPrice)
-    console.log("Sold Price:", soldPrice)
+    console.log(`Bought Price ${boughtPrice} ETH / $${boughtETHPriceFormatted} USD`)
+    console.log(`Sold Price ${soldPrice} ETH / $${soldETHPriceFormatted} USD`)
     console.log("OpenSea Link:", sale.asset.link)
     throw new Error("Bought or Sold Price missing")
   }
   
   // Get the Profit/Loss value in USD
-  const profitLossValue = Math.abs(soldPrice - boughtPrice)
-  const profitLossUSD = Math.round(profitLossValue * sale.paymentToken.usdPrice)
+  const profitLossUSD = Math.round(soldPriceUSD - boughtPriceUSD)
   const profitLossUSDFormatted = addCommas(profitLossUSD)
 
   // Get the Flip Percentage
-  const flipPercentage = ((soldPrice - boughtPrice) / boughtPrice) * 100
+  const flipPercentage = ((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD) * 100
   const flipPercentageRounded = Math.round(flipPercentage * 100) / 100
 
   // Report all losses OR only if profit is > $5000
   if (flipPercentageRounded > 0 && profitLossUSD < 5000) {
-    console.log("Bought Price:", boughtPrice)
-    console.log("Sold Price:", soldPrice)
+    console.log(`Bought Price ${boughtPrice} ETH / $${boughtETHPriceFormatted} USD`)
+    console.log(`Sold Price ${soldPrice} ETH / $${soldETHPriceFormatted} USD`)
     console.log("Profit Loss:", profitLossUSDFormatted)
     console.log("OpenSea Link:", sale.asset.link)
     throw new Error("Profit/Loss USD value under $5K")
@@ -59,8 +83,8 @@ export function composeTweet(purchase: Sale, sale: Sale): String | null {
 
   // Format the Tweet content
   const intro = `${sellerName} FLIPPED ${twitterUsername} #${sale.asset.tokenId}\n\n`
-  const boughtInfo = `🛍 Bought @ ${boughtPrice} ${sale.paymentToken.symbol}\n`
-  const soldInfo = `💰 Sold @ ${soldPrice} ${sale.paymentToken.symbol}\n`
+  const boughtInfo = `🛍 Bought @ ${boughtPrice} ${sale.paymentToken.symbol} ($${boughtETHPriceFormatted}/ETH)\n`
+  const soldInfo = `💰 Sold @ ${soldPrice} ${sale.paymentToken.symbol} ($${soldETHPriceFormatted}/ETH)\n`
   const hodlInfo = `🤝 HODL Duration: ${hodlDuration}\n`
   const flipInfo = `${isProfitLossEmoji} ${isProfitLoss}: $${profitLossUSDFormatted} (${isProfitLossPercentageEmoji}${Math.abs(flipPercentageRounded)}%)\n`
   const openSeaLink = `${sale.asset.link}`
