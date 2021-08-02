@@ -58,29 +58,18 @@ class TwitterMcBot {
         continue
       }
 
-      console.log('New Sales IDs', newSalesIds)
-      console.log('')
-
       let latestSalesIds: number[] = newSalesIds.filter(id => !oldSalesIds.includes(id))
         .concat(oldSalesIds.filter(id => !newSalesIds.includes(id)));
-
-      console.log('Latest Sales IDs', latestSalesIds)
-      console.log('')
 
       if (latestSalesIds.length > 0) {
         for (let i=0; i<latestSalesIds.length; i++) {
           console.log(`${getCurrentTime()} - New Sale ID#${latestSalesIds[i]}`)
-          console.log('')
 
           for (let j=0; j<newSales.length; j++) {
-            console.log('Latest Sale ID', latestSalesIds[i])
-            console.log('')
             const tokenID = newSales[j].asset.tokenId
 
             if (latestSalesIds[i] === newSales[j].saleId) {
               try {
-                console.log('')
-                console.log(newSales[j])
                 const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(tokenID)
 
                 if (tokenSales.length > 1) {
