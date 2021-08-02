@@ -34,7 +34,8 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
 
   // Get the Profit/Loss labels
   const isProfitLoss = flipPercentageRounded > 0 ? 'PROFIT' : 'LOSS'
-  const isProfitLossEmoji = flipPercentageRounded > 0 ? '📈 +' : '📉 -'
+  const isProfitLossEmoji = flipPercentageRounded > 0 ? '🚀' : '🧐'
+  const isProfitLossPercentageEmoji = flipPercentageRounded > 0 ? '📈 +' : '📉 -'
 
   // Get Twitter Username of the NFT Collection
   let twitterUsername = sale.asset.collection.twitterUsername
@@ -48,8 +49,11 @@ export function composeTweet(sale: Sale, boughtPrice: number): String | null {
   const sellerName = seller.username || sellerAddressShort
 
   // Format the Tweet content
-  const line1 = `${sellerName} FLIPPED ${twitterUsername} #${sale.asset.tokenId} for a ${isProfitLoss} of $${profitLossUSDFormatted} (${isProfitLossEmoji}${Math.abs(flipPercentageRounded)}%)\n`
-  const line2 = `Bought @ ${boughtPrice} ${sale.paymentToken.symbol} => Sold @ ${salePrice} ${sale.paymentToken.symbol}\n`
+  const intro = `${sellerName} FLIPPED ${twitterUsername} #${sale.asset.tokenId}\n\n`
+  const boughtInfo = `🛍 Bought @ ${boughtPrice} ${sale.paymentToken.symbol}\n`
+  const soldInfo = `💰 Sold @ ${salePrice} ${sale.paymentToken.symbol}\n`
+  const hodlInfo = `🤝 HODL Duration: Coming soon\n`
+  const flipInfo = `${isProfitLossEmoji} ${isProfitLoss}: $${profitLossUSDFormatted} (${isProfitLossPercentageEmoji}${Math.abs(flipPercentageRounded)}%)\n`
   const openSeaLink = `${sale.asset.link}`
-  return line1 + line2 + openSeaLink
+  return intro + boughtInfo + soldInfo + hodlInfo + flipInfo + openSeaLink
 }
