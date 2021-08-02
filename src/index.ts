@@ -100,7 +100,7 @@ class TwitterMcBot {
 
                 if (tokenSales.length > 1) {
                   try {
-                    const tweetText = composeTweet({
+                    const tweetText = await composeTweet({
                       purchase: tokenSales[1], 
                       sale: tokenSales[0], 
                       coinbaseAPI: this.coinbaseAPI
