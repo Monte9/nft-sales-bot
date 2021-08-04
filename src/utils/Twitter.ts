@@ -28,7 +28,9 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   const soldETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate)
 
   if (isError(boughtETHPrice) || isError(soldETHPrice)) {
-    throw new Error("Unable to get ETH/USD value from Coinbase API")
+    console.log(`Bought date ${boughtDate}`)
+    console.log(`Sold date ${soldDate}`)
+    throw new Error("Unable to get ETH/USD value from Coinbase API\n")
   }
   
   // Type cast the price to number
@@ -38,7 +40,7 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   if (boughtETHPriceNumber <= 0 || soldETHPriceNumber <= 0) {
     console.log(`Got $${boughtETHPriceNumber}/ETH for ${boughtDate}`)
     console.log(`Got $${soldETHPriceNumber}/ETH for ${soldDate}`)
-    throw new Error("Got invalid ETH price from Coinbase API")
+    throw new Error("Got invalid ETH price from Coinbase API\n")
   }
 
   // Get formatted ETH price for Bought & Sold dates
@@ -54,7 +56,7 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
     console.log(`Bought Price ${boughtPrice} ETH / $${boughtETHPriceFormatted} USD`)
     console.log(`Sold Price ${soldPrice} ETH / $${soldETHPriceFormatted} USD`)
     console.log("OpenSea Link:", sale.asset.link)
-    throw new Error("Bought or Sold Price missing")
+    throw new Error("Bought or Sold Price missing\n")
   }
   
   // Get the Profit/Loss value in USD
@@ -64,15 +66,6 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   // Get the Flip Percentage
   const flipPercentage = ((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD) * 100
   const flipPercentageRounded = Math.round(flipPercentage * 100) / 100
-
-  // Report all losses OR only if profit is > $5000
-  if (flipPercentageRounded > 0 && profitLossUSD < 5000) {
-    console.log(`Bought Price ${boughtPrice} ETH / $${boughtETHPriceFormatted} USD`)
-    console.log(`Sold Price ${soldPrice} ETH / $${soldETHPriceFormatted} USD`)
-    console.log("Profit Loss:", profitLossUSDFormatted)
-    console.log("OpenSea Link:", sale.asset.link)
-    throw new Error("Profit/Loss USD value under $5K")
-  }
 
   // Get the Profit/Loss labels
   const isProfitLoss = flipPercentageRounded > 0 ? 'PROFIT' : 'LOSS'
@@ -97,5 +90,13 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   const hodlInfo = `🤝 HODL Duration: ${hodlDuration}\n`
   const flipInfo = `${isProfitLossEmoji} ${isProfitLoss}: $${profitLossUSDFormatted} (${isProfitLossPercentageEmoji}${Math.abs(flipPercentageRounded)}%)\n`
   const openSeaLink = `${sale.asset.link}`
-  return intro + boughtInfo + soldInfo + hodlInfo + flipInfo + openSeaLink
+  const tweetContent = intro + boughtInfo + soldInfo + hodlInfo + flipInfo + openSeaLink
+
+  // Report all losses OR only if profit is > $15K
+  if (flipPercentageRounded > 0 && profitLossUSD < 15000) {
+    console.log(intro + flipInfo + openSeaLink)
+    throw new Error("Profit/Loss USD value under $15K\n")
+  }
+
+  return tweetContent
 }
