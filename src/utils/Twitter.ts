@@ -17,6 +17,10 @@ interface NamedParameters {
 
 // Composes a tweet using the Sale information
 export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParameters): Promise<String | Error> {
+  // Get Token ID & OpenSea Link
+  const tokenId = sale.asset.tokenId
+  const openSeaLink = sale.asset.link
+
   // Get rounded Bought & Sold price in ETH
   const boughtPrice = Math.round(purchase.salePrice * 100) / 100
   const soldPrice = Math.round(sale.salePrice * 100) / 100
@@ -73,6 +77,7 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   const flipValueRounded = Math.round((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD * 100) / 100
   const flipPercentage = flipValueRounded * 100
   const flipPercentageRounded = Math.round(flipPercentage * 100) / 100
+  const flipPercentageRoundedFormatted = addCommas(Math.abs(flipPercentageRounded))
 
   // Get the Profit/Loss labels
   const isProfitLoss = flipPercentageRounded > 0 ? 'PROFIT' : 'LOSS'
@@ -83,7 +88,7 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   // Formula: return % / no. days held x 365
   // Credit: Anonn.eth
   const annualizedReturns = flipPercentageRounded / hodlDays * 365
-  const annualizedReturnsFormatted = addCommas(Math.round(annualizedReturns * 100) / 100)
+  const annualizedReturnsFormatted = addCommas(Math.round(Math.round(annualizedReturns * 100) / 100))
 
   // Get Twitter Username of the NFT Collection
   let twitterUsername = sale.asset.collection.twitterUsername
@@ -97,13 +102,12 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   const sellerName = seller.username || sellerWallet
 
   // Format the Tweet content
-  const intro = `${sellerName} FLIPPED ${twitterUsername} #${sale.asset.tokenId}\n`
-  const boughtInfo = `🛍 Bought @ ${boughtPrice} ${sale.paymentToken.symbol} ($${boughtETHPriceFormatted}/ETH)\n`
-  const soldInfo = `💰 Sold @ ${soldPrice} ${sale.paymentToken.symbol} ($${soldETHPriceFormatted}/ETH)\n`
+  const intro = `${sellerName} FLIPPED ${twitterUsername} #${tokenId}\n`
+  const boughtInfo = `🛍 Bought: ${boughtPrice} ${sale.paymentToken.symbol} @ $${boughtETHPriceFormatted}/ETH\n`
+  const soldInfo = `💰 Sold: ${soldPrice} ${sale.paymentToken.symbol} @ $${soldETHPriceFormatted}/ETH\n`
   const hodlInfo = `🤝 HODL Duration: ${hodlDuration}\n`
-  const flipInfo = `${isProfitLossEmoji} ${isProfitLoss}: $${profitLossUSDFormatted} (${isProfitLossPercentageEmoji}${Math.abs(flipPercentageRounded)}%)\n`
+  const flipInfo = `${isProfitLossEmoji} ${isProfitLoss}: $${profitLossUSDFormatted} (${isProfitLossPercentageEmoji}${flipPercentageRoundedFormatted}%)\n`
   const annualizedReturnsInfo = `💸 Annualized Returns: ${annualizedReturnsFormatted}%\n`
-  const openSeaLink = `${sale.asset.link}`
   const tweetContent = intro + '\n' + boughtInfo + soldInfo + hodlInfo + flipInfo + '\n' + annualizedReturnsInfo + openSeaLink
 
   // Report all losses OR only if profit is > $15K

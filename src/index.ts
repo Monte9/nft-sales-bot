@@ -49,9 +49,7 @@ class TwitterMcBot {
     // DEBUG CODE ONLY
     // BUG: $0/ETH date 2021-08-04T00:49:40 - Token 4155
     // BUG: USDC sale - Token 822
-    // Feature: Annualized return 6071.77% - Token 5333
-    // Feature: Annualized return 10,202.96% - Token 1227
-    // const tokenID = '5333'
+    // const tokenID = '822'
 
     // try {
     //   const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(tokenID)
