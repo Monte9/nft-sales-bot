@@ -49,7 +49,7 @@ class TwitterMcBot {
     // DEBUG CODE ONLY
     // BUG: $0/ETH date 2021-08-04T00:49:40 - Token 4155
     // BUG: USDC sale - Token 822
-    // const tokenID = '822'
+    // const tokenID = '4155'
 
     // try {
     //   const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(tokenID)

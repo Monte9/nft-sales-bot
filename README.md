@@ -6,9 +6,9 @@ You can find me tweeting here: [Dear Earth](https://twitter.com/dearearth_)
 
 ### Getting Started
 
-This is a node server with a `.js` which polls `OpenSea` Events API to get the latest sales information.
+This is a Node server with Typescript. It uses the `twit` npm package to post a Tweet with the appropriate information.
 
-And it uses the `twit` npm packages to send out a Tweet with the appropriate information.
+We currently poll the `OpenSea` API every minute to get latest sales for Bored Apes, Cool Cats & CryptoPunks.
 
 #### Running it locally:
 
@@ -17,5 +17,17 @@ git clone git@github.com:Monte9/nft-flipping-mcbot.git
 
 cd nft-flipping-mcbot && yarn
 
-node index.js
+yarn start:dev
+```
+
+### Release
+
+This app is deployed on Heroku and is run on a paid worker. It uses babel to transform the `TS` code to `JS` before deploying it.
+
+Here is how to build this manually
+
+```
+yarn build
+
+yarn start
 ```
