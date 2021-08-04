@@ -1,7 +1,12 @@
 import CoinbaseAPI from "../api/CoinbaseAPI";
 
 import { Sale } from "../types/OpenSeaSale";
-import { addCommas, getDaysBetween, getShortWalletAddress } from "../shared/Formatters";
+import { 
+  addCommas, 
+  getYMDaysBetween, 
+  getTotalDaysBetween, 
+  getShortWalletAddress
+} from "../shared/Formatters";
 import { isError } from "./Helpers";
 
 interface NamedParameters {
@@ -20,8 +25,9 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   const boughtDate = purchase.transaction.timestamp
   const soldDate = sale.transaction.timestamp
 
-  // Get HODL Duration
-  const hodlDuration = getDaysBetween(soldDate, boughtDate)
+  // Get HODL Duration & Days
+  const hodlDuration = getYMDaysBetween(soldDate, boughtDate)
+  const hodlDays = getTotalDaysBetween(soldDate, boughtDate)
 
   // Get the ETH price for Bought & Sold dates
   const boughtETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate)
@@ -64,13 +70,20 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   const profitLossUSDFormatted = addCommas(profitLossUSD)
 
   // Get the Flip Percentage
-  const flipPercentage = ((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD) * 100
+  const flipValueRounded = Math.round((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD * 100) / 100
+  const flipPercentage = flipValueRounded * 100
   const flipPercentageRounded = Math.round(flipPercentage * 100) / 100
 
   // Get the Profit/Loss labels
   const isProfitLoss = flipPercentageRounded > 0 ? 'PROFIT' : 'LOSS'
   const isProfitLossEmoji = flipPercentageRounded > 0 ? '🚀' : '🧐'
   const isProfitLossPercentageEmoji = flipPercentageRounded > 0 ? '📈 +' : '📉 -'
+
+  // Calculate Annualized Returns
+  // Formula: return % / no. days held x 365
+  // Credit: Anonn.eth
+  const annualizedReturns = flipPercentageRounded / hodlDays * 365
+  const annualizedReturnsFormatted = addCommas(Math.round(annualizedReturns * 100) / 100)
 
   // Get Twitter Username of the NFT Collection
   let twitterUsername = sale.asset.collection.twitterUsername
@@ -84,13 +97,14 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   const sellerName = seller.username || sellerWallet
 
   // Format the Tweet content
-  const intro = `${sellerName} FLIPPED ${twitterUsername} #${sale.asset.tokenId}\n\n`
+  const intro = `${sellerName} FLIPPED ${twitterUsername} #${sale.asset.tokenId}\n`
   const boughtInfo = `🛍 Bought @ ${boughtPrice} ${sale.paymentToken.symbol} ($${boughtETHPriceFormatted}/ETH)\n`
   const soldInfo = `💰 Sold @ ${soldPrice} ${sale.paymentToken.symbol} ($${soldETHPriceFormatted}/ETH)\n`
   const hodlInfo = `🤝 HODL Duration: ${hodlDuration}\n`
   const flipInfo = `${isProfitLossEmoji} ${isProfitLoss}: $${profitLossUSDFormatted} (${isProfitLossPercentageEmoji}${Math.abs(flipPercentageRounded)}%)\n`
+  const annualizedReturnsInfo = `💸 Annualized Returns: ${annualizedReturnsFormatted}%\n`
   const openSeaLink = `${sale.asset.link}`
-  const tweetContent = intro + boughtInfo + soldInfo + hodlInfo + flipInfo + openSeaLink
+  const tweetContent = intro + '\n' + boughtInfo + soldInfo + hodlInfo + flipInfo + '\n' + annualizedReturnsInfo + openSeaLink
 
   // Report all losses OR only if profit is > $15K
   if (flipPercentageRounded > 0 && profitLossUSD < 15000) {

@@ -8,7 +8,7 @@ export const getCurrentTime = (): string => {
   return moment.tz('Asia/Kolkata').format("MMM Do, hh:mm A")
 }
 
-export const getDaysBetween = (start: string, end: string): string => {
+export const getYMDaysBetween = (start: string, end: string): string => {
   const startDate = moment(start)
   const endDate = moment(end)
   const duration = moment.duration(startDate.diff(endDate));
@@ -28,10 +28,20 @@ export const getDaysBetween = (start: string, end: string): string => {
     durationString = durationString + `${months} ${monthsString} `
   }
 
-  const daysString = days === 1 ? 'day' : 'days'
-  durationString = durationString + `${days} ${daysString}`
+  if (days != 0) {
+    const daysString = days === 1 ? 'day' : 'days'
+    durationString = durationString + `${days} ${daysString}`
+  }
 
   return durationString
+}
+
+export const getTotalDaysBetween = (start: string, end: string): number => {
+  const startDate = moment(start)
+  const endDate = moment(end)
+  const duration = moment.duration(startDate.diff(endDate));
+  const days = duration.asDays()
+  return Math.floor(days)
 }
 
 export const getShortWalletAddress = (address): string => {

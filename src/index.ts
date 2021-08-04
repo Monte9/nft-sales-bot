@@ -47,10 +47,10 @@ class TwitterMcBot {
     }
 
     // DEBUG CODE ONLY
-    // $0/ETH bug - date 2021-08-04T00:49:40 - token 4155
-    // USDC sale - token 822
-    // Annualized return 6071.77% - token 5333
-    // Annualized return - https://twitter.com/dearearth_/status/1422797797179416576
+    // BUG: $0/ETH date 2021-08-04T00:49:40 - Token 4155
+    // BUG: USDC sale - Token 822
+    // Feature: Annualized return 6071.77% - Token 5333
+    // Feature: Annualized return 10,202.96% - Token 1227
     // const tokenID = '5333'
 
     // try {
@@ -64,9 +64,9 @@ class TwitterMcBot {
     //         coinbaseAPI: this.coinbaseAPI
     //       })
     //       // this.twitterAPI.postTweet(tweetText)
-    //       console.log(tweetText)
+    //       console.log(tweetText, "\n")
     //     } catch (error) {
-    //       console.log("Unable to post Tweet:", error.message, "\n")
+    //       console.log("Unable to post Tweet:", error.message)
     //     }
     //   }
     // } catch (error) {
@@ -112,7 +112,7 @@ class TwitterMcBot {
                     })
                     this.twitterAPI.postTweet(tweetText)
                   } catch (error) {
-                    console.log("Unable to post Tweet:", error.message, "\n")
+                    console.log("Unable to post Tweet:", error.message)
                   }
                 } else {
                   console.log(`Token #${tokenID} only has 1 Sales Event`, "\n")
