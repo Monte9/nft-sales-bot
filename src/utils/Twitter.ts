@@ -26,14 +26,23 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   // Get the ETH price for Bought & Sold dates
   const boughtETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate)
   const soldETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate)
+
   if (isError(boughtETHPrice) || isError(soldETHPrice)) {
     throw new Error("Unable to get ETH/USD value from Coinbase API")
   }
+  
+  // Type cast the price to number
+  const boughtETHPriceNumber = Number(boughtETHPrice)
+  const soldETHPriceNumber = Number(soldETHPrice)
+
+  if (boughtETHPriceNumber <= 0 || soldETHPriceNumber <= 0) {
+    console.log(`Got $${boughtETHPriceNumber}/ETH for ${boughtDate}`)
+    console.log(`Got $${soldETHPriceNumber}/ETH for ${soldDate}`)
+    throw new Error("Got invalid ETH price from Coinbase API")
+  }
 
   // Get formatted ETH price for Bought & Sold dates
-  const boughtETHPriceNumber = Number(boughtETHPrice)
   const boughtETHPriceFormatted = addCommas(boughtETHPriceNumber)
-  const soldETHPriceNumber = Number(soldETHPrice)
   const soldETHPriceFormatted = addCommas(soldETHPriceNumber)
 
   // Get absolute Bought & Sold price in USD
