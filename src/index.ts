@@ -42,12 +42,17 @@ class TwitterMcBot {
         oldSalesIds.push(oldSales[i].saleId)
       }
     } catch (error) {
-      console.log("Unable to get Sales Events:", error.message, "\n")
+      console.log("Unable to get Sales Events:", error.message)
       return
     }
 
     // DEBUG CODE ONLY
-    // const tokenID = '8888'
+    // $0/ETH bug - date 2021-08-04T00:49:40 - token 4155
+    // USDC sale - token 822
+    // Annualized return 6071.77% - token 5333
+    // Annualized return - https://twitter.com/dearearth_/status/1422797797179416576
+    // const tokenID = '5333'
+
     // try {
     //   const tokenSales = await this.openSeaAPI.fetchParsedSaleEvents(tokenID)
 
@@ -65,7 +70,7 @@ class TwitterMcBot {
     //     }
     //   }
     // } catch (error) {
-    //   console.log(`Unable to get Sales Events for ${tokenID}:`, error.message, "\n")
+    //   console.log(`Unable to get Sales Events for ${tokenID}:`, error.message)
     // }
     // return
 
@@ -113,7 +118,7 @@ class TwitterMcBot {
                   console.log(`Token #${tokenID} only has 1 Sales Event`, "\n")
                 }
               } catch (error) {
-                console.log(`Unable to get Sales Events for ${tokenID}:`, error.message, "\n")
+                console.log(`Unable to get Sales Events for ${tokenID}:`, error.message)
                 continue
               }
             }

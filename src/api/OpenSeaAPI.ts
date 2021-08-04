@@ -17,20 +17,20 @@ export default class OpenSeaAPI {
   }
 
   async fetchParsedSaleEvents(tokenId?: string): Promise<Sale[]> {
-    let data = null
+    let response = null
 
     // Get latest sale events from OpenSea
     try {
-      data = await this.getSaleEvents(tokenId)
+      response = await this.getSaleEvents(tokenId)
     } catch (error) {
       throw error
     }
     
-    const saleEvents = data && data.asset_events
+    const saleEvents = response && response.asset_events
 
     // If missing saleEvents - nothing to do further
     if (saleEvents == null || saleEvents.length == 0) {
-      console.log('Data', data)
+      console.log(response)
       throw new Error("Missing events from OpenSea Events API\n")
     }
 
