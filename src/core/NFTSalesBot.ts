@@ -72,7 +72,7 @@ export default class NFTSalesBot {
       return
     }
 
-    let collectionData: SalesBot[] = await Promise.all(
+    let collectionsData: SalesBot[] = await Promise.all(
       NFT_COLLECTIONS.map(async (collection, index): Promise<SalesBot | null> => {
         const openSeaAPI = new OpenSeaAPI(collection.address)
         let oldSales: Sale[] = null;
@@ -105,13 +105,53 @@ export default class NFTSalesBot {
       })
     )
 
+    collectionsData = await Promise.all(
+      collectionsData.map(async (collectionData, index): Promise<SalesBot | null> => {
+        if (collectionData.oldSalesIds.length > 0) {
+          return collectionData
+        }
+
+        let oldSales: Sale[] = null;
+        let oldSalesIds: number[] = []
+
+        let salesBot = {
+          collection: collectionData.collection,
+          openSeaAPI: collectionData.openSeaAPI,
+          oldSalesIds: oldSalesIds
+        }
+
+        console.log(`try again for ${collectionData.collection.name}`)
+
+        try {
+          oldSales = await collectionData.openSeaAPI.fetchParsedSaleEvents()
+          
+          for (let i=0; i<oldSales.length; i++) {
+            oldSalesIds.push(oldSales[i].saleId)
+          }
+
+          // Delay the OpenSea API call by 10 seconds
+          await new Promise(resolve => setTimeout(resolve, index * 10000));
+          console.log(`Waited for ${index * 10000 / 1000} secs before calling OpenSea API for ${collectionData.collection.name} sales events\n`)
+        } catch (error) {
+          console.log(`Unable to get ${collectionData.collection.slug} Sales Events:`, error.message)
+          return salesBot
+        }
+
+        // Update the oldSalesId on the salesBot
+        salesBot.oldSalesIds = oldSalesIds
+        return salesBot
+      })
+    )
+
+    console.log('Updated', collectionsData)
+
     let currentIndex = 0
 
     // Run in Production
     while(true) {
       // Get the index within the bounds of collectionData
-      const collectionIndex = currentIndex % collectionData.length
-      const currentCollection = collectionData[collectionIndex]
+      const collectionIndex = currentIndex % collectionsData.length
+      const currentCollection = collectionsData[collectionIndex]
 
       if (currentCollection.oldSalesIds.length <= 0) {
         console.log(`Missing oldSalesIds for ${currentCollection.collection.name}`)
