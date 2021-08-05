@@ -91,9 +91,9 @@ export default class NFTSalesBot {
             oldSalesIds.push(oldSales[i].saleId)
           }
 
-          // Delay the OpenSea API call by 20 seconds
-          await new Promise(resolve => setTimeout(resolve, index * 20000));
-          console.log(`Waited for ${index * 20000 / 1000} secs before calling OpenSea API for ${collection.name} sales events\n`)
+          // Delay the OpenSea API call by 10 seconds
+          await new Promise(resolve => setTimeout(resolve, index * 10000));
+          console.log(`Waited for ${index * 10000 / 1000} secs before calling OpenSea API for ${collection.name} sales events\n`)
         } catch (error) {
           console.log(`Unable to get ${collection.slug} Sales Events:`, error.message)
           return salesBot
@@ -165,6 +165,7 @@ export default class NFTSalesBot {
                       coinbaseAPI: this.coinbaseAPI
                     })
                     this.twitterAPI.postTweet(tweetText)
+                    // console.log(tweetText)
                   } catch (error) {
                     console.log("Unable to post Tweet:", error.message)
                   }
