@@ -1,4 +1,4 @@
-import moment from 'moment-timezone';
+import * as moment from 'moment-timezone';
 
 export function addCommas(value: number): String {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

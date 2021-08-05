@@ -37,6 +37,8 @@ TWITTER_ACCESS_TOKEN=TODO_REPLACE_THIS
 TWITTER_ACCESS_TOKEN_SECRET=TODO_REPLACE_THIS
 ```
 
+Once you update the file with your API keys, you can ignore the file from showing up in git diffs with `git update-index --assume-unchanged .env`
+
 ### Release
 
 This app is deployed on Heroku and is run on a paid worker. It uses `Babel` to transform the `Typescript` code to `Javascript` before deploying it.
