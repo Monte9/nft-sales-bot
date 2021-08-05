@@ -91,9 +91,9 @@ export default class NFTSalesBot {
             oldSalesIds.push(oldSales[i].saleId)
           }
 
-          // Delay the OpenSea API call by 15 seconds
-          await new Promise(resolve => setTimeout(resolve, index * 15000));
-          console.log(`Waited for ${index * 15000 / 1000} secs before calling OpenSea API for ${collection.name} sales events\n`)
+          // Delay the OpenSea API call by 20 seconds
+          await new Promise(resolve => setTimeout(resolve, index * 20000));
+          console.log(`Waited for ${index * 20000 / 1000} secs before calling OpenSea API for ${collection.name} sales events\n`)
         } catch (error) {
           console.log(`Unable to get ${collection.slug} Sales Events:`, error.message)
           return salesBot

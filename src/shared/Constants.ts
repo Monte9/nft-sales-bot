@@ -22,7 +22,7 @@ export const NFT_COLLECTIONS: Collection[] = [
     name: 'Cool Cats NFT',
     twitterUsername: 'coolcatsnft',
     slug: 'cool-cats-nft',
-    profitThreshold: 1000
+    profitThreshold: 2000
   },
   {
     address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
@@ -30,7 +30,7 @@ export const NFT_COLLECTIONS: Collection[] = [
     name: 'CryptoPunks',
     twitterUsername: 'larvalabs',
     slug: 'cryptopunks',
-    profitThreshold: 50000
+    profitThreshold: 25000
   },
   {
     address: '0x7bd29408f11d2bfc23c34f18275bbf23bb716bc7',
@@ -38,6 +38,6 @@ export const NFT_COLLECTIONS: Collection[] = [
     name: 'Meebits',
     twitterUsername: 'larvalabs',
     slug: 'meebits',
-    profitThreshold: 10000
+    profitThreshold: 5000
   }
 ];
