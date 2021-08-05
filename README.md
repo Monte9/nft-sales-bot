@@ -35,6 +35,7 @@ TWITTER_API_KEY=TODO_REPLACE_THIS
 TWITTER_API_SECRET_KEY=TODO_REPLACE_THIS
 TWITTER_ACCESS_TOKEN=TODO_REPLACE_THIS
 TWITTER_ACCESS_TOKEN_SECRET=TODO_REPLACE_THIS
+NODE_ENV=DEVELOPMENT
 ```
 
 Once you update the file with your API keys, you can ignore the file from showing up in git diffs with `git update-index --assume-unchanged .env`

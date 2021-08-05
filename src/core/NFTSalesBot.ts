@@ -34,24 +34,7 @@ export default class NFTSalesBot {
     this.coinbaseAPI = new CoinbaseAPI();
   }
 
-  async runInstance() {
-    console.log(`Starting NFT Sales Bot for ${this.collection.name}`)
-
-    let oldSales: Sale[] = null;
-    let oldSalesIds: number[] = []
-
-    try {
-      oldSales = await this.openSeaAPI.fetchParsedSaleEvents()
-
-      for (let i=0; i<oldSales.length; i++) {
-        oldSalesIds.push(oldSales[i].saleId)
-      }
-    } catch (error) {
-      console.log("Unable to get Sales Events:", error.message)
-      return
-    }
-
-    // DEBUG CODE ONLY
+  async runBotInDebugMode() {
     // Bored Ape BUG: USDC sale - Token 822
     // Cool Cat - Token 5943
     const tokenID = '5943'
@@ -78,8 +61,32 @@ export default class NFTSalesBot {
     } catch (error) {
       console.log(`Unable to get Sales Events for ${tokenID}:`, error.message)
     }
-    return
+  }
 
+  async runInstance() {
+    console.log(`Starting NFT Sales Bot for ${this.collection.name} in ${process.env.NODE_ENV}`)
+
+    // DEBUG CODE ONLY
+    if (process.env.NODE_ENV === "DEVELOPMENT") {
+      this.runBotInDebugMode()
+      return
+    }
+
+    let oldSales: Sale[] = null;
+    let oldSalesIds: number[] = []
+
+    try {
+      oldSales = await this.openSeaAPI.fetchParsedSaleEvents()
+
+      for (let i=0; i<oldSales.length; i++) {
+        oldSalesIds.push(oldSales[i].saleId)
+      }
+    } catch (error) {
+      console.log("Unable to get Sales Events:", error.message)
+      return
+    }
+
+    // Run in Production
     while(true) {
       let newSales: Sale[] = null;
       let newSalesIds: number[] = []
