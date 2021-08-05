@@ -1,22 +1,24 @@
 import CoinbaseAPI from "../api/CoinbaseAPI";
 
-import { Sale } from "../types/OpenSeaSale";
+import { Collection, Sale } from "../types/OpenSeaSale";
+
 import { 
   addCommas, 
   getYMDaysBetween, 
   getTotalDaysBetween, 
   getShortWalletAddress
 } from "../shared/Formatters";
-import { isError } from "./Helpers";
+import { isError } from "../shared/Helpers";
 
 interface NamedParameters {
+  collection: Collection
   purchase: Sale
   sale: Sale
   coinbaseAPI: CoinbaseAPI
 }
 
 // Composes a tweet using the Sale information
-export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParameters): Promise<String | Error> {
+export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: NamedParameters): Promise<String | Error> {
   // Get Token ID & OpenSea Link
   const tokenId = sale.asset.tokenId
   const openSeaLink = sale.asset.link
@@ -110,10 +112,11 @@ export async function composeTweet({ purchase, sale, coinbaseAPI }: NamedParamet
   const annualizedReturnsInfo = `💸 Annualized Returns: ${annualizedReturnsFormatted}%\n`
   const tweetContent = intro + '\n' + boughtInfo + soldInfo + hodlInfo + flipInfo + '\n' + annualizedReturnsInfo + openSeaLink
 
-  // Report all losses OR only if profit is > $15K
-  if (flipPercentageRounded > 0 && profitLossUSD < 15000) {
+  // Report all losses OR only if profit is > profitThreshold for the collection
+  if (flipPercentageRounded > 0 && profitLossUSD < collection.profitThreshold) {
     console.log(intro + flipInfo + openSeaLink)
-    throw new Error("Profit/Loss USD value under $15K\n")
+    const fomattedProfitThreshold = addCommas(collection.profitThreshold)
+    throw new Error(`Profit/Loss USD value under $${fomattedProfitThreshold}\n`)
   }
 
   return tweetContent

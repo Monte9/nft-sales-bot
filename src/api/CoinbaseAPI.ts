@@ -1,8 +1,9 @@
 import fetch from 'node-fetch';
 
-import { isError } from '../utils/Helpers';
+import { isError } from '../shared/Helpers';
 
 export default class CoinbaseAPI {
+
   // https://developers.coinbase.com/api/v2#get-spot-price
   async getUSDPriceForETH(date: string): Promise<number | Error> {
     const url = 'https://api.coinbase.com/v2/prices/ETH-USD/spot';
