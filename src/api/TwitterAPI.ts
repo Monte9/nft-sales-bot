@@ -26,6 +26,7 @@ export default class TwitterAPI {
   postTweet(content) {
     this.api.post('statuses/update', { status: content }, function(err, data, response) {
       if (err != null) {
+        console.log(err)
         console.log("Oops! Unable to post the Tweet:", err.allErrors[0] && err.allErrors[0].message)
       } else {
         console.log("Tweet Posted:", `https://twitter.com/${data.user.screen_name}/status/${data.id_str}\n`)

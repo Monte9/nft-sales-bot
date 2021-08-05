@@ -19,8 +19,8 @@ class TwitterMcBot {
 
   constructor() {
     this.twitterAPI = new TwitterAPI(
-      process.env.TWITTER_CONSUMER_KEY,
-      process.env.TWITTER_CONSUMER_SECRET,
+      process.env.TWITTER_API_KEY,
+      process.env.TWITTER_API_SECRET_KEY,
       process.env.TWITTER_ACCESS_TOKEN,
       process.env.TWITTER_ACCESS_TOKEN_SECRET,
     )
@@ -30,7 +30,7 @@ class TwitterMcBot {
   }
 
   async runInstance() {
-    console.log("Started NFT Flipping McBot")
+    console.log("Starting NFT Sales Bot...")
 
     let oldSales: Sale[] = null;
     let oldSalesIds: number[] = []

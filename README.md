@@ -1,8 +1,8 @@
-## NFT FLIPPING McBOT
+## NFT Sales Bot
 
 Beep Boop! I am a Twitter bot that tweets all NFT sales along with the profit/loss flip % for CryptoPunks, Bored Apes & Cool Cats.
 
-You can find me tweeting here: [Dear Earth](https://twitter.com/dearearth_)
+You can find me tweeting @ [Flip McBot](https://twitter.com/nftsalesbot)
 
 ### Getting Started
 
@@ -13,11 +13,24 @@ We currently poll the `OpenSea` API every minute to get latest sales for Bored A
 #### Running it locally:
 
 ```
-git clone git@github.com:Monte9/nft-flipping-mcbot.git
+git clone git@github.com:Monte9/nft-sales-bot.git
 
-cd nft-flipping-mcbot && yarn
+cd nft-sales-bot && yarn
 
 yarn start:dev
+```
+
+## Adding ENV Variables
+
+In order to post a tweet, you will need access to the Twitter API keys. Submit a new application at https://developer.twitter.com/en/apps
+
+Then create a new file at the root `.env` and add the API keys in it.
+
+```
+TWITTER_API_KEY=
+TWITTER_API_SECRET_KEY=
+TWITTER_ACCESS_TOKEN=
+TWITTER_ACCESS_TOKEN_SECRET=
 ```
 
 ### Release
@@ -31,3 +44,5 @@ yarn build
 
 yarn start
 ```
+
+Don't forget to upload your Twitter API keys to Heroku.

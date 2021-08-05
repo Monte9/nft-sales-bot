@@ -1,7 +1,7 @@
 {
-  "name": "nft-flipping-mcbot",
+  "name": "nft-sales-bot",
   "version": "1.0.0",
-  "description": "A Twitter bot that tweets about NFT sales along with the flipping %",
+  "description": "A Twitter bot that tweets all NFT sales along with the profit/loss flip % for CryptoPunks, Bored Apes & Cool Cats.",
   "main": "index.ts",
   "scripts": {
     "clean": "rm -rf build && mkdir build",
@@ -13,14 +13,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Monte9/nft-flipping-mcbot.git"
+    "url": "git+ssh://git@github.com:Monte9/nft-sales-bot.git"
   },
   "author": "monte9",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Monte9/nft-flipping-mcbot/issues"
-  },
-  "homepage": "https://github.com/Monte9/nft-flipping-mcbot#readme",
+  "homepage": "https://github.com/Monte9/nft-sales-bot#readme",
   "dependencies": {
     "@babel/cli": "^7.14.5",
     "@babel/plugin-transform-runtime": "^7.14.5",
