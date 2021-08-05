@@ -6,11 +6,11 @@ You can find me tweeting @ [Flip McBot](https://twitter.com/nftsalesbot)
 
 ### Getting Started
 
-This is a Node server with Typescript. It uses the `twit` npm package to post a Tweet with the appropriate information.
+This is a `Node` server with `Typescript`. It uses the `twit` npm package to post a Tweet with the NFT Sale information.
 
-We currently poll the `OpenSea` API every minute to get latest sales for Bored Apes, Cool Cats & CryptoPunks.
+We currently poll the `OpenSea` API every minute to get latest sales for `Bored Apes`, `Cool Cats`, `CryptoPunks` & `Meebits`.
 
-#### Running it locally:
+### Setup
 
 ```
 git clone git@github.com:Monte9/nft-sales-bot.git
@@ -22,20 +22,24 @@ yarn start:dev
 
 ## Adding ENV Variables
 
-In order to post a tweet, you will need access to the Twitter API keys. Submit a new application at https://developer.twitter.com/en/apps
+In order to post a tweet, you will need access to the Twitter Developer account. Without API valid keys you'll get the following error when running the app
 
-Then create a new file at the root `.env` and add the API keys in it.
+`Oops! Unable to post the Tweet: Invalid or expired token.`
+
+To get Twitter API keys you need to submit a new application at https://developer.twitter.com/en/apps. It typically takes them 1-2 days to get back to you.
+
+Once you have the Twitter API keys, you need to open up the `.env` file at the root and replace all `TODO_REPLACE_THIS` instances with the appropriate values.
 
 ```
-TWITTER_API_KEY=
-TWITTER_API_SECRET_KEY=
-TWITTER_ACCESS_TOKEN=
-TWITTER_ACCESS_TOKEN_SECRET=
+TWITTER_API_KEY=TODO_REPLACE_THIS
+TWITTER_API_SECRET_KEY=TODO_REPLACE_THIS
+TWITTER_ACCESS_TOKEN=TODO_REPLACE_THIS
+TWITTER_ACCESS_TOKEN_SECRET=TODO_REPLACE_THIS
 ```
 
 ### Release
 
-This app is deployed on Heroku and is run on a paid worker. It uses babel to transform the `TS` code to `JS` before deploying it.
+This app is deployed on Heroku and is run on a paid worker. It uses `Babel` to transform the `Typescript` code to `Javascript` before deploying it.
 
 Here is how to build this manually
 
@@ -45,4 +49,4 @@ yarn build
 yarn start
 ```
 
-Don't forget to upload your Twitter API keys to Heroku.
+Lastly, don't forget to upload your Twitter API keys to Heroku or your CI/CD platform.
