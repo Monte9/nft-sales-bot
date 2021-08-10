@@ -31,11 +31,12 @@ To get Twitter API keys you need to submit a new application at https://develope
 Once you have the Twitter API keys, you need to open up the `.env` file at the root and replace all `TODO_REPLACE_THIS` instances with the appropriate values.
 
 ```
-TWITTER_API_KEY=TODO_REPLACE_THIS
-TWITTER_API_SECRET_KEY=TODO_REPLACE_THIS
-TWITTER_ACCESS_TOKEN=TODO_REPLACE_THIS
-TWITTER_ACCESS_TOKEN_SECRET=TODO_REPLACE_THIS
 NODE_ENV=DEVELOPMENT
+OPENSEA_API_KEY=
+TWITTER_API_KEY=
+TWITTER_API_SECRET_KEY=
+TWITTER_ACCESS_TOKEN=
+TWITTER_ACCESS_TOKEN_SECRET=
 ```
 
 Once you update the file with your API keys, you can ignore the file from showing up in git diffs with `git update-index --assume-unchanged .env`

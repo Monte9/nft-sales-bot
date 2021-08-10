@@ -49,7 +49,8 @@ export default class OpenSeaAPI {
     const options = {
       method: 'GET', 
       headers: {
-        Accept: 'application/json'
+        Accept: 'application/json',
+        'x-api-key': process.env.OPENSEA_API_KEY,
       }
     };
 

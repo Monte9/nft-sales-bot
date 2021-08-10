@@ -1,18 +1,17 @@
 import 'dotenv/config';
 
-import OpenSeaAPI from '../api/OpenSeaAPI';
-import TwitterAPI from '../api/TwitterAPI';
-import CoinbaseAPI from '../api/CoinbaseAPI';
+import OpenSeaAPI from '../../api/OpenSeaAPI';
+import TwitterAPI from '../../api/TwitterAPI';
+import CoinbaseAPI from '../../api/CoinbaseAPI';
 
-import { composeTweet } from '../core/Twitter';
+import { composeTweet } from '../Twitter';
 
-import { Sale } from '../types/OpenSeaSale';
-import { SalesBot } from '../types/NFTSalesBot';
+import { Sale } from '../../types/OpenSeaSale';
+import { SalesBot } from '../../types/NFTSalesBot';
 
-import { getCurrentTime } from '../shared/Formatters';
-import { getCollectionFromSymbol } from '../shared/Helpers';
-import { CollectionSymbol, NFT_COLLECTIONS } from '../shared/Constants';
-
+import { getCurrentTime } from '../../shared/Formatters';
+import { NFT_COLLECTIONS } from '../../shared/Constants';
+import { runDebugBot } from './DebugBot';
 
 export default class NFTSalesBot {
   twitterAPI: TwitterAPI = null
@@ -30,50 +29,17 @@ export default class NFTSalesBot {
     this.coinbaseAPI = new CoinbaseAPI();
   }
 
-  async runInDebugMode() {
-    // Get BAYC Collection for testing
-    const BAYC_Collection = getCollectionFromSymbol(CollectionSymbol.BAYC);
-    const openSeaAPI = new OpenSeaAPI(BAYC_Collection.address)
-
-    // Bored Ape BUG: USDC sale - Token 822
-    // Cool Cat - Token 5943
-    const tokenID = '822'
-
-    try {
-      const tokenSales = await openSeaAPI.fetchParsedSaleEvents(tokenID)
-
-      if (tokenSales.length > 1) {
-        try {
-          const tweetText = await composeTweet({
-            collection: BAYC_Collection,
-            purchase: tokenSales[1],
-            sale: tokenSales[0],
-            coinbaseAPI: this.coinbaseAPI
-          })
-          // this.twitterAPI.postTweet(tweetText)
-          console.log(tweetText, "\n")
-        } catch (error) {
-          console.log("Unable to post Tweet:", error.message)
-        }
-      } else {
-        console.log(`${BAYC_Collection.symbol} #${tokenID} only has 1 Sales Event`, "\n")
-      }
-    } catch (error) {
-      console.log(`Unable to get Sales Events for ${BAYC_Collection.symbol} #${tokenID}:`, error.message)
-    }
-  }
-
   async start() {
-    console.log(`Starting NFT Sales Bot in ${process.env.NODE_ENV}`)
+    console.log(`Starting NFT Sales Bot in ${process.env.NODE_ENV}\n`)
 
-    // DEBUG CODE ONLY
+    // Runs the DebugBot in DEVELOPMENT environment
     if (process.env.NODE_ENV === "DEVELOPMENT") {
-      this.runInDebugMode()
+      runDebugBot(this.coinbaseAPI)
       return
     }
 
     let collectionsData: SalesBot[] = await Promise.all(
-      NFT_COLLECTIONS.map(async (collection, index): Promise<SalesBot | null> => {
+      NFT_COLLECTIONS.map(async (collection): Promise<SalesBot | null> => {
         const openSeaAPI = new OpenSeaAPI(collection.address)
         let oldSales: Sale[] = null;
         let oldSalesIds: number[] = []
@@ -91,11 +57,9 @@ export default class NFTSalesBot {
             oldSalesIds.push(oldSales[i].saleId)
           }
 
-          // Delay the OpenSea API call by 10 seconds
-          await new Promise(resolve => setTimeout(resolve, index * 10000));
-          console.log(`Waited for ${index * 10000 / 1000} secs before calling OpenSea API for ${collection.name} sales events\n`)
+          console.log(`Got ${oldSales.length} Sales Events for ${collection.name}`)
         } catch (error) {
-          console.log(`Unable to get ${collection.slug} Sales Events:`, error.message)
+          console.log(`Unable to get ${collection.slug} Sales Events:`, error.message, '\n')
           return salesBot
         }
 
@@ -105,45 +69,7 @@ export default class NFTSalesBot {
       })
     )
 
-    collectionsData = await Promise.all(
-      collectionsData.map(async (collectionData, index): Promise<SalesBot | null> => {
-        if (collectionData.oldSalesIds.length > 0) {
-          return collectionData
-        }
-
-        let oldSales: Sale[] = null;
-        let oldSalesIds: number[] = []
-
-        let salesBot = {
-          collection: collectionData.collection,
-          openSeaAPI: collectionData.openSeaAPI,
-          oldSalesIds: oldSalesIds
-        }
-
-        console.log(`try again for ${collectionData.collection.name}`)
-
-        try {
-          oldSales = await collectionData.openSeaAPI.fetchParsedSaleEvents()
-          
-          for (let i=0; i<oldSales.length; i++) {
-            oldSalesIds.push(oldSales[i].saleId)
-          }
-
-          // Delay the OpenSea API call by 10 seconds
-          await new Promise(resolve => setTimeout(resolve, index * 10000));
-          console.log(`Waited for ${index * 10000 / 1000} secs before calling OpenSea API for ${collectionData.collection.name} sales events\n`)
-        } catch (error) {
-          console.log(`Unable to get ${collectionData.collection.slug} Sales Events:`, error.message)
-          return salesBot
-        }
-
-        // Update the oldSalesId on the salesBot
-        salesBot.oldSalesIds = oldSalesIds
-        return salesBot
-      })
-    )
-
-    console.log('Updated', collectionsData)
+    console.log('\nCollection Data', collectionsData, '\n')
 
     let currentIndex = 0
 
@@ -158,7 +84,6 @@ export default class NFTSalesBot {
 
         // Increment currentIndex to got to the next collection
         currentIndex = currentIndex + 1
-
         continue
       }
 
@@ -178,7 +103,6 @@ export default class NFTSalesBot {
 
         // Increment currentIndex to got to the next collection
         currentIndex = currentIndex + 1
-
         continue
       }
 
@@ -217,7 +141,6 @@ export default class NFTSalesBot {
 
                 // Increment currentIndex to got to the next collection
                 currentIndex = currentIndex + 1
-
                 continue
               }
             }
