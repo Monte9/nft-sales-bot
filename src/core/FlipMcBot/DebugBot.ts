@@ -20,8 +20,8 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
   try {
     const tokenSales = await openSeaAPI.fetchParsedSaleEvents(tokenID)
 
-    if (tokenSales.length <= 1) {
-      console.log(`${collection.symbol} #${tokenID} only has 1 Sales Event`, "\n")
+    if (tokenSales.length < 2) {
+      console.log(`${collection.symbol} #${tokenID} only has 1 sales event`, "\n")
       return
     }
 

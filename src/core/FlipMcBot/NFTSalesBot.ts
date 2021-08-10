@@ -1,24 +1,22 @@
 import 'dotenv/config';
 
-import OpenSeaAPI from '../../api/OpenSeaAPI';
 import TwitterAPI from '../../api/TwitterAPI';
 import CoinbaseAPI from '../../api/CoinbaseAPI';
+
+import { runDebugBot } from './DebugBot';
+import { getCollectionsDataFromOpenSea } from './Helpers';
 
 import { composeTweet } from '../Twitter';
 
 import { Sale } from '../../types/OpenSeaSale';
-import { SalesBot } from '../../types/NFTSalesBot';
 
 import { getCurrentTime } from '../../shared/Formatters';
-import { NFT_COLLECTIONS } from '../../shared/Constants';
-import { runDebugBot } from './DebugBot';
 
 export default class NFTSalesBot {
   twitterAPI: TwitterAPI = null
   coinbaseAPI: CoinbaseAPI = null
 
   constructor() {
-    // Initialize TwitterAPI with API keys
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
       process.env.TWITTER_API_SECRET_KEY,
@@ -38,38 +36,8 @@ export default class NFTSalesBot {
       return
     }
 
-    let collectionsData: SalesBot[] = await Promise.all(
-      NFT_COLLECTIONS.map(async (collection): Promise<SalesBot | null> => {
-        const openSeaAPI = new OpenSeaAPI(collection.address)
-        let oldSales: Sale[] = null;
-        let oldSalesIds: number[] = []
-
-        let salesBot = {
-          collection,
-          openSeaAPI,
-          oldSalesIds
-        }
-
-        try {
-          oldSales = await openSeaAPI.fetchParsedSaleEvents()
-          
-          for (let i=0; i<oldSales.length; i++) {
-            oldSalesIds.push(oldSales[i].saleId)
-          }
-
-          console.log(`Got ${oldSales.length} Sales Events for ${collection.name}`)
-        } catch (error) {
-          console.log(`Unable to get ${collection.slug} Sales Events:`, error.message, '\n')
-          return salesBot
-        }
-
-        // Update the oldSalesId on the salesBot
-        salesBot.oldSalesIds = oldSalesIds
-        return salesBot
-      })
-    )
-
-    console.log('\nCollection Data', collectionsData, '\n')
+    const collectionsData = await getCollectionsDataFromOpenSea()
+    console.log('\nCollections', collectionsData, '\n')
 
     let currentIndex = 0
 
@@ -82,7 +50,7 @@ export default class NFTSalesBot {
       if (currentCollection.oldSalesIds.length <= 0) {
         console.log(`Missing oldSalesIds for ${currentCollection.collection.name}`)
 
-        // Increment currentIndex to got to the next collection
+        // Increment currentIndex to go to the next collection
         currentIndex = currentIndex + 1
         continue
       }
@@ -90,7 +58,7 @@ export default class NFTSalesBot {
       let newSales: Sale[] = null;
       let newSalesIds: number[] = []
 
-      console.log(`Getting events for ${currentCollection.collection.name}`)
+      console.log(`Getting sales events for ${currentCollection.collection.name}`)
 
       try {
         newSales = await currentCollection.openSeaAPI.fetchParsedSaleEvents()
@@ -109,7 +77,9 @@ export default class NFTSalesBot {
       let latestSalesIds: number[] = newSalesIds.filter(id => !currentCollection.oldSalesIds.includes(id))
         .concat(currentCollection.oldSalesIds.filter(id => !newSalesIds.includes(id)));
 
-      if (latestSalesIds.length > 0) {
+      if (latestSalesIds.length < 1) {
+        console.log(`${getCurrentTime()} - No new sales!\n`)
+      } else {
         for (let i=0; i<latestSalesIds.length; i++) {
           console.log(`${currentCollection.collection.name} @ ${getCurrentTime()} - New Sale ID#${latestSalesIds[i]}\n`)
 
@@ -128,8 +98,14 @@ export default class NFTSalesBot {
                       sale: tokenSales[0], 
                       coinbaseAPI: this.coinbaseAPI
                     })
-                    this.twitterAPI.postTweet(tweetText)
-                    // console.log(tweetText)
+
+                    // In DEVELOPMENT environment we don't want to tweet it
+                    // Just console log the Tweet text
+                    if (process.env.NODE_ENV === "DEVELOPMENT") {
+                      console.log(tweetText)
+                    } else {
+                      this.twitterAPI.postTweet(tweetText)
+                    }
                   } catch (error) {
                     console.log("Unable to post Tweet:", error.message)
                   }
@@ -146,8 +122,6 @@ export default class NFTSalesBot {
             }
           }
         }
-      } else {
-        console.log(`${getCurrentTime()} - No new sales!\n`)
       }
 
       // Update the oldSalesIds to prevent duplicates in the next iteration
