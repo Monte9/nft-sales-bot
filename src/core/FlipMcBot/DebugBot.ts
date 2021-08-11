@@ -39,6 +39,6 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
       console.log("Unable to post Tweet:", error.message)
     }
   } catch (error) {
-    console.log(`Unable to get Sales Events for ${collection.symbol} #${tokenID}:`, error.message)
+    console.log(`Unable to get sales events for ${collection.name} #${tokenID}:`, error.message)
   }
 };

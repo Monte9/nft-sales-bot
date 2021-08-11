@@ -50,6 +50,10 @@ export default class NFTSalesBot {
       if (currentCollection.oldSalesIds.length <= 0) {
         console.log(`Missing oldSalesIds for ${currentCollection.collection.name}`)
 
+        // Delay the next OpenSea API call by 30 seconds
+        console.log(`Waiting for 30 secs...\n`)
+        await new Promise(resolve => setTimeout(resolve, 30000));
+
         // Increment currentIndex to go to the next collection
         currentIndex = currentIndex + 1
         continue
@@ -67,7 +71,11 @@ export default class NFTSalesBot {
           newSalesIds.push(newSales[i].saleId)
         }
       } catch (error) {
-        console.log(`Unable to get new Sales Events for ${currentCollection.collection.name} @ ${getCurrentTime()}:`, error.message, "\n")
+        console.log(`Unable to get new sales events for ${currentCollection.collection.name} @ ${getCurrentTime()}:`, error.message, "\n")
+
+        // Delay the next OpenSea API call by 30 seconds
+        console.log(`Waiting for 30 secs...\n`)
+        await new Promise(resolve => setTimeout(resolve, 30000));
 
         // Increment currentIndex to got to the next collection
         currentIndex = currentIndex + 1
@@ -115,6 +123,10 @@ export default class NFTSalesBot {
               } catch (error) {
                 console.log(`Unable to get Sales Events for ${currentCollection.collection.name} #${tokenID}:`, error.message)
 
+                // Delay the next OpenSea API call by 30 seconds
+                console.log(`Waiting for 30 secs...\n`)
+                await new Promise(resolve => setTimeout(resolve, 30000));
+
                 // Increment currentIndex to got to the next collection
                 currentIndex = currentIndex + 1
                 continue
@@ -127,7 +139,7 @@ export default class NFTSalesBot {
       // Update the oldSalesIds to prevent duplicates in the next iteration
       currentCollection.oldSalesIds = newSalesIds
 
-      // Delay the OpenSea API call by 30 seconds
+      // Delay the next OpenSea API call by 30 seconds
       console.log(`Waiting for 30 secs...\n`)
       await new Promise(resolve => setTimeout(resolve, 30000));
 
