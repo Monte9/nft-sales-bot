@@ -1,6 +1,9 @@
+import { ApiV2Includes, TweetV2, Tweetv2TimelineResult } from "twitter-api-v2";
+
 import CoinbaseAPI from "../api/CoinbaseAPI";
 
 import { Collection, Sale } from "../types/OpenSeaSale";
+import { TweetAuthor, TwitterMention } from "../types/NFTSalesBot";
 
 import { 
   addCommas, 
@@ -119,4 +122,40 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: 
   }
 
   return tweetContent
+}
+
+export function parseMentions(mentions: Tweetv2TimelineResult): TwitterMention[] {
+  const tweets: TweetV2[] = mentions.data
+  const includes: ApiV2Includes = mentions.includes
+
+  return tweets.reduce((acc, tweet) => {
+    // Ensure Tweet has ID and the includes array is not empty
+    if (tweet.id && includes) {
+      // Find the Author of the tweet
+      const authorUser = includes.users.find(user => {
+        if (user.id == tweet.author_id) {
+          return true
+        } else {
+          return false
+        }
+      })
+
+      let author: TweetAuthor = {
+        id: authorUser.id,
+        username: authorUser.username,
+        description: authorUser.description,
+        name: authorUser.name
+      }
+
+      const twitterMention: TwitterMention = {
+        authorId: tweet.author_id,
+        tweetId: tweet.id,
+        text: tweet.text,
+        author
+      }
+      acc.push(twitterMention)
+    }
+
+    return acc;
+  }, [])
 }

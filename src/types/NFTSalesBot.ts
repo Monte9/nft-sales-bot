@@ -7,3 +7,21 @@ export interface SalesBot {
   openSeaAPI: OpenSeaAPI
   oldSalesIds: number[]
 }
+
+export interface MentionsBot {
+  oldMentionIds: string[]
+}
+
+export interface TwitterMention {
+  authorId: string
+  tweetId: string
+  text: string
+  author: TweetAuthor
+}
+
+export interface TweetAuthor {
+  id: string
+  username: string
+  description: string
+  name: string
+}

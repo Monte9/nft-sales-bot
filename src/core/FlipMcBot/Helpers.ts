@@ -1,6 +1,7 @@
 import OpenSeaAPI from "../../api/OpenSeaAPI";
+import TwitterAPI from "../../api/TwitterAPI";
 
-import { SalesBot } from "../../types/NFTSalesBot";
+import { MentionsBot, SalesBot } from "../../types/NFTSalesBot";
 import { Sale } from "../../types/OpenSeaSale";
 
 import { NFT_COLLECTIONS } from "../../shared/Constants";
@@ -36,4 +37,27 @@ export async function getCollectionsDataFromOpenSea(): Promise<SalesBot[]> {
       return salesBot
     })
   )
+}
+
+export async function getMentionsDataFromOpenSea(twitterAPI: TwitterAPI): Promise<MentionsBot> {
+  let oldMentionIds: string[] = []
+  let mentionsBot: MentionsBot = {
+    oldMentionIds
+  }
+
+  try {
+    const mentions = await twitterAPI.fetchParsedMentions();
+    for (let i=0; i<mentions.length; i++) {
+      oldMentionIds.push(mentions[i].tweetId)
+    }
+
+    console.log(`Got ${oldMentionIds.length} OLD mentions`)
+  } catch (error) {
+    console.log(`Unable to get Twitter Mentions:`, error.message, '\n')
+    return mentionsBot
+  }
+
+  // Update the oldMentionIds on the mentionsBot
+  mentionsBot.oldMentionIds = oldMentionIds
+  return mentionsBot
 }

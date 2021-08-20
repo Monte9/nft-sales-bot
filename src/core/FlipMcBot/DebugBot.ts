@@ -26,7 +26,10 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
       return
     }
 
-    await twitterAPI.userMentionTimeline();
+    const mentions = await twitterAPI.fetchParsedMentions();
+    console.log('Got', mentions.length, 'mentions')
+
+    // this.postReply("Hi! I am indeed alive. 😊", incomingTweet.id)
 
     // const collections = await openSeaAPI.fetchParsedCollections();
     // console.log('You own:')

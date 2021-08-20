@@ -1,6 +1,10 @@
-import TwitterApi, { ApiV2Includes, TweetV2 } from 'twitter-api-v2';
+import TwitterApi, { Tweetv2TimelineResult } from 'twitter-api-v2';
 import TwitterApiv1ReadWrite from 'twitter-api-v2/dist/v1/client.v1.write';
 import TwitterApiv2ReadWrite from 'twitter-api-v2/dist/v2/client.v2.write';
+
+import { parseMentions } from '../core/Twitter';
+
+import { TwitterMention } from '../types/NFTSalesBot';
 
 import { getCurrentTime } from '../shared/Formatters';
 
@@ -41,33 +45,35 @@ export default class TwitterAPI {
     }
   }
 
-  async userMentionTimeline() {
+  async fetchParsedMentions(): Promise<TwitterMention[]> {
+    let mentions = null
+
+    // Get all mentions from Twitter
+    try {
+      mentions = await this.userMentionTimeline()
+    } catch (error) {
+      throw error
+    }
+
+    // If there are no mentions returned - throw an error
+    if (mentions == null || mentions.length < 1) {
+      throw new Error(`No recent mentions on Twitter`)
+    }
+
+    return parseMentions(mentions)
+  }
+
+  async userMentionTimeline(): Promise<Tweetv2TimelineResult> {
     try {
       const tweet = await this.twitterV2.userByUsername('nftsalesbot')
       const userId = tweet.data.id
 
-      const mentions = await this.twitterV2.userMentionTimeline(userId, {expansions: ['author_id'], max_results: 20, "user.fields": ['username', 'description', 'name']})
-
-      const tweets: TweetV2[] = mentions.data.data
-      const includes: ApiV2Includes = mentions.includes
-
-      const incomingTweet = tweets[0]
-      console.log('Incoming Tweet', incomingTweet)
-
-      const author = includes.users.find(user => {
-        if (user.id == incomingTweet.author_id) {
-          return true
-        } else {
-          return false
-        }
-      })
-      console.log('Author', author)
-
-      this.postReply("Hi! I am indeed alive. 😊", incomingTweet.id)
-
+      const response = await this.twitterV2.userMentionTimeline(userId, {expansions: ['author_id'], max_results: 20, "user.fields": ['username', 'description', 'name']})
+      return response.data
     } catch (error) {
-      console.log("Oops! Unable to get Twitter user.")
+      console.log("Oops! Unable to recent mentions for nftsalesbot on Twitter.")
       console.log("Error:", error.message, '\n')
+      throw(error.message);
     }
   }
 }
