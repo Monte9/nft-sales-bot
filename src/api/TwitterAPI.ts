@@ -1,4 +1,5 @@
 import Twit from 'twit';
+import { getCurrentTime } from '../shared/Formatters';
 
 export default class TwitterAPI {
   consumer_key = null
@@ -29,7 +30,7 @@ export default class TwitterAPI {
         console.log(err)
         console.log("Oops! Unable to post the Tweet:", err.allErrors[0] && err.allErrors[0].message)
       } else {
-        console.log("Tweet Posted:", `https://twitter.com/${data.user.screen_name}/status/${data.id_str}\n`)
+        console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${data.user.screen_name}/status/${data.id_str}\n`)
       }
     })
   }

@@ -8,14 +8,14 @@ import { getCollectionFromSymbol } from "../../shared/Helpers";
 
 export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
   // Get an OpenSea Collection
-  const collection = getCollectionFromSymbol(CollectionSymbol.COOL);
+  const collection = getCollectionFromSymbol(CollectionSymbol.BAYC);
 
   // Create an OpenSea API instance using the Collection smart contract address
   const openSeaAPI = new OpenSeaAPI(collection.address)
 
   // Bored Ape BUG: USDC sale - Token 822
   // Cool Cat - Token 5943
-  const tokenID = '5943'
+  const tokenID = '822'
 
   try {
     const tokenSales = await openSeaAPI.fetchParsedSaleEvents(tokenID)
