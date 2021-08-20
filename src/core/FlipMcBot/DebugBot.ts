@@ -26,25 +26,25 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
       return
     }
 
-    // await twitterAPI.postTweet('Hello NFT World!')
+    await twitterAPI.userMentionTimeline();
 
-    const collections = await openSeaAPI.fetchParsedCollections()
-    console.log('You own:')
+    // const collections = await openSeaAPI.fetchParsedCollections();
+    // console.log('You own:')
 
-    collections.sort(function(firstCollection, secondCollection) {
-      if (firstCollection.ownedAssetCount == secondCollection.ownedAssetCount) {
-        return 0
-      } else if (firstCollection.ownedAssetCount < secondCollection.ownedAssetCount) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
+    // collections.sort(function(firstCollection, secondCollection) {
+    //   if (firstCollection.ownedAssetCount == secondCollection.ownedAssetCount) {
+    //     return 0
+    //   } else if (firstCollection.ownedAssetCount < secondCollection.ownedAssetCount) {
+    //     return 1;
+    //   } else {
+    //     return -1;
+    //   }
+    // });
 
-    collections.map((collection, index) => {
-      console.log(`- ${collection.ownedAssetCount}x ${collection.name}`)
-    })
-    console.log('')
+    // collections.map((collection, index) => {
+    //   console.log(`- ${collection.ownedAssetCount}x ${collection.name}`)
+    // })
+    // console.log('')
 
     try {
       const tweetText = await composeTweet({
@@ -54,7 +54,7 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
         coinbaseAPI
       })
 
-      console.log(tweetText, "\n")
+      // console.log(tweetText, "\n")
     } catch (error) {
       console.log("Unable to post Tweet:", error.message)
     }
