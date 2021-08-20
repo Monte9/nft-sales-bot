@@ -1,12 +1,13 @@
 import OpenSeaAPI from '../../api/OpenSeaAPI';
 import CoinbaseAPI from '../../api/CoinbaseAPI';
+import TwitterAPI from '../../api/TwitterAPI';
 
 import { composeTweet } from "../Twitter";
 
 import { CollectionSymbol } from "../../shared/Constants";
 import { getCollectionFromSymbol } from "../../shared/Helpers";
 
-export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
+export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI) {
   // Get an OpenSea Collection
   const collection = getCollectionFromSymbol(CollectionSymbol.BAYC);
 
@@ -25,6 +26,8 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
       return
     }
 
+    // await twitterAPI.postTweet('Hello NFT World!')
+
     const collections = await openSeaAPI.fetchParsedCollections()
     console.log('You own:')
 
@@ -41,6 +44,7 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
     collections.map((collection, index) => {
       console.log(`- ${collection.ownedAssetCount}x ${collection.name}`)
     })
+    console.log('')
 
     try {
       const tweetText = await composeTweet({
@@ -50,8 +54,7 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
         coinbaseAPI
       })
 
-      // console.log(tweetText, "\n")
-      // this.twitterAPI.postTweet(tweetText)
+      console.log(tweetText, "\n")
     } catch (error) {
       console.log("Unable to post Tweet:", error.message)
     }

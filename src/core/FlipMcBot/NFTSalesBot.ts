@@ -17,14 +17,14 @@ export default class NFTSalesBot {
   coinbaseAPI: CoinbaseAPI = null
 
   constructor() {
+    this.coinbaseAPI = new CoinbaseAPI();
+    
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
       process.env.TWITTER_API_SECRET_KEY,
       process.env.TWITTER_ACCESS_TOKEN,
       process.env.TWITTER_ACCESS_TOKEN_SECRET,
     )
-
-    this.coinbaseAPI = new CoinbaseAPI();
   }
 
   async start() {
@@ -32,7 +32,7 @@ export default class NFTSalesBot {
 
     // Runs the DebugBot in DEVELOPMENT environment
     if (process.env.NODE_ENV === "DEVELOPMENT") {
-      runDebugBot(this.coinbaseAPI)
+      runDebugBot(this.coinbaseAPI, this.twitterAPI)
       return
     }
 
@@ -112,7 +112,7 @@ export default class NFTSalesBot {
                     if (process.env.NODE_ENV === "DEVELOPMENT") {
                       console.log(tweetText)
                     } else {
-                      this.twitterAPI.postTweet(tweetText)
+                      await this.twitterAPI.postTweet(tweetText)
                     }
                   } catch (error) {
                     console.log("Unable to post Tweet:", error.message)

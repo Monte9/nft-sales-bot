@@ -1,37 +1,36 @@
-import Twit from 'twit';
+import TwitterApi from 'twitter-api-v2';
+import TwitterApiv1ReadWrite from 'twitter-api-v2/dist/v1/client.v1.write';
+import TwitterApiv2ReadWrite from 'twitter-api-v2/dist/v2/client.v2.write';
+
 import { getCurrentTime } from '../shared/Formatters';
 
 export default class TwitterAPI {
-  consumer_key = null
-  consumer_secret = null
-  access_token = null
-  access_token_secret = null
-  api = null
+  twitterV1: TwitterApiv1ReadWrite = null
+  twitterV2: TwitterApiv2ReadWrite = null
 
-  constructor(consumer_key, consumer_secret, access_token, access_token_secret) {
-    this.consumer_key = consumer_key;
-    this.consumer_secret = consumer_secret;
-    this.access_token = access_token;
-    this.access_token_secret = access_token_secret;
-
-    this.api = new Twit({
-      consumer_key: this.consumer_key,
-      consumer_secret: this.consumer_secret,
-      access_token: this.access_token,
-      access_token_secret: this.access_token_secret,
-      timeout_ms: 60 * 1000,
-      strictSSL: true,
+  constructor(apiKey, apiSecretKey, accessToken, accessTokenSecret) {
+    // Instantiate the TwitterAPI
+    const twitterClient = new TwitterApi({
+      appKey: apiKey,
+      appSecret: apiSecretKey,
+      accessToken: accessToken,
+      accessSecret: accessTokenSecret,
     });
+
+    this.twitterV1 = twitterClient.v1;
+    this.twitterV2 = twitterClient.v2;
   }
 
-  postTweet(content) {
-    this.api.post('statuses/update', { status: content }, function(err, data, response) {
-      if (err != null) {
-        console.log(err)
-        console.log("Oops! Unable to post the Tweet:", err.allErrors[0] && err.allErrors[0].message)
-      } else {
-        console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${data.user.screen_name}/status/${data.id_str}\n`)
-      }
-    })
+  async postTweet(content) {
+    try {
+      const tweet = await this.twitterV1.tweet(content)
+      console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.user.id_str}\n`)
+    } catch (error) {
+      console.log("Oops! Unable to post the Tweet.")
+      console.log("Error:", error.message, '\n')
+    }
+  }
+
+  async userMentionTimeline(userId: string) {
   }
 }
