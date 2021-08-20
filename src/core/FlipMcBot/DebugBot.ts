@@ -25,6 +25,23 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
       return
     }
 
+    const collections = await openSeaAPI.fetchParsedCollections()
+    console.log('You own:')
+
+    collections.sort(function(firstCollection, secondCollection) {
+      if (firstCollection.ownedAssetCount == secondCollection.ownedAssetCount) {
+        return 0
+      } else if (firstCollection.ownedAssetCount < secondCollection.ownedAssetCount) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+
+    collections.map((collection, index) => {
+      console.log(`- ${collection.ownedAssetCount}x ${collection.name}`)
+    })
+
     try {
       const tweetText = await composeTweet({
         collection,
@@ -33,7 +50,7 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
         coinbaseAPI
       })
 
-      console.log(tweetText, "\n")
+      // console.log(tweetText, "\n")
       // this.twitterAPI.postTweet(tweetText)
     } catch (error) {
       console.log("Unable to post Tweet:", error.message)
