@@ -2,7 +2,7 @@ import OpenSeaAPI from '../../api/OpenSeaAPI';
 import CoinbaseAPI from '../../api/CoinbaseAPI';
 import TwitterAPI from '../../api/TwitterAPI';
 
-import { composeTweet } from "../Twitter";
+import { composeReply, composeTweet } from "../Twitter";
 
 import { CollectionSymbol } from "../../shared/Constants";
 import { getCollectionFromSymbol } from "../../shared/Helpers";
@@ -29,25 +29,9 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
     const mentions = await twitterAPI.fetchParsedMentions();
     console.log('Got', mentions.length, 'mentions')
 
-    // this.postReply("Hi! I am indeed alive. 😊", incomingTweet.id)
+    const tweetText = await composeReply(mentions[0], openSeaAPI)
+    console.log(tweetText)
 
-    // const collections = await openSeaAPI.fetchParsedCollections();
-    // console.log('You own:')
-
-    // collections.sort(function(firstCollection, secondCollection) {
-    //   if (firstCollection.ownedAssetCount == secondCollection.ownedAssetCount) {
-    //     return 0
-    //   } else if (firstCollection.ownedAssetCount < secondCollection.ownedAssetCount) {
-    //     return 1;
-    //   } else {
-    //     return -1;
-    //   }
-    // });
-
-    // collections.map((collection, index) => {
-    //   console.log(`- ${collection.ownedAssetCount}x ${collection.name}`)
-    // })
-    // console.log('')
 
     try {
       const tweetText = await composeTweet({

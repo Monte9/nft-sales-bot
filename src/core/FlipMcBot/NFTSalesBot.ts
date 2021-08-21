@@ -2,20 +2,24 @@ import 'dotenv/config';
 
 import TwitterAPI from '../../api/TwitterAPI';
 import CoinbaseAPI from '../../api/CoinbaseAPI';
+import OpenSeaAPI from '../../api/OpenSeaAPI';
 
 import { runDebugBot } from './DebugBot';
 import { getCollectionsDataFromOpenSea, getMentionsDataFromOpenSea } from './Helpers';
 
-import { composeTweet } from '../Twitter';
+import { composeReply, composeTweet } from '../Twitter';
 
 import { Sale } from '../../types/OpenSeaSale';
 
 import { getCurrentTime } from '../../shared/Formatters';
 import { TwitterMention } from '../../types/NFTSalesBot';
+import { getCollectionFromSymbol, isError } from '../../shared/Helpers';
+import { CollectionSymbol } from '../../shared/Constants';
 
 export default class NFTSalesBot {
   twitterAPI: TwitterAPI = null
   coinbaseAPI: CoinbaseAPI = null
+  openSeaAPI: OpenSeaAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI();
@@ -44,6 +48,12 @@ export default class NFTSalesBot {
     console.log('\nMentions', mentionsData, '\n')
 
     let currentIndex = 0
+
+    // TODO - remove this for OpenSeaAPI
+    const collection = getCollectionFromSymbol(CollectionSymbol.BAYC);
+
+    // TODO - remoe this for OpenSeaAPI
+    this.openSeaAPI = new OpenSeaAPI(collection.address)
 
     // Run in Production
     while(true) {
@@ -78,8 +88,15 @@ export default class NFTSalesBot {
           });
 
           if (mention) {
-            console.log('Tweet Mention', mention)
-            this.twitterAPI.postReply("Hi! Thanks for reaching out. My owner @dearearth_ is doing some upgrades on me. Stay tuned!", mention.tweetId)
+            const tweetText = await composeReply(mention, this.openSeaAPI)
+
+            // Make sure Tweet text is not an error and it's not empty
+            if (!isError(tweetText) && String(tweetText).length > 0) {
+              // Empty newline for clean logs
+              console.log('')
+
+              this.twitterAPI.postReply(tweetText, mention.tweetId)
+            }
           }
         }
       }

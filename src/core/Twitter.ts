@@ -1,6 +1,7 @@
 import { ApiV2Includes, TweetV2, Tweetv2TimelineResult } from "twitter-api-v2";
 
 import CoinbaseAPI from "../api/CoinbaseAPI";
+import OpenSeaAPI from "../api/OpenSeaAPI";
 
 import { Collection, Sale } from "../types/OpenSeaSale";
 import { TweetAuthor, TwitterMention } from "../types/NFTSalesBot";
@@ -21,7 +22,7 @@ interface NamedParameters {
 }
 
 // Composes a tweet using the Sale information
-export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: NamedParameters): Promise<String | Error> {
+export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: NamedParameters): Promise<string | Error> {
   // Get Token ID & OpenSea Link
   const tokenId = sale.asset.tokenId
   const openSeaLink = sale.asset.link
@@ -158,4 +159,87 @@ export function parseMentions(mentions: Tweetv2TimelineResult): TwitterMention[]
 
     return acc;
   }, [])
+}
+
+// Compose a Reply for a Twitter Mention
+export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI): Promise<string | Error> {
+  let reply = ''
+
+  try {
+    const collections = await openSeaAPI.fetchParsedCollections();
+
+    const cryptoPunksCollection = collections.find(collection => {
+      if (collection.slug == 'cryptopunks') {
+        return true
+      } else {
+        return false
+      }
+    })
+  
+    const boredApesCollection = collections.find(collection => {
+      if (collection.slug == 'boredapeyachtclub') {
+        return true
+      } else {
+        return false
+      }
+    })
+  
+    const coolCatsNFTCollection = collections.find(collection => {
+      if (collection.slug == 'cool-cats-nft') {
+        return true
+      } else {
+        return false
+      }
+    })
+  
+    const meebitsCollection = collections.find(collection => {
+      if (collection.slug == 'meebits') {
+        return true
+      } else {
+        return false
+      }
+    })
+
+    if (mention.text.includes("floor")) {
+      reply = 'These are the current floor prices 🧹🧹🧹\n\n'
+      
+      if (cryptoPunksCollection) {
+        reply = reply + `🦹🏼 CryptoPunks: ${cryptoPunksCollection.stats.floorPrice} ETH\n`
+      }
+      
+      if (boredApesCollection) {
+        reply = reply + `🦍 Bored Apes YC: ${boredApesCollection.stats.floorPrice} ETH\n`
+      }
+      
+      if (coolCatsNFTCollection) {
+        reply = reply + `🐱 CoolCats NFT: ${coolCatsNFTCollection.stats.floorPrice} ETH\n`
+      }
+      
+      if (meebitsCollection) {
+        reply = reply + `🤖 Meebits: ${meebitsCollection.stats.floorPrice} ETH\n`
+      }
+    }
+  } catch (error) {
+    console.log("ERROR", error)
+    throw (error)
+  }
+  
+  // console.log('You own:')
+  // Sort Collection by most owned to least
+  // collections.sort(function(firstCollection, secondCollection) {
+  //   if (firstCollection.ownedAssetCount == secondCollection.ownedAssetCount) {
+  //     return 0
+  //   } else if (firstCollection.ownedAssetCount < secondCollection.ownedAssetCount) {
+  //     return 1;
+  //   } else {
+  //     return -1;
+  //   }
+  // });
+
+  // collections.map((collection, index) => {
+  //   console.log(`- ${collection.ownedAssetCount}x ${collection.slug}`)
+  // })
+  // console.log('')
+
+  return reply
 }
