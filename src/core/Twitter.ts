@@ -4,6 +4,7 @@ import CoinbaseAPI from "../api/CoinbaseAPI";
 import OpenSeaAPI from "../api/OpenSeaAPI";
 
 import { Collection, Sale } from "../types/OpenSeaSale";
+import { OpenSeaCollection } from "../types/OpenSeaCollection";
 import { TweetAuthor, TwitterMention } from "../types/NFTSalesBot";
 
 import { 
@@ -164,59 +165,103 @@ export function parseMentions(mentions: Tweetv2TimelineResult): TwitterMention[]
 // Compose a Reply for a Twitter Mention
 export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI): Promise<string | Error> {
   let reply = ''
+  let page = 0
+  const dearEarthWallet: string = '0x6e7592ff3C32c93A520A11020379d66Ab844Bf5B'
+  const jeremiahAllenWelchWallet: string = '0x58f7cdf32be333e5a5c7ff8097742ac5535b7a65'
+
+  let animetasCollection: OpenSeaCollection = null
+  let boredApesCollection: OpenSeaCollection = null
+  let coolCatsCollection: OpenSeaCollection = null
+  let meebitsCollection: OpenSeaCollection = null
+  let on1ForceCollection: OpenSeaCollection = null
 
   try {
-    const collections = await openSeaAPI.fetchParsedCollections();
+    while (!animetasCollection || !boredApesCollection || !coolCatsCollection) {
+      const collections = await openSeaAPI.fetchParsedCollections(dearEarthWallet, page)
 
-    const cryptoPunksCollection = collections.find(collection => {
-      if (collection.slug == 'cryptopunks') {
-        return true
-      } else {
-        return false
+      if (!collections || collections.length < 1) {
+        break
       }
-    })
-  
-    const boredApesCollection = collections.find(collection => {
-      if (collection.slug == 'boredapeyachtclub') {
-        return true
-      } else {
-        return false
+
+      animetasCollection = collections.find(collection => {
+        if (collection.slug == 'animetas') {
+          return true
+        } else {
+          return false
+        }
+      })
+
+      boredApesCollection = collections.find(collection => {
+        if (collection.slug == 'boredapeyachtclub') {
+          return true
+        } else {
+          return false
+        }
+      })
+    
+      coolCatsCollection = collections.find(collection => {
+        if (collection.slug == 'cool-cats-nft') {
+          return true
+        } else {
+          return false
+        }
+      })
+
+      // Increment the page to get the next set of collections
+      page = page + 1
+    }
+
+    // Reset page for next interation
+    page = 0
+
+    while (!meebitsCollection || !on1ForceCollection) {
+      const collections = await openSeaAPI.fetchParsedCollections(jeremiahAllenWelchWallet, page)
+
+      if (!collections || collections.length < 1) {
+        break
       }
-    })
-  
-    const coolCatsNFTCollection = collections.find(collection => {
-      if (collection.slug == 'cool-cats-nft') {
-        return true
-      } else {
-        return false
-      }
-    })
-  
-    const meebitsCollection = collections.find(collection => {
-      if (collection.slug == 'meebits') {
-        return true
-      } else {
-        return false
-      }
-    })
+
+      meebitsCollection = collections.find(collection => {
+        if (collection.slug == 'meebits') {
+          return true
+        } else {
+          return false
+        }
+      })
+
+      on1ForceCollection = collections.find(collection => {
+        if (collection.slug == '0n1-force') {
+          return true
+        } else {
+          return false
+        }
+      })
+
+      // Increment the page to get the next set of collections
+      page = page + 1
+    }
 
     if (mention.text.includes("floor")) {
       reply = 'These are the current floor prices 🧹🧹🧹\n\n'
-      
-      if (cryptoPunksCollection) {
-        reply = reply + `🦹🏼 CryptoPunks: ${cryptoPunksCollection.stats.floorPrice} ETH\n`
+
+      if (animetasCollection) {
+        reply = reply + `🦹🏼 Animetas: ${animetasCollection.stats.floorPrice} ETH\n`
       }
       
       if (boredApesCollection) {
         reply = reply + `🦍 Bored Apes YC: ${boredApesCollection.stats.floorPrice} ETH\n`
       }
       
-      if (coolCatsNFTCollection) {
-        reply = reply + `🐱 CoolCats NFT: ${coolCatsNFTCollection.stats.floorPrice} ETH\n`
+      if (coolCatsCollection) {
+        reply = reply + `🐱 CoolCats NFT: ${coolCatsCollection.stats.floorPrice} ETH\n`
       }
       
       if (meebitsCollection) {
         reply = reply + `🤖 Meebits: ${meebitsCollection.stats.floorPrice} ETH\n`
+      }
+
+      if (on1ForceCollection) {
+        reply = reply + `🦹🏼‍♂️ 0N1 Force: ${on1ForceCollection.stats.floorPrice} ETH\n`
       }
     }
   } catch (error) {

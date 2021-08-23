@@ -32,7 +32,6 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
     const tweetText = await composeReply(mentions[0], openSeaAPI)
     console.log(tweetText)
 
-
     try {
       const tweetText = await composeTweet({
         collection,
