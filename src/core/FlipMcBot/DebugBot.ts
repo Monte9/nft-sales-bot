@@ -5,7 +5,7 @@ import TwitterAPI from '../../api/TwitterAPI';
 import { composeReply, composeTweet } from "../Twitter";
 
 import { CollectionSymbol } from "../../shared/Constants";
-import { getCollectionFromSymbol } from "../../shared/Helpers";
+import { getCollectionFromSymbol, isError } from "../../shared/Helpers";
 
 export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI) {
   // Get an OpenSea Collection
@@ -13,6 +13,32 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
 
   // Create an OpenSea API instance using the Collection smart contract address
   const openSeaAPI = new OpenSeaAPI(collection.address)
+
+  // ------
+  // Floor Mentions Bot
+  // ------
+
+  try {
+    const mentions = await twitterAPI.fetchParsedMentions();
+    const mention = mentions[0]
+
+    console.log(`Got a mention from ${mention.author.username}`)
+    console.log(mention.text, '\n')
+    console.log('Getting floor prices for all collections', '\n')
+
+    const tweetText = await composeReply(mention, openSeaAPI)
+    if (!isError(tweetText) && String(tweetText).length > 0) {
+      console.log(tweetText, "\n")
+    }
+  } catch (error) {
+    console.log('Unable to get mentions from Twitter', error.message)
+  }
+
+  console.log(`-------------`)
+
+  // ------
+  // NFT Sales Bot
+  // ------
 
   // Bored Ape BUG: USDC sale - Token 822
   // Cool Cat - Token 5943
@@ -26,24 +52,17 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
       return
     }
 
-    const mentions = await twitterAPI.fetchParsedMentions();
-    console.log('Got', mentions.length, 'mentions')
+    console.log(`Got a new sale`, '\n')
 
-    const tweetText = await composeReply(mentions[0], openSeaAPI)
-    console.log(tweetText)
+    // Compose Tweet for NFT Sale
+    const newSalesTweet = await composeTweet({
+      collection,
+      purchase: tokenSales[1],
+      sale: tokenSales[0],
+      coinbaseAPI
+    })
 
-    try {
-      const tweetText = await composeTweet({
-        collection,
-        purchase: tokenSales[1],
-        sale: tokenSales[0],
-        coinbaseAPI
-      })
-
-      // console.log(tweetText, "\n")
-    } catch (error) {
-      console.log("Unable to post Tweet:", error.message)
-    }
+    console.log(newSalesTweet, "\n")
   } catch (error) {
     console.log(`Unable to get sales events for ${collection.name} #${tokenID}:`, error.message)
   }

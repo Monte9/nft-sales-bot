@@ -28,7 +28,7 @@ export default class TwitterAPI {
   async postTweet(content) {
     try {
       const tweet = await this.twitterV1.tweet(content)
-      console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.user.id_str}\n`)
+      console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}\n`)
     } catch (error) {
       console.log("Oops! Unable to post the Tweet.")
       console.log("Error:", error.message, '\n')

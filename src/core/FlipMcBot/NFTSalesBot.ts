@@ -80,6 +80,7 @@ export default class NFTSalesBot {
           const tweetMentionId = latestMentionIds[i]
 
           const mention = newMentions.find(mention => {
+            console.log(mention.tweetId, tweetMentionId)
             if (mention.tweetId == tweetMentionId) {
               return true
             } else {
@@ -88,9 +89,11 @@ export default class NFTSalesBot {
           });
 
           if (mention) {
-            const tweetText = await composeReply(mention, this.openSeaAPI)
+            console.log(`Got a mention from ${mention.author.username}`)
+            console.log(mention.text, '\n')
+            console.log('Getting floor prices for all collections', '\n')
 
-            console.log('Got a mention', mention, '\n')
+            const tweetText = await composeReply(mention, this.openSeaAPI)
 
             // Make sure Tweet text is not an error and it's not empty
             if (!isError(tweetText) && String(tweetText).length > 0) {

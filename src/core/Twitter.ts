@@ -208,6 +208,8 @@ export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaA
     })
   )
 
+  console.log('')
+
   const collections = Array.prototype.concat.apply([], allCollections)
 
   let animetasCollection = getCollectionFromSlug(collections, CollectionSlug.animetas)
@@ -253,6 +255,8 @@ export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaA
     if (on1ForceCollection) {
       reply = reply + `🦹🏼‍♂️ 0N1 Force: ${on1ForceCollection.stats.floorPrice} ETH\n`
     }
+  } else {
+    console.log("Mentioned tweet doesn't not include keywords: floor", '\n')
   }
   
   // console.log('You own:')
