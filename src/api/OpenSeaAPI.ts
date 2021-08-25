@@ -77,7 +77,7 @@ export default class OpenSeaAPI {
     }
 
     // If there are no collections returned - return an empty array
-    if (collections === null || collections.length < 1) {
+    if (collections === undefined || collections === null || collections.length < 1) {
       return []
     }
 
