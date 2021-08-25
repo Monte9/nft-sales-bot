@@ -13,7 +13,8 @@ import {
   getTotalDaysBetween, 
   getShortWalletAddress
 } from "../shared/Formatters";
-import { isError } from "../shared/Helpers";
+import { getCollectionFromSlug, isError } from "../shared/Helpers";
+import { CollectionSlug } from "../shared/Constants";
 
 interface NamedParameters {
   collection: Collection
@@ -165,108 +166,87 @@ export function parseMentions(mentions: Tweetv2TimelineResult): TwitterMention[]
 // Compose a Reply for a Twitter Mention
 export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI): Promise<string | Error> {
   let reply = ''
-  let page = 0
-  const dearEarthWallet: string = '0x6e7592ff3C32c93A520A11020379d66Ab844Bf5B'
-  const jeremiahAllenWelchWallet: string = '0x58f7cdf32be333e5a5c7ff8097742ac5535b7a65'
 
-  let animetasCollection: OpenSeaCollection = null
-  let boredApesCollection: OpenSeaCollection = null
-  let coolCatsCollection: OpenSeaCollection = null
-  let meebitsCollection: OpenSeaCollection = null
-  let on1ForceCollection: OpenSeaCollection = null
+  const wallets: string[] = [
+    // Dear Earth
+    // Animetas, Cool Cats
+    '0x6e7592ff3C32c93A520A11020379d66Ab844Bf5B',
+    // JeremiahAllenWelch
+    // Meebits, 0n1 Force
+    '0x58f7cdf32be333e5a5c7ff8097742ac5535b7a65',
+    // Bogeli
+    // Bored Apes & BAKC
+    '0x36991b237b1a2c2eafd94274f11e589d3c041c95',
+    // narendra
+    // Guttr Cats & Gutter Rats
+    '0x02c349ace1412e3ee40cc72f13ead686a7f08ae4'
+  ]
 
-  try {
-    while (!animetasCollection || !boredApesCollection || !coolCatsCollection) {
-      const collections = await openSeaAPI.fetchParsedCollections(dearEarthWallet, page)
+  const allCollections = await Promise.all(
+    wallets.map(async (address): Promise<OpenSeaCollection[] | null> => {
+      let page = 0
+      let pagedCollections: OpenSeaCollection[] = []
 
-      if (!collections || collections.length < 1) {
-        break
+      while(true) {
+        let collec = await openSeaAPI.fetchParsedCollections(address, page)
+
+        if (!collec || collec.length < 1) {
+          break
+        } else {
+          pagedCollections.push(...collec)
+          page = page + 1
+        }
       }
 
-      animetasCollection = collections.find(collection => {
-        if (collection.slug == 'animetas') {
-          return true
-        } else {
-          return false
-        }
-      })
+      return pagedCollections
+    })
+  )
 
-      boredApesCollection = collections.find(collection => {
-        if (collection.slug == 'boredapeyachtclub') {
-          return true
-        } else {
-          return false
-        }
-      })
+  const collections = Array.prototype.concat.apply([], allCollections)
+
+  let animetasCollection = getCollectionFromSlug(collections, CollectionSlug.animetas)
+  let boredApesKCCollection = getCollectionFromSlug(collections, CollectionSlug.boredapekennelclub)
+  let boredApesYCCollection = getCollectionFromSlug(collections, CollectionSlug.boredapeyachtclub)
+  let coolCatsCollection = getCollectionFromSlug(collections, CollectionSlug.coolcatsnft)
+  let gutterCatsCollection = getCollectionFromSlug(collections, CollectionSlug.guttercatgang)
+  let gutterRatsCollection = getCollectionFromSlug(collections, CollectionSlug.gutterrats)
+  let meebitsCollection = getCollectionFromSlug(collections, CollectionSlug.meebits)
+  let on1ForceCollection = getCollectionFromSlug(collections, CollectionSlug.on1force)
+
+  if (mention.text.includes("floor")) {
+    reply = 'These are the current floor prices 🧹\n\n'
+
+    if (animetasCollection) {
+      reply = reply + `🦹🏼 Animetas: ${animetasCollection.stats.floorPrice} ETH\n`
+    }
+
+    if (boredApesKCCollection) {
+      reply = reply + `🐕 Bored Apes KC: ${boredApesKCCollection.stats.floorPrice} ETH\n`
+    }
     
-      coolCatsCollection = collections.find(collection => {
-        if (collection.slug == 'cool-cats-nft') {
-          return true
-        } else {
-          return false
-        }
-      })
-
-      // Increment the page to get the next set of collections
-      page = page + 1
+    if (boredApesYCCollection) {
+      reply = reply + `🦍 Bored Apes YC: ${boredApesYCCollection.stats.floorPrice} ETH\n`
+    }
+    
+    if (coolCatsCollection) {
+      reply = reply + `🐱 CoolCats NFT: ${coolCatsCollection.stats.floorPrice} ETH\n`
     }
 
-    // Reset page for next interation
-    page = 0
-
-    while (!meebitsCollection || !on1ForceCollection) {
-      const collections = await openSeaAPI.fetchParsedCollections(jeremiahAllenWelchWallet, page)
-
-      if (!collections || collections.length < 1) {
-        break
-      }
-
-      meebitsCollection = collections.find(collection => {
-        if (collection.slug == 'meebits') {
-          return true
-        } else {
-          return false
-        }
-      })
-
-      on1ForceCollection = collections.find(collection => {
-        if (collection.slug == '0n1-force') {
-          return true
-        } else {
-          return false
-        }
-      })
-
-      // Increment the page to get the next set of collections
-      page = page + 1
+    if (gutterCatsCollection) {
+      reply = reply + `🐈 Gutter Cat Gang: ${gutterCatsCollection.stats.floorPrice} ETH\n`
     }
 
-    if (mention.text.includes("floor")) {
-      reply = 'These are the current floor prices 🧹🧹🧹\n\n'
-
-      if (animetasCollection) {
-        reply = reply + `🦹🏼 Animetas: ${animetasCollection.stats.floorPrice} ETH\n`
-      }
-      
-      if (boredApesCollection) {
-        reply = reply + `🦍 Bored Apes YC: ${boredApesCollection.stats.floorPrice} ETH\n`
-      }
-      
-      if (coolCatsCollection) {
-        reply = reply + `🐱 CoolCats NFT: ${coolCatsCollection.stats.floorPrice} ETH\n`
-      }
-      
-      if (meebitsCollection) {
-        reply = reply + `🤖 Meebits: ${meebitsCollection.stats.floorPrice} ETH\n`
-      }
-
-      if (on1ForceCollection) {
-        reply = reply + `🦹🏼‍♂️ 0N1 Force: ${on1ForceCollection.stats.floorPrice} ETH\n`
-      }
+    if (gutterRatsCollection) {
+      reply = reply + `🐀 Gutter Rats: ${gutterRatsCollection.stats.floorPrice} ETH\n`
     }
-  } catch (error) {
-    console.log("ERROR", error)
-    throw (error)
+    
+    if (meebitsCollection) {
+      reply = reply + `🤖 Meebits: ${meebitsCollection.stats.floorPrice} ETH\n`
+    }
+
+    if (on1ForceCollection) {
+      reply = reply + `🦹🏼‍♂️ 0N1 Force: ${on1ForceCollection.stats.floorPrice} ETH\n`
+    }
   }
   
   // console.log('You own:')

@@ -7,13 +7,25 @@ export enum CollectionSymbol {
   MEEB
 }
 
+export enum CollectionSlug {
+  animetas = "animetas",
+  boredapekennelclub = "bored-ape-kennel-club",
+  boredapeyachtclub = "boredapeyachtclub",
+  coolcatsnft = "cool-cats-nft",
+  cryptopunks = "cryptopunks",
+  meebits = "meebits",
+  on1force = "0n1-force",
+  guttercatgang = "guttercatgang",
+  gutterrats = "gutterrats",
+}
+
 export const NFT_COLLECTIONS: Collection[] = [
   {
     address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
     symbol: CollectionSymbol.BAYC,
     name: 'Bored Ape Yacht Club',
     twitterUsername: 'BoredApeYC',
-    slug: 'boredapeyachtclub',
+    slug: CollectionSlug.boredapeyachtclub,
     profitThreshold: 15000
   },
   {
@@ -21,7 +33,7 @@ export const NFT_COLLECTIONS: Collection[] = [
     symbol: CollectionSymbol.COOL,
     name: 'Cool Cats NFT',
     twitterUsername: 'coolcatsnft',
-    slug: 'cool-cats-nft',
+    slug: CollectionSlug.coolcatsnft,
     profitThreshold: 2000
   },
   {
@@ -29,7 +41,7 @@ export const NFT_COLLECTIONS: Collection[] = [
     symbol: CollectionSymbol.PUNK,
     name: 'CryptoPunks',
     twitterUsername: 'larvalabs',
-    slug: 'cryptopunks',
+    slug: CollectionSlug.cryptopunks,
     profitThreshold: 25000
   },
   {
@@ -37,7 +49,7 @@ export const NFT_COLLECTIONS: Collection[] = [
     symbol: CollectionSymbol.MEEB,
     name: 'Meebits',
     twitterUsername: 'larvalabs',
-    slug: 'meebits',
+    slug: CollectionSlug.meebits,
     profitThreshold: 5000
   }
 ];

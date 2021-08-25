@@ -1,11 +1,11 @@
-import { CollectionSymbol } from "../shared/Constants";
+import { CollectionSlug, CollectionSymbol } from "../shared/Constants";
 
 export interface Collection {
   address?: string
   symbol: CollectionSymbol
   name: string
   twitterUsername?: string
-  slug: string
+  slug: CollectionSlug
   profitThreshold?: number
 }
 

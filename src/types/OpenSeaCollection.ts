@@ -1,10 +1,10 @@
-import { CollectionSymbol } from "../shared/Constants";
+import { CollectionSlug, CollectionSymbol } from "../shared/Constants";
 
 export interface OpenSeaCollection {
   address: string
   name: string
   symbol: CollectionSymbol
-  slug: string
+  slug: CollectionSlug
   stats: CollectionStats
   ownedAssetCount: number
   twitterUsername?: string

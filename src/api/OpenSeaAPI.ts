@@ -76,9 +76,8 @@ export default class OpenSeaAPI {
       throw error
     }
 
-    // If there are no collection returned - throw an error
+    // If there are no collection returned - return an empty array
     if (collections == null || collections.length < 1) {
-      console.log(`No collections for wallet ${wallet} on page ${page}`)
       return []
     }
 
