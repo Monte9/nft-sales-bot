@@ -90,6 +90,8 @@ export default class NFTSalesBot {
           if (mention) {
             const tweetText = await composeReply(mention, this.openSeaAPI)
 
+            console.log('Got a mention', mention, '\n')
+
             // Make sure Tweet text is not an error and it's not empty
             if (!isError(tweetText) && String(tweetText).length > 0) {
               // Empty newline for clean logs

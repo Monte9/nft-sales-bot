@@ -76,10 +76,12 @@ export default class OpenSeaAPI {
       throw error
     }
 
-    // If there are no collection returned - return an empty array
-    if (collections == null || collections.length < 1) {
+    // If there are no collections returned - return an empty array
+    if (collections === null || collections.length < 1) {
       return []
     }
+
+    console.log(`Found ${collections.length} assets on page ${page} for wallet ${wallet}`)
 
     return parseCollections(collections)
   }

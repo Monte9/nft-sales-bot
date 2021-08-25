@@ -188,7 +188,13 @@ export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaA
       let pagedCollections: OpenSeaCollection[] = []
 
       while(true) {
-        let collec = await openSeaAPI.fetchParsedCollections(address, page)
+        let collec: OpenSeaCollection[] = []
+
+        try {
+          collec = await openSeaAPI.fetchParsedCollections(address, page)
+        } catch (error) {
+          break
+        }
 
         if (!collec || collec.length < 1) {
           break
