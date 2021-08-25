@@ -165,6 +165,10 @@ export function parseMentions(mentions: Tweetv2TimelineResult): TwitterMention[]
 
 // Compose a Reply for a Twitter Mention
 export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI): Promise<string | Error> {
+  if (!mention.text.includes("floor")) {
+    throw new Error("tweet does not include keywords - floor")
+  }
+
   let reply = ''
 
   const wallets: string[] = [
@@ -181,6 +185,8 @@ export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaA
     // Guttr Cats & Gutter Rats
     '0x02c349ace1412e3ee40cc72f13ead686a7f08ae4'
   ]
+
+  console.log('Getting floor prices for all collections', '\n')
 
   const allCollections = await Promise.all(
     wallets.map(async (address): Promise<OpenSeaCollection[] | null> => {
@@ -207,8 +213,6 @@ export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaA
       return pagedCollections
     })
   )
-
-  console.log('')
 
   const collections = Array.prototype.concat.apply([], allCollections)
 
@@ -255,8 +259,6 @@ export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaA
     if (on1ForceCollection) {
       reply = reply + `🦹🏼‍♂️ 0N1 Force: ${on1ForceCollection.stats.floorPrice} ETH\n`
     }
-  } else {
-    console.log("Mentioned tweet doesn't not include keywords: floor", '\n')
   }
   
   // console.log('You own:')

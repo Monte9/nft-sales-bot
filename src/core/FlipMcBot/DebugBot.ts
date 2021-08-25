@@ -22,16 +22,15 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
     const mentions = await twitterAPI.fetchParsedMentions();
     const mention = mentions[0]
 
-    console.log(`Got a mention from ${mention.author.username}`)
-    console.log(mention.text, '\n')
-    console.log('Getting floor prices for all collections', '\n')
+    console.log(`Got a mention from ${mention.author.username}: ${mention.text}`)
+    console.log(`https://twitter.com/${mention.author.username}/status/${mention.tweetId}`)
 
     const tweetText = await composeReply(mention, openSeaAPI)
     if (!isError(tweetText) && String(tweetText).length > 0) {
       console.log(tweetText, "\n")
     }
   } catch (error) {
-    console.log('Unable to get mentions from Twitter', error.message)
+    console.log('Unable to compose reply:', error.message)
   }
 
   console.log(`-------------`)
@@ -64,6 +63,6 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
 
     console.log(newSalesTweet, "\n")
   } catch (error) {
-    console.log(`Unable to get sales events for ${collection.name} #${tokenID}:`, error.message)
+    console.log(`Unable to compose tweet for ${collection.name} #${tokenID}:`, error.message)
   }
 };
