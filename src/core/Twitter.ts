@@ -3,8 +3,10 @@ import { ApiV2Includes, TweetV2, Tweetv2TimelineResult } from "twitter-api-v2";
 import CoinbaseAPI from "../api/CoinbaseAPI";
 import OpenSeaAPI from "../api/OpenSeaAPI";
 
+import { composeFloorPricesReply } from "./Twitter/FloorPrices";
+import { composePortfolioReply } from "./Twitter/Portfolio";
+
 import { Collection, Sale } from "../types/OpenSeaSale";
-import { OpenSeaCollection } from "../types/OpenSeaCollection";
 import { TweetAuthor, TwitterMention } from "../types/NFTSalesBot";
 
 import { 
@@ -13,8 +15,7 @@ import {
   getTotalDaysBetween, 
   getShortWalletAddress
 } from "../shared/Formatters";
-import { getCollectionFromSlug, isError } from "../shared/Helpers";
-import { CollectionSlug } from "../shared/Constants";
+import { isError } from "../shared/Helpers";
 
 interface NamedParameters {
   collection: Collection
@@ -164,119 +165,30 @@ export function parseMentions(mentions: Tweetv2TimelineResult): TwitterMention[]
 }
 
 // Compose a Reply for a Twitter Mention
-export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI): Promise<string | Error> {
-  if (!mention.text.includes("floor")) {
-    throw new Error("tweet does not include keywords - floor")
+export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI): Promise<string> {
+  const tweetText = mention.text.toLowerCase()
+  const floorKeyword = 'floor'.toLowerCase()
+  const portfolioKeyword = 'portfolio'.toLowerCase()
+
+  if (!tweetText.includes(floorKeyword) && !tweetText.includes(portfolioKeyword)) {
+    throw new Error(`tweet does not include keywords - ${floorKeyword}, ${portfolioKeyword}`)
   }
 
-  let reply = ''
-
-  const wallets: string[] = [
-    // Dear Earth
-    // Animetas, Cool Cats
-    '0x6e7592ff3C32c93A520A11020379d66Ab844Bf5B',
-    // JeremiahAllenWelch
-    // Meebits, 0n1 Force
-    '0x58f7cdf32be333e5a5c7ff8097742ac5535b7a65',
-    // Bogeli
-    // Bored Apes & BAKC
-    '0x36991b237b1a2c2eafd94274f11e589d3c041c95',
-    // narendra
-    // Guttr Cats & Gutter Rats
-    '0x02c349ace1412e3ee40cc72f13ead686a7f08ae4'
-  ]
-
-  console.log('Getting floor prices for all collections', '\n')
-
-  const allCollections = await Promise.all(
-    wallets.map(async (address): Promise<OpenSeaCollection[] | null> => {
-      let page = 0
-      let pagedCollections: OpenSeaCollection[] = []
-
-      while(true) {
-        let collec: OpenSeaCollection[] = []
-
-        try {
-          collec = await openSeaAPI.fetchParsedCollections(address, page)
-        } catch (error) {
-          break
-        }
-
-        if (!collec || collec.length < 1) {
-          break
-        } else {
-          pagedCollections.push(...collec)
-          page = page + 1
-        }
-      }
-
-      return pagedCollections
-    })
-  )
-
-  const collections = Array.prototype.concat.apply([], allCollections)
-
-  let animetasCollection = getCollectionFromSlug(collections, CollectionSlug.animetas)
-  let boredApesKCCollection = getCollectionFromSlug(collections, CollectionSlug.boredapekennelclub)
-  let boredApesYCCollection = getCollectionFromSlug(collections, CollectionSlug.boredapeyachtclub)
-  let coolCatsCollection = getCollectionFromSlug(collections, CollectionSlug.coolcatsnft)
-  let gutterCatsCollection = getCollectionFromSlug(collections, CollectionSlug.guttercatgang)
-  let gutterRatsCollection = getCollectionFromSlug(collections, CollectionSlug.gutterrats)
-  let meebitsCollection = getCollectionFromSlug(collections, CollectionSlug.meebits)
-  let on1ForceCollection = getCollectionFromSlug(collections, CollectionSlug.on1force)
+  let reply = 'Flip McBot is sleeping right now. Please try again later!'
 
   if (mention.text.includes("floor")) {
-    reply = 'These are the current floor prices 🧹\n\n'
-
-    if (animetasCollection) {
-      reply = reply + `🦹🏼 Animetas: ${animetasCollection.stats.floorPrice} ETH\n`
+    try {
+      reply = await composeFloorPricesReply(mention, openSeaAPI)
+    } catch (error) {
+      throw new Error(`unable to composeFloorPricesReply - ${error.message}`)
     }
-
-    if (boredApesKCCollection) {
-      reply = reply + `🐕 Bored Apes KC: ${boredApesKCCollection.stats.floorPrice} ETH\n`
-    }
-    
-    if (boredApesYCCollection) {
-      reply = reply + `🦍 Bored Apes YC: ${boredApesYCCollection.stats.floorPrice} ETH\n`
-    }
-    
-    if (coolCatsCollection) {
-      reply = reply + `🐱 CoolCats NFT: ${coolCatsCollection.stats.floorPrice} ETH\n`
-    }
-
-    if (gutterCatsCollection) {
-      reply = reply + `🐈 Gutter Cat Gang: ${gutterCatsCollection.stats.floorPrice} ETH\n`
-    }
-
-    if (gutterRatsCollection) {
-      reply = reply + `🐀 Gutter Rats: ${gutterRatsCollection.stats.floorPrice} ETH\n`
-    }
-    
-    if (meebitsCollection) {
-      reply = reply + `🤖 Meebits: ${meebitsCollection.stats.floorPrice} ETH\n`
-    }
-
-    if (on1ForceCollection) {
-      reply = reply + `🦹🏼‍♂️ 0N1 Force: ${on1ForceCollection.stats.floorPrice} ETH\n`
+  } else {
+    try {
+      reply = await composePortfolioReply(mention, openSeaAPI)
+    } catch (error) {
+      throw new Error(`unable to composePortfolioReply - ${error.message}`)
     }
   }
-  
-  // console.log('You own:')
-  // Sort Collection by most owned to least
-  // collections.sort(function(firstCollection, secondCollection) {
-  //   if (firstCollection.ownedAssetCount == secondCollection.ownedAssetCount) {
-  //     return 0
-  //   } else if (firstCollection.ownedAssetCount < secondCollection.ownedAssetCount) {
-  //     return 1;
-  //   } else {
-  //     return -1;
-  //   }
-  // });
-
-  // collections.map((collection, index) => {
-  //   console.log(`- ${collection.ownedAssetCount}x ${collection.slug}`)
-  // })
-  // console.log('')
 
   return reply
 }

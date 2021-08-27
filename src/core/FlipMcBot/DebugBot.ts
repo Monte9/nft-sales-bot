@@ -20,15 +20,14 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
 
   try {
     const mentions = await twitterAPI.fetchParsedMentions();
+    // Floor prices = mentions[9]
     const mention = mentions[0]
 
     console.log(`Got a mention from ${mention.author.username}: ${mention.text}`)
-    console.log(`https://twitter.com/${mention.author.username}/status/${mention.tweetId}`)
+    console.log(`https://twitter.com/${mention.author.username}/status/${mention.tweetId}`, '\n')
 
     const tweetText = await composeReply(mention, openSeaAPI)
-    if (!isError(tweetText) && String(tweetText).length > 0) {
-      console.log(tweetText, "\n")
-    }
+    console.log(tweetText)
   } catch (error) {
     console.log('Unable to compose reply:', error.message)
   }
