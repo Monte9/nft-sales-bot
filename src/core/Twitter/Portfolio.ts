@@ -3,6 +3,8 @@ import moment from 'moment-timezone';
 import OpenSeaAPI from "../../api/OpenSeaAPI"
 import CoinbaseAPI from "../../api/CoinbaseAPI"
 
+import { getWalletAddress } from '../ENS';
+
 import { TwitterMention } from "../../types/NFTSalesBot"
 import { OpenSeaCollection } from "../../types/OpenSeaCollection"
 
@@ -19,10 +21,17 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
     throw new Error(`missing ${portfolioKeyword} keyword`)
   }
 
-  // Dear Earth
-  const wallet = '0x6e7592ff3C32c93A520A11020379d66Ab844Bf5B'
+  let address = null
+  let reply = null
 
-  console.log(`Getting all collections for ${wallet}`)
+  try {
+    address = await getWalletAddress(mention);
+  } catch (error) {
+    reply = `Unable to get NFT portfolio data. Make sure to include a ENS or wallet address.`
+    return reply
+  }
+
+  console.log(`Getting all collections for ${address}`)
 
   let page = 0
   let allCollections: OpenSeaCollection[] = []
@@ -31,7 +40,7 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
     let collection: OpenSeaCollection[] = []
 
     try {
-      collection = await openSeaAPI.fetchParsedCollections(wallet, page)
+      collection = await openSeaAPI.fetchParsedCollections(address, page)
     } catch (error) {
       break
     }
@@ -46,7 +55,7 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
 
   console.log('')
 
-  let reply = 'You own the following NFTs\n'
+  reply = 'You own the following NFTs\n'
 
   // Sort Collection by most owned to least
   allCollections.sort(function(firstCollection, secondCollection) {
@@ -71,7 +80,6 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
 
   const todayDate = new Date()
   const dateFormat = moment().format('YYYY-MM-DD');
-  console.log(dateFormat)
 
   const ethUSDPrice = await coinbaseAPI.getUSDPriceForETH(dateFormat)
 
@@ -82,13 +90,13 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
   
   // Type cast the price to number
   const ethUSDPriceNumber = Number(ethUSDPrice)
-  console.log(ethUSDPriceNumber)
+  const roundedETHUSDPriceNumber = Math.round(ethUSDPriceNumber * 100) / 100
 
   cleanFilteredCollections.map((collection, index) => {
-    const ethValue = collection.ownedAssetCount * collection.stats.floorPrice
+    const ethValue = Math.round(collection.ownedAssetCount * collection.stats.floorPrice * 100) / 100
 
     portfolioValueETH = portfolioValueETH + ethValue
-    portfolioValueUSD = portfolioValueUSD + (portfolioValueETH * ethUSDPriceNumber)
+    portfolioValueUSD = portfolioValueUSD + (portfolioValueETH * roundedETHUSDPriceNumber)
 
     reply = reply + `- ${collection.ownedAssetCount}x ${collection.name} ~ ${ethValue} ETH\n`
   })
