@@ -16,7 +16,6 @@ export enum CollectionSlug {
   meebits = "meebits",
   on1force = "0n1-force",
   guttercatgang = "guttercatgang",
-  gutterrats = "gutterrats",
 }
 
 export const NFT_COLLECTIONS: Collection[] = [

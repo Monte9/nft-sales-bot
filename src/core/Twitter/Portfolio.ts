@@ -92,16 +92,36 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
   const ethUSDPriceNumber = Number(ethUSDPrice)
   const roundedETHUSDPriceNumber = Math.round(ethUSDPriceNumber * 100) / 100
 
-  cleanFilteredCollections.map((collection, index) => {
-    const ethValue = Math.round(collection.ownedAssetCount * collection.stats.floorPrice * 100) / 100
+  for (let index=0; index<cleanFilteredCollections.length; index++) {
+    if (index > 3) {
+      break
+    }
+
+    const collection = cleanFilteredCollections[index]
+
+    let floorPrice = collection.stats.floorPrice
+    if (collection.slug === CollectionSlug.cryptopunks) {
+      console.log('punks')
+      floorPrice = 120
+    }
+
+    const ethValue = Math.round(collection.ownedAssetCount * floorPrice * 100) / 100
 
     portfolioValueETH = portfolioValueETH + ethValue
     portfolioValueUSD = portfolioValueUSD + (portfolioValueETH * roundedETHUSDPriceNumber)
 
-    reply = reply + `- ${collection.ownedAssetCount}x ${collection.name} ~ ${ethValue} ETH\n`
-  })
+    console.log(collection.name)
+
+    if (index < 4) {
+      reply = reply + `- ${collection.ownedAssetCount}x ${collection.name} ~ ${ethValue} ETH\n`
+    }
+  }
+
   console.log('')
 
-  reply = reply + `\nYour portfolio floor is worth ${addCommas(portfolioValueETH)} ETH ($${addCommas(portfolioValueUSD)}) `
+  const roundedPortfolioValueETH = Math.round(portfolioValueETH)
+  const roundedPortfolioValueUSD = Math.round(portfolioValueUSD)
+
+  reply = reply + `\nYour portfolio floor is worth ${addCommas(roundedPortfolioValueETH)} ETH ($${addCommas(roundedPortfolioValueUSD)}) `
   return reply
 }

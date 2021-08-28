@@ -26,7 +26,7 @@ export async function composeFloorPricesReply(mention: TwitterMention, openSeaAP
     // Bored Apes & BAKC
     '0x36991b237b1a2c2eafd94274f11e589d3c041c95',
     // narendra
-    // Guttr Cats & Gutter Rats
+    // Gutter Cats
     '0x02c349ace1412e3ee40cc72f13ead686a7f08ae4'
   ]
 
@@ -67,7 +67,6 @@ export async function composeFloorPricesReply(mention: TwitterMention, openSeaAP
   let boredApesYCCollection = getCollectionFromSlug(collections, CollectionSlug.boredapeyachtclub)
   let coolCatsCollection = getCollectionFromSlug(collections, CollectionSlug.coolcatsnft)
   let gutterCatsCollection = getCollectionFromSlug(collections, CollectionSlug.guttercatgang)
-  let gutterRatsCollection = getCollectionFromSlug(collections, CollectionSlug.gutterrats)
   let meebitsCollection = getCollectionFromSlug(collections, CollectionSlug.meebits)
   let on1ForceCollection = getCollectionFromSlug(collections, CollectionSlug.on1force)
 
@@ -93,10 +92,6 @@ export async function composeFloorPricesReply(mention: TwitterMention, openSeaAP
     reply = reply + `🐈 Gutter Cat Gang: ${gutterCatsCollection.stats.floorPrice} ETH\n`
   }
 
-  if (gutterRatsCollection) {
-    reply = reply + `🐀 Gutter Rats: ${gutterRatsCollection.stats.floorPrice} ETH\n`
-  }
-  
   if (meebitsCollection) {
     reply = reply + `🤖 Meebits: ${meebitsCollection.stats.floorPrice} ETH\n`
   }
