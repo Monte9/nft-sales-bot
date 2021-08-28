@@ -3,6 +3,8 @@ import OpenSeaAPI from "../../api/OpenSeaAPI"
 import { TwitterMention } from "../../types/NFTSalesBot"
 import { OpenSeaCollection } from "../../types/OpenSeaCollection"
 
+import { CollectionSlug } from "../../shared/Constants"
+
 // Compose a Reply for a Twitter Mention - Portfolio
 export async function composePortfolioReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI): Promise<string> {
   const tweetText = mention.text.toLowerCase()
@@ -39,9 +41,7 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
 
   console.log('')
 
-  console.log('You own:')
-
-  let reply = 'Your NFT collection is worth 💰\nComing soon!'
+  let reply = 'You own the following NFTs\n\n'
 
   // Sort Collection by most owned to least
   allCollections.sort(function(firstCollection, secondCollection) {
@@ -54,10 +54,20 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
     }
   });
 
-  allCollections.map((collection, index) => {
-    console.log(`- ${collection.ownedAssetCount}x ${collection.slug}`)
+  const filteredCollections = allCollections.map((collection, index) => {
+    if (Object.values(CollectionSlug).includes(collection.slug)) {
+      return collection
+    }
+  })
+
+  const cleanFilteredCollections = filteredCollections.filter(collection => collection !== undefined)
+
+  cleanFilteredCollections.map((collection, index) => {
+    reply = reply + `- ${collection.ownedAssetCount}x ${collection.name}\n`
   })
   console.log('')
+
+  reply = reply + 'Your portfolio is worth ~$$$ (Coming soon)'
 
   return reply
 }

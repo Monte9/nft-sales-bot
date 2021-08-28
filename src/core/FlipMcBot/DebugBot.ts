@@ -20,8 +20,7 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
 
   try {
     const mentions = await twitterAPI.fetchParsedMentions();
-    // Floor prices = mentions[9]
-    const mention = mentions[0]
+    const mention = mentions[2]
 
     console.log(`Got a mention from ${mention.author.username}: ${mention.text}`)
     console.log(`https://twitter.com/${mention.author.username}/status/${mention.tweetId}`, '\n')
