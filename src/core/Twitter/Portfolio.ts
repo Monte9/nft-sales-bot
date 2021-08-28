@@ -101,8 +101,9 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
 
     let floorPrice = collection.stats.floorPrice
     if (collection.slug === CollectionSlug.cryptopunks) {
-      console.log('punks')
       floorPrice = 120
+    } else if (collection.slug === CollectionSlug.boredapeyachtclub) {
+      floorPrice = 50
     }
 
     const ethValue = Math.round(collection.ownedAssetCount * floorPrice * 100) / 100
