@@ -5,7 +5,7 @@ import TwitterAPI from '../../api/TwitterAPI';
 import { composeReply, composeTweet } from "../Twitter";
 
 import { CollectionSymbol } from "../../shared/Constants";
-import { getCollectionFromSymbol, isError } from "../../shared/Helpers";
+import { getCollectionFromSymbol } from "../../shared/Helpers";
 
 export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI) {
   // Get an OpenSea Collection
@@ -20,12 +20,12 @@ export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterA
 
   try {
     const mentions = await twitterAPI.fetchParsedMentions();
-    const mention = mentions[2]
+    const mention = mentions[0]
 
     console.log(`Got a mention from ${mention.author.username}: ${mention.text}`)
     console.log(`https://twitter.com/${mention.author.username}/status/${mention.tweetId}`, '\n')
 
-    const tweetText = await composeReply(mention, openSeaAPI)
+    const tweetText = await composeReply(mention, openSeaAPI, coinbaseAPI)
     console.log(tweetText)
   } catch (error) {
     console.log('Unable to compose reply:', error.message)

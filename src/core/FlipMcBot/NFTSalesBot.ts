@@ -92,7 +92,7 @@ export default class NFTSalesBot {
             console.log(`https://twitter.com/${mention.author.username}/status/${mention.tweetId}`)
 
             try {
-              const tweetText = await composeReply(mention, this.openSeaAPI)
+              const tweetText = await composeReply(mention, this.openSeaAPI, this.coinbaseAPI)
 
               // In DEVELOPMENT environment we don't want to tweet it
               // Just console log the Tweet text

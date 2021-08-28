@@ -165,7 +165,7 @@ export function parseMentions(mentions: Tweetv2TimelineResult): TwitterMention[]
 }
 
 // Compose a Reply for a Twitter Mention
-export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI): Promise<string> {
+export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI): Promise<string> {
   const tweetText = mention.text.toLowerCase()
   const floorKeyword = 'floor'.toLowerCase()
   const portfolioKeyword = 'portfolio'.toLowerCase()
@@ -184,7 +184,7 @@ export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaA
     }
   } else {
     try {
-      reply = await composePortfolioReply(mention, openSeaAPI)
+      reply = await composePortfolioReply(mention, openSeaAPI, coinbaseAPI)
     } catch (error) {
       throw new Error(`unable to composePortfolioReply - ${error.message}`)
     }

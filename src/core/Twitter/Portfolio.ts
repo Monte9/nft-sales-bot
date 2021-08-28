@@ -1,12 +1,17 @@
+import moment from 'moment-timezone';
+
 import OpenSeaAPI from "../../api/OpenSeaAPI"
+import CoinbaseAPI from "../../api/CoinbaseAPI"
 
 import { TwitterMention } from "../../types/NFTSalesBot"
 import { OpenSeaCollection } from "../../types/OpenSeaCollection"
 
 import { CollectionSlug } from "../../shared/Constants"
+import { isError } from '../../shared/Helpers';
+import { addCommas } from '../../shared/Formatters';
 
 // Compose a Reply for a Twitter Mention - Portfolio
-export async function composePortfolioReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI): Promise<string> {
+export async function composePortfolioReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI): Promise<string> {
   const tweetText = mention.text.toLowerCase()
   const portfolioKeyword = 'portfolio'.toLowerCase()
 
@@ -41,7 +46,7 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
 
   console.log('')
 
-  let reply = 'You own the following NFTs\n\n'
+  let reply = 'You own the following NFTs\n'
 
   // Sort Collection by most owned to least
   allCollections.sort(function(firstCollection, secondCollection) {
@@ -61,13 +66,34 @@ export async function composePortfolioReply(mention: TwitterMention, openSeaAPI:
   })
 
   const cleanFilteredCollections = filteredCollections.filter(collection => collection !== undefined)
+  let portfolioValueETH = 0
+  let portfolioValueUSD = 0
+
+  const todayDate = new Date()
+  const dateFormat = moment().format('YYYY-MM-DD');
+  console.log(dateFormat)
+
+  const ethUSDPrice = await coinbaseAPI.getUSDPriceForETH(dateFormat)
+
+  if (isError(ethUSDPrice)) {
+    console.log(`Today date: ${todayDate}`)
+    throw new Error("Unable to get ETH/USD value from Coinbase API\n")
+  }
+  
+  // Type cast the price to number
+  const ethUSDPriceNumber = Number(ethUSDPrice)
+  console.log(ethUSDPriceNumber)
 
   cleanFilteredCollections.map((collection, index) => {
-    reply = reply + `- ${collection.ownedAssetCount}x ${collection.name}\n`
+    const ethValue = collection.ownedAssetCount * collection.stats.floorPrice
+
+    portfolioValueETH = portfolioValueETH + ethValue
+    portfolioValueUSD = portfolioValueUSD + (portfolioValueETH * ethUSDPriceNumber)
+
+    reply = reply + `- ${collection.ownedAssetCount}x ${collection.name} ~ ${ethValue} ETH\n`
   })
   console.log('')
 
-  reply = reply + 'Your portfolio is worth ~$$$ (Coming soon)'
-
+  reply = reply + `\nYour portfolio floor is worth ${addCommas(portfolioValueETH)} ETH ($${addCommas(portfolioValueUSD)}) `
   return reply
 }
