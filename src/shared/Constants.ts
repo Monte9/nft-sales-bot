@@ -2,6 +2,7 @@ import { Collection } from "../types/OpenSeaSale"
 
 export enum CollectionSymbol {
   BAYC,
+  MAYC,
   COOL,
   PUNK,
   MEEB
@@ -11,6 +12,7 @@ export enum CollectionSlug {
   animetas = "animetas",
   boredapekennelclub = "bored-ape-kennel-club",
   boredapeyachtclub = "boredapeyachtclub",
+  mutantapeyachtclub = "mutantapeyachtclub",
   coolcatsnft = "cool-cats-nft",
   cryptopunks = "cryptopunks",
   meebits = "meebits",
@@ -26,6 +28,14 @@ export const NFT_COLLECTIONS: Collection[] = [
     twitterUsername: 'BoredApeYC',
     slug: CollectionSlug.boredapeyachtclub,
     profitThreshold: 15000
+  },
+  {
+    address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
+    symbol: CollectionSymbol.BAYC,
+    name: 'Mutant Ape Yacht Club',
+    twitterUsername: 'BoredApeYC',
+    slug: CollectionSlug.mutantapeyachtclub,
+    profitThreshold: 1000
   },
   {
     address: '0x1a92f7381b9f03921564a437210bb9396471050c',
