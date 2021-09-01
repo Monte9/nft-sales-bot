@@ -50,7 +50,7 @@ export default class TwitterAPI {
 
     // Get all mentions from Twitter
     try {
-      mentions = await this.userMentionTimeline()
+      // mentions = await this.userMentionTimeline()
     } catch (error) {
       throw error
     }
