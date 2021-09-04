@@ -57,56 +57,56 @@ export default class NFTSalesBot {
 
     // Run in Production
     while(true) {
-      let newMentions: TwitterMention[] = null;
-      let newMentionIds: string[] = []
+      // let newMentions: TwitterMention[] = null;
+      // let newMentionIds: string[] = []
 
-      try {
-        newMentions = await this.twitterAPI.fetchParsedMentions();
+      // try {
+      //   newMentions = await this.twitterAPI.fetchParsedMentions();
 
-        for (let i=0; i<newMentions.length; i++) {
-          newMentionIds.push(newMentions[i].tweetId)
-        }
-      } catch (error) {
-        console.log(`Unable to get Twitter Mentions @ ${getCurrentTime()}:`, error.message, '\n')
-      }
+      //   for (let i=0; i<newMentions.length; i++) {
+      //     newMentionIds.push(newMentions[i].tweetId)
+      //   }
+      // } catch (error) {
+      //   console.log(`Unable to get Twitter Mentions @ ${getCurrentTime()}:`, error.message, '\n')
+      // }
 
-      let latestMentionIds: string[] = newMentionIds.filter(id => !mentionsData.oldMentionIds.includes(id))
-        .concat(mentionsData.oldMentionIds.filter(id => !newMentionIds.includes(id)));
+      // let latestMentionIds: string[] = newMentionIds.filter(id => !mentionsData.oldMentionIds.includes(id))
+      //   .concat(mentionsData.oldMentionIds.filter(id => !newMentionIds.includes(id)));
 
-      if (latestMentionIds.length < 1) {
-        console.log(`${getCurrentTime()} - No new mentions!\n`)
-      } else {
-        for (let i=0; i<latestMentionIds.length; i++) {
-          const tweetMentionId = latestMentionIds[i]
+      // if (latestMentionIds.length < 1) {
+      //   console.log(`${getCurrentTime()} - No new mentions!\n`)
+      // } else {
+      //   for (let i=0; i<latestMentionIds.length; i++) {
+      //     const tweetMentionId = latestMentionIds[i]
 
-          const mention = newMentions.find(mention => {
-            if (mention.tweetId == tweetMentionId) {
-              return true
-            } else {
-              return false
-            }
-          });
+      //     const mention = newMentions.find(mention => {
+      //       if (mention.tweetId == tweetMentionId) {
+      //         return true
+      //       } else {
+      //         return false
+      //       }
+      //     });
 
-          if (mention) {
-            console.log(`Got a mention from ${mention.author.username}: ${mention.text}`)
-            console.log(`https://twitter.com/${mention.author.username}/status/${mention.tweetId}`)
+      //     if (mention) {
+      //       console.log(`Got a mention from ${mention.author.username}: ${mention.text}`)
+      //       console.log(`https://twitter.com/${mention.author.username}/status/${mention.tweetId}`)
 
-            try {
-              const tweetText = await composeReply(mention, this.openSeaAPI, this.coinbaseAPI)
+      //       try {
+      //         const tweetText = await composeReply(mention, this.openSeaAPI, this.coinbaseAPI)
 
-              // In DEVELOPMENT environment we don't want to tweet it
-              // Just console log the Tweet text
-              if (process.env.NODE_ENV === "DEVELOPMENT") {
-                console.log(tweetText)
-              } else {
-                await this.twitterAPI.postReply(tweetText, mention.tweetId)
-              }
-            } catch (error) {
-              console.log('Unable to compose reply:', error.message)
-            }
-          }
-        }
-      }
+      //         // In DEVELOPMENT environment we don't want to tweet it
+      //         // Just console log the Tweet text
+      //         if (process.env.NODE_ENV === "DEVELOPMENT") {
+      //           console.log(tweetText)
+      //         } else {
+      //           await this.twitterAPI.postReply(tweetText, mention.tweetId)
+      //         }
+      //       } catch (error) {
+      //         console.log('Unable to compose reply:', error.message)
+      //       }
+      //     }
+      //   }
+      // }
 
       // Get the index within the bounds of collectionData
       const collectionIndex = currentIndex % collectionsData.length
