@@ -20,10 +20,15 @@ export default class TwitterAPI {
 
   async postTweet(content) {
     try {
-      const tweet = await this.twitterV1.tweet(content)
-      console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}\n`)
+      // In DEVELOPMENT environment we don't want to post a tweet
+      // Just console.log the content instead
+      if (process.env.NODE_ENV === "DEVELOPMENT") {
+        console.log(content)
+      } else {
+        const tweet = await this.twitterV1.tweet(content)
+        console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}\n`)
+      }
     } catch (error) {
-      console.log("Oops! Unable to post the Tweet.")
       console.log("Error:", error.message, '\n')
     }
   }

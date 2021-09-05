@@ -1,34 +1,40 @@
 import OpenSeaAPI from '../api/OpenSeaAPI';
 import CoinbaseAPI from '../api/CoinbaseAPI';
+import TwitterAPI from '../api/TwitterAPI';
 
-import { composeTweet } from "./Twitter";
+import { composeTweet } from './Twitter';
 
 import { CollectionSlug } from '../types';
 
-import { getCollectionFromSlug } from "../shared/Helpers";
+import { getCollectionFromSlug } from '../shared/Helpers';
 
-export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI) {
+export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI) {
   const collection = getCollectionFromSlug(CollectionSlug.mutantapeyachtclub)
   const tokenID = '8495'
 
   try {
     const tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)
     
+    // If only 1 sale exists, it's not considered a FLIP - just ignore it
     if (tokenSales.length < 2) {
-      console.log(`${collection.name} #${tokenID} only has 1 sales event`, "\n")
+      console.log(`${collection.name} #${tokenID} only has 1 sales event`, '\n')
       return
     }
 
-    // Compose Tweet for NFT Sale
-    const newSalesTweet = await composeTweet({
-      collection,
-      purchase: tokenSales[1],
-      sale: tokenSales[0],
-      coinbaseAPI
-    })
+    try {
+      const newSalesTweet = await composeTweet({
+        collection,
+        purchase: tokenSales[1],
+        sale: tokenSales[0],
+        coinbaseAPI
+      })  
 
-    console.log(newSalesTweet, "\n")
+      // Post a tweet with sale information
+      await twitterAPI.postTweet(newSalesTweet)
+    } catch (error) {
+      console.log("Unable to post tweet:", error.message)
+    }
   } catch (error) {
-    console.log(`Unable to compose tweet for ${collection.name} #${tokenID}:`, error.message)
+    console.log(`Unable to get Sales Events for ${collection.name} #${tokenID}:`, error.message)
   }
 };
