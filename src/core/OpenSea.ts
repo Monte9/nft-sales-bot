@@ -5,6 +5,10 @@ export function parseSales(saleEvents): Sale[] {
   return saleEvents.reduce((acc, saleEvent) => {
     // Sometimes asset can be empty
     if (saleEvent.asset && saleEvent.transaction) {
+
+      // Uncomment the line below when adding a new collection
+      // console.log(saleEvent.asset)
+
       let collection: Collection = {
         address: saleEvent.asset.asset_contract.address,
         symbol: saleEvent.asset.asset_contract.symbol,

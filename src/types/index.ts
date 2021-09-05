@@ -3,7 +3,9 @@ export enum CollectionSlug {
   mutantapeyachtclub = "mutant-ape-yacht-club",
   coolcatsnft = "cool-cats-nft",
   cryptopunks = "cryptopunks",
-  dystopunksv2 = "dystopunks-v2"
+  dystopunksv2 = "dystopunks-v2",
+  loot = "lootproject",
+  bloot = "blootofficial",
 }
 
 export interface SalesBot {
