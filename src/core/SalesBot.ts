@@ -82,7 +82,7 @@ export default class NFTSalesBot {
           newSalesIds.push(newSale.saleId)
         })
       } catch (error) {
-        console.log(`Unable to get new sales events for ${currentCollection.collection.name} @ ${getCurrentTime()}:`, error.message, "\n")
+        console.log(`Unable to get new sales events for ${currentCollection.collection.symbol} @ ${getCurrentTime()}:`, error.message, "\n")
 
         // Delay the next OpenSea API call by 30 seconds
         console.log(`Waiting for 30 secs...\n`)
@@ -133,7 +133,7 @@ export default class NFTSalesBot {
 
               // If only 1 sale exists, it's not considered a FLIP - just ignore it
               if (tokenSales.length < 2) {
-                console.log(`${currentCollection.collection.name} #${tokenID} only has 1 sales event`, '\n')
+                console.log(`${currentCollection.collection.symbol} #${tokenID} only has 1 sales event`, '\n')
                 continue
               }
 
@@ -151,7 +151,7 @@ export default class NFTSalesBot {
                 console.log("Unable to post tweet:", error.message)
               }
             } catch (error) {
-              console.log(`Unable to get Sales Events for ${currentCollection.collection.name} #${tokenID}:`, error.message)
+              console.log(`Unable to get Sales Events for ${currentCollection.collection.symbol} #${tokenID}:`, error.message)
 
               // Delay the next OpenSea API call by 30 seconds
               console.log(`Waiting for 30 secs...\n`)

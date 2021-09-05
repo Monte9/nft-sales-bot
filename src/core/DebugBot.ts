@@ -17,7 +17,7 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
     
     // If only 1 sale exists, it's not considered a FLIP - just ignore it
     if (tokenSales.length < 2) {
-      console.log(`${collection.name} #${tokenID} only has 1 sales event`, '\n')
+      console.log(`${collection.symbol} #${tokenID} only has 1 sales event`, '\n')
       return
     }
 
@@ -35,6 +35,6 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
       console.log("Unable to post tweet:", error.message)
     }
   } catch (error) {
-    console.log(`Unable to get Sales Events for ${collection.name} #${tokenID}:`, error.message)
+    console.log(`Unable to get Sales Events for ${collection.symbol} #${tokenID}:`, error.message)
   }
 };

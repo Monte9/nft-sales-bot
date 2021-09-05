@@ -106,7 +106,7 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: 
   // Report all losses OR only if profit is > profitThreshold for the collection
   if (flipPercentageRounded > 0 && profitLossUSD < collection.profitThreshold) {
     const fomattedProfitThreshold = addCommas(collection.profitThreshold)
-    throw new Error(`Profit/Loss USD value for ${collection.name} ${tokenId} under $${fomattedProfitThreshold}\n${openSeaLink}\n`)
+    throw new Error(`profit for ${collection.symbol} #${tokenId} under $${fomattedProfitThreshold}\n${openSeaLink}\n`)
   }
 
   return tweetContent
