@@ -1,16 +1,18 @@
-import OpenSeaAPI from '../api/OpenSeaAPI';
 import CoinbaseAPI from '../api/CoinbaseAPI';
+import FloorAPI from '../api/FloorAPI';
+import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
 
 import { composeTweet } from './Twitter';
 
 import { CollectionSlug } from '../types';
 
-import { getCollectionFromSlug } from '../shared/Helpers';
+import { getCollectionFromSlug, getFloorPriceForCollection } from '../shared/Helpers';
 
-export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI) {
-  const collection = getCollectionFromSlug(CollectionSlug.cryptopunks)
-  const tokenID = '6110'
+export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI, floorAPI: FloorAPI) {
+  const collection = getCollectionFromSlug(CollectionSlug.boredapeyachtclub)
+  const tokenID = '951'
+  const floorPrice = await getFloorPriceForCollection(collection)
 
   try {
     const tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)
@@ -26,8 +28,9 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
         collection,
         purchase: tokenSales[1],
         sale: tokenSales[0],
-        coinbaseAPI
-      })  
+        coinbaseAPI,
+        floorPrice: floorPrice.currentFloor
+      })
 
       // Post a tweet with sale information
       await twitterAPI.postTweet(newSalesTweet)

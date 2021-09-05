@@ -14,11 +14,12 @@ interface NamedParameters {
   collection: Collection
   purchase: Sale
   sale: Sale
+  floorPrice: number
   coinbaseAPI: CoinbaseAPI
 }
 
 // Composes a tweet using the Sale information
-export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: NamedParameters): Promise<string> {
+export async function composeTweet({ collection, purchase, sale, coinbaseAPI, floorPrice }: NamedParameters): Promise<string> {
   // Get Token ID & OpenSea Link
   const tokenId = sale.asset.tokenId
   const openSeaLink = sale.asset.link
@@ -26,6 +27,8 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: 
   // Get rounded Bought & Sold price in ETH
   const boughtPrice = rounded(purchase.salePrice)
   const soldPrice = rounded(sale.salePrice)
+  const didSelldBelowFloor = sale.salePrice < floorPrice
+  console.log(`Floor price for ${collection.name} is ${floorPrice} ETH`)
 
   // Missing BoughtPrice or SoldPrice
   if (boughtPrice <= 0 || soldPrice <= 0) {
@@ -91,7 +94,7 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: 
   // Get Sale type
   const saleTypeEmoji = flipPercentageRounded > 0 ? '🏆' : '🥲'
   const saleTypeTitle = flipPercentageRounded > 0 ? 'FLIPPED' : 'FUMBLED'
-  const saleTypeInfo = getSaleTypeInfo(flipPercentageRounded, boughtPriceUSD, soldPriceUSD, hodlDays)
+  const saleTypeInfo = getSaleTypeInfo(flipPercentageRounded, boughtPriceUSD, soldPriceUSD, hodlDays, didSelldBelowFloor)
 
   // Format the Tweet content
   const intro = `${sellerName} ${saleTypeTitle} ${collection.symbol} #${tokenId}\n`
@@ -112,7 +115,17 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: 
   return tweetContent
 }
 
-function getSaleTypeInfo(flipPercentageRounded: number, boughtPriceUSD: number, soldPriceUSD: number, hodlDays: number) {
+function getSaleTypeInfo(flipPercentageRounded: number, boughtPriceUSD: number, soldPriceUSD: number, hodlDays: number, didSelldBelowFloor: boolean) {
+  // They accepted a bot offer below current floor price
+  if (didSelldBelowFloor) {
+    return 'Below Floor #NGMI'
+  }
+
+  // If Sold price < 40% of Bought price
+  if (soldPriceUSD <boughtPriceUSD * 0.4) {
+    return 'Noodle Hands'
+  }
+
   // If Sold price < 40% of Bought price
   if (soldPriceUSD <boughtPriceUSD * 0.4) {
     return 'Noodle Hands'
@@ -130,6 +143,11 @@ function getSaleTypeInfo(flipPercentageRounded: number, boughtPriceUSD: number, 
 
   // If sold price is 1.5 times bought price
   if (soldPriceUSD > boughtPriceUSD * 1.5) {
+    return 'Good Flip'
+  }
+
+  // If sold price is 5 times bought price
+  if (soldPriceUSD > boughtPriceUSD * 5) {
     return 'Expert Flipper'
   }
 

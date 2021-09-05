@@ -1,8 +1,9 @@
 import 'dotenv/config';
 
-import TwitterAPI from '../api/TwitterAPI';
 import CoinbaseAPI from '../api/CoinbaseAPI';
+import FloorAPI from '../api/FloorAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
+import TwitterAPI from '../api/TwitterAPI';
 
 import { runDebugBot } from './DebugBot';
 
@@ -12,15 +13,18 @@ import { Collection, Sale, SalesBot } from '../types';
 
 import { getCurrentTime } from '../shared/Formatters';
 import { NFT_COLLECTIONS } from '../shared/Constants';
+import { getFloorPriceForCollection } from '../shared/Helpers';
 
 export default class NFTSalesBot {
-  twitterAPI: TwitterAPI = null
   coinbaseAPI: CoinbaseAPI = null
+  floorAPI: FloorAPI = null
   openSeaAPI: OpenSeaAPI = null
+  twitterAPI: TwitterAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI();
     this.openSeaAPI = new OpenSeaAPI();
+    this.floorAPI = new FloorAPI();
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
@@ -35,12 +39,12 @@ export default class NFTSalesBot {
 
     // Runs DebugBot in DEVELOPMENT environment
     if (process.env.NODE_ENV === "DEVELOPMENT") {
-      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI)
+      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.floorAPI)
       return
     }
 
     const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI)
-    console.log('\nCollections', collectionsData, '\n')
+    console.log('\Initial Collections', collectionsData, '\n')
 
     let currentIndex = 0
 
@@ -143,9 +147,10 @@ export default class NFTSalesBot {
               try {
                 const tweetText = await composeTweet({
                   collection: currentCollection.collection,
-                  purchase: tokenSales[1], 
-                  sale: tokenSales[0], 
-                  coinbaseAPI: this.coinbaseAPI
+                  purchase: tokenSales[1],
+                  sale: tokenSales[0],
+                  coinbaseAPI: this.coinbaseAPI,
+                  floorPrice: currentCollection.floorPrice
                 })
 
                 // Post a tweet with sale information
@@ -198,7 +203,7 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
   let oldSales: Sale[] = null;
   let oldSalesIds: number[] = []
 
-  let salesBot = {
+  let salesBot: SalesBot = {
     collection,
     oldSalesIds
   }
@@ -215,6 +220,10 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
     console.log(`Unable to get sale events for ${collection.slug}:`, error.message, '\n')
     return salesBot
   }
+
+  // Set the floor price for the collection
+  const floorPrice = await getFloorPriceForCollection(collection)
+  salesBot.floorPrice = floorPrice.currentFloor
 
   // Update the oldSalesId on the salesBot
   salesBot.oldSalesIds = oldSalesIds

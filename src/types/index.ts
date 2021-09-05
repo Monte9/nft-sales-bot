@@ -9,6 +9,7 @@ export enum CollectionSlug {
 export interface SalesBot {
   collection: Collection
   oldSalesIds: number[]
+  floorPrice?: number
 }
 
 export interface Collection {
@@ -18,6 +19,7 @@ export interface Collection {
   twitterUsername?: string
   slug: CollectionSlug
   profitThreshold?: number
+  alternateNames: string[]
 }
 
 export interface Asset {
@@ -57,4 +59,12 @@ export interface Sale {
   salePrice: number
   saleId: number
   transaction: Transaction
+}
+
+export interface FloorPrice {
+  name?: string
+  currentFloor: number
+  lastUpdated?: string
+  activityUrl?: string
+  url?: string
 }
