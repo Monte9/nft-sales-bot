@@ -3,20 +3,25 @@ import fetch from 'node-fetch';
 import { isError } from '../shared/Helpers';
 
 export default class CoinbaseAPI {
+  // The URL for the /spot-price endpoint on Coinbase
+  spotPriceURL = 'https://api.coinbase.com/v2/prices/ETH-USD/spot';
 
+  // The request options for making a GET request
+  // Includes the x-api-key for OpenSea to bypass the rate limiting
+  getOptions = {
+    method: 'GET', 
+    headers: {
+      Accept: 'application/json',
+    }
+  };
+
+  // API: /v2/prices/ETH-USD/spot
   // https://developers.coinbase.com/api/v2#get-spot-price
-  async getUSDPriceForETH(date: string): Promise<number | Error> {
-    const url = 'https://api.coinbase.com/v2/prices/ETH-USD/spot';
+
+  async getUSDPriceForETH(date: string): Promise<number> {
     let params = `date=${date}`
 
-    const options = {
-      method: 'GET', 
-      headers: {
-        Accept: 'application/json'
-      }
-    };
-
-    const response = await fetch(`${url}?${params}`, options)
+    const response = await fetch(`${this.spotPriceURL}?${params}`, this.getOptions)
       .then(response => {
         if (response.status >= 200 && response.status <= 299) {
           return response.json();
@@ -29,12 +34,16 @@ export default class CoinbaseAPI {
       });
 
     if (isError(response)) {
-      return Error(response.message);
+      throw Error(response.message);
     } else if (!response || !response.data || !response.data.amount) {
-      return Error('Missing response data with USD value');
+      throw Error('missing USD/ETH price');
     }
 
     const amount = Number(response.data.amount)
+    if (amount <= 0) {
+      throw new Error("invalid ETH price")
+    }
+    
     return Math.round(amount)
   }
 }

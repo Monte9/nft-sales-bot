@@ -1,4 +1,4 @@
-import NFTSalesBot from "./core/FlipMcBot/NFTSalesBot"
+import NFTSalesBot from "./core/NFTSalesBot"
 
 // Create an instance of NFTSalesBot
 const flipMcBot = new NFTSalesBot()

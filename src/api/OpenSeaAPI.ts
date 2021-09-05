@@ -1,56 +1,31 @@
 import fetch from 'node-fetch';
 
 import { parseSales } from '../core/OpenSea';
+import { isError } from '../shared/Helpers';
 
-import { Sale } from '../types/OpenSeaSale';
+import { Sale } from '../types';
 
 export default class OpenSeaAPI {
-  smartContract: string = null
+  // The URL for the /events endpoint on OpenSea
+  eventsURL = 'https://api.opensea.io/api/v1/events';
 
-  constructor(smartContract) {
-    this.smartContract = smartContract
-  }
-
-  // API: v1/events
-
-  async fetchParsedSaleEvents(tokenId?: string): Promise<Sale[]> {
-    let response = null
-
-    // Get latest sale events from OpenSea
-    try {
-      response = await this.getSaleEvents(tokenId)
-    } catch (error) {
-      throw error
+  // The request options for making a GET request
+  // Includes the x-api-key for OpenSea to bypass the rate limiting
+  getOptions = {
+    method: 'GET', 
+    headers: {
+      Accept: 'application/json',
+      'x-api-key': process.env.OPENSEA_API_KEY,
     }
+  };
+
+  // API: /v1/events
+  // https://docs.opensea.io/reference/retrieving-asset-events
+
+  async fetchSaleEventsForCollection(collectionSlug: string): Promise<Sale[]> {
+    let params = `only_opensea=false&collection_slug=${collectionSlug}&event_type=successful&offset=0&limit=20`
     
-    const saleEvents = response && response.asset_events
-
-    // If there are no saleEvents - throw an error
-    if (saleEvents == null || saleEvents.length == 0) {
-      throw new Error(`Missing events from OpenSea api/v1/events - ${response.message}`)
-    }
-
-    return parseSales(saleEvents)
-  }
-  
-  private async getSaleEvents(tokenId?: string) {
-    const url = 'https://api.opensea.io/api/v1/events';
-    let params = `only_opensea=false&asset_contract_address=${this.smartContract}&event_type=successful&offset=0&limit=20`
-
-    // If tokenId exists, we want to get all sale events for just that specific token
-    if (tokenId) {
-      params = params + `&token_id=${Number(tokenId)}`
-    }
-    
-    const options = {
-      method: 'GET', 
-      headers: {
-        Accept: 'application/json',
-        'x-api-key': process.env.OPENSEA_API_KEY,
-      }
-    };
-
-    return await fetch(`${url}?${params}`, options)
+    const response = await fetch(`${this.eventsURL}?${params}`, this.getOptions)
       .then(response => {
         if (response.status >= 200 && response.status <= 299) {
           return response.json();
@@ -61,5 +36,37 @@ export default class OpenSeaAPI {
       .catch(error => {
         return Error(error);
       });
+
+    if (isError(response)) {
+      throw Error(response.message);
+    } else if (!response || !response.asset_events || response.asset_events.length == 0) {
+      throw Error('no sale events');
+    }
+
+    return parseSales(response.asset_events)
+  }
+
+  async fetchSaleEventsForToken(assetContractAddress: string, tokenId: string): Promise<Sale[]> {
+    let params = `only_opensea=false&asset_contract_address=${assetContractAddress}&token_id=${tokenId}&event_type=successful&offset=0&limit=20`
+    
+    const response = await fetch(`${this.eventsURL}?${params}`, this.getOptions)
+      .then(response => {
+        if (response.status >= 200 && response.status <= 299) {
+          return response.json();
+        } else {
+          return Error(response.statusText);
+        }
+      })
+      .catch(error => {
+        return Error(error);
+      });
+
+    if (isError(response)) {
+      throw Error(response.message);
+    } else if (!response || !response.asset_events || response.asset_events.length == 0) {
+      throw Error('no sale events');
+    }
+
+    return parseSales(response.asset_events)
   }
 }

@@ -1,8 +1,9 @@
-import { Collection, Asset, User, PaymentToken, Sale, Transaction } from "../types/OpenSeaSale";
+import { rounded } from "../shared/Formatters";
+import { Collection, Asset, User, PaymentToken, Sale, Transaction } from "../types";
 
 export function parseSales(saleEvents): Sale[] {
   return saleEvents.reduce((acc, saleEvent) => {
-    // Sometimes asset can be empty for some BAYC tokens
+    // Sometimes asset can be empty
     if (saleEvent.asset && saleEvent.transaction) {
       let collection: Collection = {
         address: saleEvent.asset.asset_contract.address,
@@ -36,7 +37,7 @@ export function parseSales(saleEvents): Sale[] {
           name: saleEvent.payment_token.name,
           imageUrl: saleEvent.payment_token.image_url,
           decimals: saleEvent.payment_token.decimals,
-          usdPrice: Math.round(Number(saleEvent.payment_token.usd_price) * 100) / 100
+          usdPrice: rounded(Number(saleEvent.payment_token.usd_price))
         } 
       }
 

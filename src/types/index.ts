@@ -1,8 +1,18 @@
-import { CollectionSlug, CollectionSymbol } from "../shared/Constants";
+export enum CollectionSlug {
+  boredapeyachtclub = "boredapeyachtclub",
+  mutantapeyachtclub = "mutant-ape-yacht-club",
+  coolcatsnft = "cool-cats-nft",
+  cryptopunks = "cryptopunks",
+}
+
+export interface SalesBot {
+  collection: Collection
+  oldSalesIds: number[]
+}
 
 export interface Collection {
-  address?: string
-  symbol: CollectionSymbol
+  address: string
+  symbol: string
   name: string
   twitterUsername?: string
   slug: CollectionSlug

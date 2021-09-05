@@ -4,8 +4,16 @@ export function addCommas(value: number): String {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
+export function rounded(value: number): number {
+  return Math.round(value * 100) / 100
+}
+
 export const getCurrentTime = (): string => {
   return moment.tz('Asia/Kolkata').format("MMM Do, hh:mm A")
+}
+
+export const getShortWalletAddress = (address): string => {
+  return address.slice(0, 6) + '..' + address.substr(address.length - 4)
 }
 
 export const getYMDaysBetween = (start: string, end: string): string => {
@@ -58,8 +66,4 @@ export const getTotalDaysBetween = (start: string, end: string): number => {
   // Typically we want to round down the days
   // We do this to match the duration.days() call
   return Math.floor(days)
-}
-
-export const getShortWalletAddress = (address): string => {
-  return address.slice(0, 6) + '..' + address.substr(address.length - 4)
 }

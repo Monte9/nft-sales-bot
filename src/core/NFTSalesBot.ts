@@ -1,19 +1,17 @@
 import 'dotenv/config';
 
-import TwitterAPI from '../../api/TwitterAPI';
-import CoinbaseAPI from '../../api/CoinbaseAPI';
-import OpenSeaAPI from '../../api/OpenSeaAPI';
+import TwitterAPI from '../api/TwitterAPI';
+import CoinbaseAPI from '../api/CoinbaseAPI';
+import OpenSeaAPI from '../api/OpenSeaAPI';
 
 import { runDebugBot } from './DebugBot';
-import { getCollectionsDataFromOpenSea } from './Helpers';
 
-import { composeTweet } from '../Twitter';
+import { composeTweet } from './Twitter';
 
-import { Sale } from '../../types/OpenSeaSale';
+import { Sale, SalesBot } from '../types';
 
-import { getCurrentTime } from '../../shared/Formatters';
-import { getCollectionFromSymbol } from '../../shared/Helpers';
-import { CollectionSymbol } from '../../shared/Constants';
+import { getCurrentTime } from '../shared/Formatters';
+import { NFT_COLLECTIONS } from '../shared/Constants';
 
 export default class NFTSalesBot {
   twitterAPI: TwitterAPI = null
@@ -22,13 +20,14 @@ export default class NFTSalesBot {
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI();
-    
+    this.openSeaAPI = new OpenSeaAPI();
+
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
       process.env.TWITTER_API_SECRET_KEY,
       process.env.TWITTER_ACCESS_TOKEN,
       process.env.TWITTER_ACCESS_TOKEN_SECRET,
-    )
+    );
   }
 
   async start() {
@@ -36,20 +35,14 @@ export default class NFTSalesBot {
 
     // Runs the DebugBot in DEVELOPMENT environment
     if (process.env.NODE_ENV === "DEVELOPMENT") {
-      runDebugBot(this.coinbaseAPI)
+      runDebugBot(this.openSeaAPI, this.coinbaseAPI)
       return
     }
 
-    const collectionsData = await getCollectionsDataFromOpenSea()
+    const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI)
     console.log('\nCollections', collectionsData, '\n')
 
     let currentIndex = 0
-
-    // TODO - remove this for OpenSeaAPI
-    const collection = getCollectionFromSymbol(CollectionSymbol.BAYC);
-
-    // TODO - remoe this for OpenSeaAPI
-    this.openSeaAPI = new OpenSeaAPI(collection.address)
 
     // Run in Production
     while(true) {
@@ -75,7 +68,7 @@ export default class NFTSalesBot {
       console.log(`Getting sales events for ${currentCollection.collection.name}`)
 
       try {
-        newSales = await currentCollection.openSeaAPI.fetchParsedSaleEvents()
+        newSales = await this.openSeaAPI.fetchSaleEventsForCollection(currentCollection.collection.slug)
 
         for (let i=0; i<newSales.length; i++) {
           newSalesIds.push(newSales[i].saleId)
@@ -106,7 +99,7 @@ export default class NFTSalesBot {
 
             if (latestSalesIds[i] === newSales[j].saleId) {
               try {
-                const tokenSales = await currentCollection.openSeaAPI.fetchParsedSaleEvents(tokenID)
+                const tokenSales = await this.openSeaAPI.fetchSaleEventsForToken(currentCollection.collection.address, tokenID)
 
                 if (tokenSales.length > 1) {
                   try {
@@ -157,4 +150,35 @@ export default class NFTSalesBot {
       currentIndex = currentIndex + 1
     }
   }
+}
+
+export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI): Promise<SalesBot[]> {
+  return await Promise.all(
+    NFT_COLLECTIONS.map(async (collection): Promise<SalesBot | null> => {
+      let oldSales: Sale[] = null;
+      let oldSalesIds: number[] = []
+  
+      let salesBot = {
+        collection,
+        oldSalesIds
+      }
+  
+      try {
+        oldSales = await openSeaAPI.fetchSaleEventsForCollection(collection.slug)
+        
+        for (let i=0; i<oldSales.length; i++) {
+          oldSalesIds.push(oldSales[i].saleId)
+        }
+  
+        console.log(`Got ${oldSales.length} sales events for ${collection.slug}`)
+      } catch (error) {
+        console.log(`Unable to get sale events for ${collection.slug}:`, error.message, '\n')
+        return salesBot
+      }
+  
+      // Update the oldSalesId on the salesBot
+      salesBot.oldSalesIds = oldSalesIds
+      return salesBot
+    })
+  )
 }

@@ -1,14 +1,12 @@
 ## NFT Sales Bot
 
-Beep Boop! I am a Twitter bot that tweets all NFT sales along with the profit/loss flip % for CryptoPunks, Bored Apes & Cool Cats.
+A Twitter bot reporting crazy flips and annualized returns for all blue-chip NFT projects.
 
 You can find me tweeting @ [Flip McBot](https://twitter.com/nftsalesbot)
 
 ### Getting Started
 
-This is a `Node` server with `Typescript`. It uses the `twit` npm package to post a Tweet with the NFT Sale information.
-
-We currently poll the `OpenSea` API every minute to get latest sales for `Bored Apes`, `Cool Cats`, `CryptoPunks` & `Meebits`.
+This is a `Node` server with `Typescript`. It polls the OpenSea `/v1/events` endpoint every 30 seconds to get the latest NFT sales for various collections. It then crunches the sale data and uses the `twitter-api-v2` package to post a Tweet.
 
 ### Setup
 
@@ -22,7 +20,7 @@ yarn start:dev
 
 ## Adding ENV Variables
 
-In order to post a tweet, you will need access to the Twitter Developer account. Without API valid keys you'll get the following error when running the app
+In order to post a tweet, you will need access to the Twitter Developer account. Without valid API keys you'll get the following error when running the app
 
 `Oops! Unable to post the Tweet: Invalid or expired token.`
 
