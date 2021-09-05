@@ -53,8 +53,8 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: 
   }
 
   // Get the bought & sold prices in USD
-  const boughtPriceUSD = purchase.salePrice * boughtPriceETH
-  const soldPriceUSD = sale.salePrice * soldPriceETH
+  const boughtPriceUSD = Math.round(purchase.salePrice * boughtPriceETH)
+  const soldPriceUSD = Math.round(sale.salePrice * soldPriceETH)
 
   // Get formatted ETH price for Bought & Sold dates
   const boughtPriceETHFormatted = addCommas(boughtPriceETH)
@@ -80,26 +80,28 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: 
   // Credit: Anonn.eth
   const annualizedReturns = flipPercentageRounded / hodlDays * 365
   const annualizedReturnsFormatted = addCommas(Math.round(rounded(annualizedReturns)))
-
-  // Get Twitter Username of the NFT Collection
-  let twitterUsername = sale.asset.collection.twitterUsername
-  if (!twitterUsername) {
-    twitterUsername = sale.asset.collection.name
-  }
+  const annualizedReturnsInfo = `💸 Annualized Returns: ${annualizedReturnsFormatted}%\n`
+  // TODO: not using annualizedReturnsInfo
 
   // Get Seller Username or Wallet address
   const seller = sale.seller
   const sellerWallet = getShortWalletAddress(seller.address)
   const sellerName = seller.username || sellerWallet
 
+  // Get Sale type
+  const saleTypeEmoji = flipPercentageRounded > 0 ? '🏆' : '🥲'
+  const saleTypeTitle = flipPercentageRounded > 0 ? 'FLIPPED' : 'FUMBLED'
+  const saleTypeInfo = getSaleTypeInfo(flipPercentageRounded, boughtPriceUSD, soldPriceUSD, hodlDays)
+
   // Format the Tweet content
-  const intro = `${sellerName} FLIPPED ${twitterUsername} #${tokenId}\n`
+  const intro = `${sellerName} ${saleTypeTitle} ${collection.symbol} #${tokenId}\n`
   const boughtInfo = `🛍 Bought: ${boughtPrice} ${sale.paymentToken.symbol} @ $${boughtPriceETHFormatted}/ETH\n`
   const soldInfo = `💰 Sold: ${soldPrice} ${sale.paymentToken.symbol} @ $${soldPriceETHFormatted}/ETH\n`
   const hodlInfo = `🤝 HODL Duration: ${hodlDuration}\n`
   const flipInfo = `${isProfitLossEmoji} ${isProfitLoss}: $${profitLossUSDFormatted} (${isProfitLossPercentageEmoji}${flipPercentageRoundedFormatted}%)\n`
-  const annualizedReturnsInfo = `💸 Annualized Returns: ${annualizedReturnsFormatted}%\n`
-  const tweetContent = intro + '\n' + boughtInfo + soldInfo + hodlInfo + flipInfo + '\n' + annualizedReturnsInfo + openSeaLink
+  
+  const status = `${saleTypeEmoji} Status: ${saleTypeInfo}\n`
+  const tweetContent = intro + '\n' + status + '\n' + boughtInfo + soldInfo + '\n' + hodlInfo + flipInfo + openSeaLink
 
   // Report all losses OR only if profit is > profitThreshold for the collection
   if (flipPercentageRounded > 0 && profitLossUSD < collection.profitThreshold) {
@@ -108,4 +110,28 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: 
   }
 
   return tweetContent
+}
+
+function getSaleTypeInfo(flipPercentageRounded: number, boughtPriceUSD: number, soldPriceUSD: number, hodlDays: number) {
+  // If Sold price < 40% of Bought price
+  if (soldPriceUSD <boughtPriceUSD * 0.4) {
+    return 'Noodle Hands'
+  }
+
+  // If it's a loss
+  if (flipPercentageRounded < 0) {
+    return 'Paper Hands'
+  }
+
+  // If sold price is 1.5 times bought price
+  if (soldPriceUSD > boughtPriceUSD * 1.5) {
+    return 'Expert Flipper'
+  }
+
+  // If HODL duration is more than 90 days (3 months)
+  if (hodlDays > 90) {
+    return 'Diamond Hands'
+  }
+
+  return 'Noob Flipper'
 }
