@@ -9,8 +9,8 @@ import { CollectionSlug } from '../types';
 import { getCollectionFromSlug } from '../shared/Helpers';
 
 export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI) {
-  const collection = getCollectionFromSlug(CollectionSlug.dystopunksv2)
-  const tokenID = '1123'
+  const collection = getCollectionFromSlug(CollectionSlug.cryptopunks)
+  const tokenID = '6110'
 
   try {
     const tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)

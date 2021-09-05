@@ -123,14 +123,14 @@ function getSaleTypeInfo(flipPercentageRounded: number, boughtPriceUSD: number, 
     return 'Paper Hands'
   }
 
-  // If sold price is 1.5 times bought price
-  if (soldPriceUSD > boughtPriceUSD * 1.5) {
-    return 'Expert Flipper'
-  }
-
   // If HODL duration is more than 90 days (3 months)
   if (hodlDays > 90) {
     return 'Diamond Hands'
+  }
+
+  // If sold price is 1.5 times bought price
+  if (soldPriceUSD > boughtPriceUSD * 1.5) {
+    return 'Expert Flipper'
   }
 
   return 'Noob Flipper'
