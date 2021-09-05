@@ -1,13 +1,6 @@
-import { ApiV2Includes, TweetV2, Tweetv2TimelineResult } from "twitter-api-v2";
-
 import CoinbaseAPI from "../api/CoinbaseAPI";
-import OpenSeaAPI from "../api/OpenSeaAPI";
-
-import { composeFloorPricesReply } from "./Twitter/FloorPrices";
-import { composePortfolioReply } from "./Twitter/Portfolio";
 
 import { Collection, Sale } from "../types/OpenSeaSale";
-import { TweetAuthor, TwitterMention } from "../types/NFTSalesBot";
 
 import { 
   addCommas, 
@@ -126,69 +119,4 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI }: 
   }
 
   return tweetContent
-}
-
-export function parseMentions(mentions: Tweetv2TimelineResult): TwitterMention[] {
-  const tweets: TweetV2[] = mentions.data
-  const includes: ApiV2Includes = mentions.includes
-
-  return tweets.reduce((acc, tweet) => {
-    // Ensure Tweet has ID and the includes array is not empty
-    if (tweet.id && includes) {
-      // Find the Author of the tweet
-      const authorUser = includes.users.find(user => {
-        if (user.id == tweet.author_id) {
-          return true
-        } else {
-          return false
-        }
-      })
-
-      let author: TweetAuthor = {
-        id: authorUser.id,
-        username: authorUser.username,
-        description: authorUser.description,
-        name: authorUser.name
-      }
-
-      const twitterMention: TwitterMention = {
-        authorId: tweet.author_id,
-        tweetId: tweet.id,
-        text: tweet.text,
-        author
-      }
-      acc.push(twitterMention)
-    }
-
-    return acc;
-  }, [])
-}
-
-// Compose a Reply for a Twitter Mention
-export async function composeReply(mention: TwitterMention, openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI): Promise<string> {
-  const tweetText = mention.text.toLowerCase()
-  const floorKeyword = 'floor'.toLowerCase()
-  const portfolioKeyword = 'portfolio'.toLowerCase()
-
-  if (!tweetText.includes(floorKeyword) && !tweetText.includes(portfolioKeyword)) {
-    throw new Error(`tweet does not include keywords - ${floorKeyword}, ${portfolioKeyword}`)
-  }
-
-  let reply = 'Flip McBot is sleeping right now. Please try again later!'
-
-  if (mention.text.includes("floor")) {
-    try {
-      reply = await composeFloorPricesReply(mention, openSeaAPI)
-    } catch (error) {
-      throw new Error(`unable to composeFloorPricesReply - ${error.message}`)
-    }
-  } else {
-    try {
-      reply = await composePortfolioReply(mention, openSeaAPI, coinbaseAPI)
-    } catch (error) {
-      throw new Error(`unable to composePortfolioReply - ${error.message}`)
-    }
-  }
-
-  return reply
 }

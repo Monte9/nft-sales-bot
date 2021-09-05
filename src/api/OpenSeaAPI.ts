@@ -1,8 +1,7 @@
 import fetch from 'node-fetch';
 
-import { parseCollections, parseSales } from '../core/OpenSea';
+import { parseSales } from '../core/OpenSea';
 
-import { OpenSeaCollection } from '../types/OpenSeaCollection';
 import { Sale } from '../types/OpenSeaSale';
 
 export default class OpenSeaAPI {
@@ -43,54 +42,6 @@ export default class OpenSeaAPI {
       params = params + `&token_id=${Number(tokenId)}`
     }
     
-    const options = {
-      method: 'GET', 
-      headers: {
-        Accept: 'application/json',
-        'x-api-key': process.env.OPENSEA_API_KEY,
-      }
-    };
-
-    return await fetch(`${url}?${params}`, options)
-      .then(response => {
-        if (response.status >= 200 && response.status <= 299) {
-          return response.json();
-        } else {
-          return Error(response.statusText);
-        }
-      })
-      .catch(error => {
-        return Error(error);
-      });
-  }
-
-  // API: v1/collections
-
-  async fetchParsedCollections(wallet: string, page: number = 0): Promise<OpenSeaCollection[]> {
-    let collections = null
-
-    // Get all collections from OpenSea
-    try {
-      collections = await this.getCollections(wallet, page)
-    } catch (error) {
-      throw error
-    }
-
-    // If there are no collections returned - return an empty array
-    if (collections === undefined || collections === null || collections.length < 1) {
-      return []
-    }
-
-    console.log(`Found ${collections.length} assets on page ${page} for wallet ${wallet}`)
-
-    return parseCollections(collections)
-  }
-
-  private async getCollections(wallet: string, page: number) {
-    const limit = 300
-    const url = 'https://api.opensea.io/api/v1/collections';
-    const params = `asset_owner=${wallet}&offset=${page * limit}&limit=${limit}`
-
     const options = {
       method: 'GET', 
       headers: {

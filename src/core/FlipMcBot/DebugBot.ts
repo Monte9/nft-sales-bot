@@ -1,41 +1,17 @@
 import OpenSeaAPI from '../../api/OpenSeaAPI';
 import CoinbaseAPI from '../../api/CoinbaseAPI';
-import TwitterAPI from '../../api/TwitterAPI';
 
-import { composeReply, composeTweet } from "../Twitter";
+import { composeTweet } from "../Twitter";
 
 import { CollectionSymbol } from "../../shared/Constants";
 import { getCollectionFromSymbol } from "../../shared/Helpers";
 
-export async function runDebugBot(coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI) {
+export async function runDebugBot(coinbaseAPI: CoinbaseAPI) {
   // Get an OpenSea Collection
   const collection = getCollectionFromSymbol(CollectionSymbol.BAYC);
 
   // Create an OpenSea API instance using the Collection smart contract address
   const openSeaAPI = new OpenSeaAPI(collection.address)
-
-  // ------
-  // Floor Mentions Bot
-  // ------
-
-  try {
-    const mentions = await twitterAPI.fetchParsedMentions();
-    const mention = mentions[0]
-
-    console.log(`Got a mention from ${mention.author.username}: ${mention.text}`)
-    console.log(`https://twitter.com/${mention.author.username}/status/${mention.tweetId}`, '\n')
-
-    const tweetText = await composeReply(mention, openSeaAPI, coinbaseAPI)
-    console.log(tweetText)
-  } catch (error) {
-    console.log('Unable to compose reply:', error.message)
-  }
-
-  console.log(`-------------`)
-
-  // ------
-  // NFT Sales Bot
-  // ------
 
   // Bored Ape BUG: USDC sale - Token 822
   // Cool Cat - Token 5943

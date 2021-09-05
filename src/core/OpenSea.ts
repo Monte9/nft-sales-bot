@@ -1,4 +1,3 @@
-import { CollectionStats, OpenSeaCollection } from "../types/OpenSeaCollection";
 import { Collection, Asset, User, PaymentToken, Sale, Transaction } from "../types/OpenSeaSale";
 
 export function parseSales(saleEvents): Sale[] {
@@ -61,33 +60,6 @@ export function parseSales(saleEvents): Sale[] {
       }
 
       acc.push(sale)
-    }
-
-    return acc;
-  }, [])
-}
-
-export function parseCollections(collections): OpenSeaCollection[] {
-  return collections.reduce((acc, collection) => {
-    // Ensure the primary_asset_contracts & stats exists
-    if (collection.primary_asset_contracts.length > 0 && collection.stats) {
-      let stats: CollectionStats = {
-        floorPrice: collection.stats.floor_price
-      }
-
-      const assetContract = collection.primary_asset_contracts[0]
-
-      const openSeaCollection: OpenSeaCollection = {
-        address: assetContract.address,
-        name: assetContract.name,
-        symbol: assetContract.symbol,
-        slug: collection.slug,
-        twitterUsername: collection.twitter_username,
-        ownedAssetCount: collection.owned_asset_count,
-        stats
-      }
-
-      acc.push(openSeaCollection)
     }
 
     return acc;
