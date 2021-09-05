@@ -7,7 +7,7 @@ export const NFT_COLLECTIONS: Collection[] = [
     name: 'Bored Ape Yacht Club',
     twitterUsername: 'BoredApeYC',
     slug: CollectionSlug.boredapeyachtclub,
-    profitThreshold: 15000
+    profitThreshold: 20000
   },
   {
     address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
@@ -15,7 +15,7 @@ export const NFT_COLLECTIONS: Collection[] = [
     name: 'Mutant Ape Yacht Club',
     twitterUsername: 'BoredApeYC',
     slug: CollectionSlug.mutantapeyachtclub,
-    profitThreshold: 1000
+    profitThreshold: 3000
   },
   {
     address: '0x1a92f7381b9f03921564a437210bb9396471050c',
@@ -23,7 +23,7 @@ export const NFT_COLLECTIONS: Collection[] = [
     name: 'Cool Cats NFT',
     twitterUsername: 'coolcatsnft',
     slug: CollectionSlug.coolcatsnft,
-    profitThreshold: 2000
+    profitThreshold: 5000
   },
   {
     address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
@@ -31,6 +31,14 @@ export const NFT_COLLECTIONS: Collection[] = [
     name: 'CryptoPunks',
     twitterUsername: 'larvalabs',
     slug: CollectionSlug.cryptopunks,
-    profitThreshold: 25000
+    profitThreshold: 30000
+  },
+  {
+    address: '0xbea8123277142de42571f1fac045225a1d347977',
+    symbol: 'DYSTO',
+    name: 'DystoPunks V2',
+    twitterUsername: 'DystoPunks',
+    slug: CollectionSlug.dystopunksv2,
+    profitThreshold: 2000
   },
 ];
