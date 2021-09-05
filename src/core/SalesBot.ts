@@ -8,7 +8,7 @@ import { runDebugBot } from './DebugBot';
 
 import { composeTweet } from './Twitter';
 
-import { Sale, SalesBot } from '../types';
+import { Collection, Sale, SalesBot } from '../types';
 
 import { getCurrentTime } from '../shared/Formatters';
 import { NFT_COLLECTIONS } from '../shared/Constants';
@@ -58,6 +58,9 @@ export default class NFTSalesBot {
       // Make sure we have oldSaleIds for the currect collection
       if (currentCollection.oldSalesIds.length <= 0) {
         console.log(`Missing oldSalesIds for ${currentCollection.collection.name}`)
+
+        // Update the missing collection again
+        collectionsData[collectionIndex] = await getCollectionData(currentCollection.collection, this.openSeaAPI)
 
         // Delay the next OpenSea API call by 30 seconds
         console.log(`Waiting for 30 secs...\n`)
@@ -184,30 +187,36 @@ export default class NFTSalesBot {
 export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI): Promise<SalesBot[]> {
   return await Promise.all(
     NFT_COLLECTIONS.map(async (collection): Promise<SalesBot> => {
-      let oldSales: Sale[] = null;
-      let oldSalesIds: number[] = []
-  
-      let salesBot = {
-        collection,
-        oldSalesIds
-      }
-  
-      try {
-        oldSales = await openSeaAPI.fetchSaleEventsForCollection(collection.slug)
-        
-        for (let i=0; i<oldSales.length; i++) {
-          oldSalesIds.push(oldSales[i].saleId)
-        }
-  
-        console.log(`Got ${oldSales.length} sales events for ${collection.slug}`)
-      } catch (error) {
-        console.log(`Unable to get sale events for ${collection.slug}:`, error.message, '\n')
-        return salesBot
-      }
-  
-      // Update the oldSalesId on the salesBot
-      salesBot.oldSalesIds = oldSalesIds
-      return salesBot
+      return getCollectionData(collection, openSeaAPI)
     })
   )
+}
+
+// Gets the oldSales events for all Collections
+// Used to initialize the bot and build a Collection object
+export async function getCollectionData(collection: Collection, openSeaAPI: OpenSeaAPI): Promise<SalesBot> {
+  let oldSales: Sale[] = null;
+  let oldSalesIds: number[] = []
+
+  let salesBot = {
+    collection,
+    oldSalesIds
+  }
+
+  try {
+    oldSales = await openSeaAPI.fetchSaleEventsForCollection(collection.slug)
+    
+    for (let i=0; i<oldSales.length; i++) {
+      oldSalesIds.push(oldSales[i].saleId)
+    }
+
+    console.log(`Got ${oldSales.length} sales events for ${collection.slug}`)
+  } catch (error) {
+    console.log(`Unable to get sale events for ${collection.slug}:`, error.message, '\n')
+    return salesBot
+  }
+
+  // Update the oldSalesId on the salesBot
+  salesBot.oldSalesIds = oldSalesIds
+  return salesBot
 }
