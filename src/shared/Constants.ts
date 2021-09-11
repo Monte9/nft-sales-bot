@@ -55,13 +55,4 @@ export const NFT_COLLECTIONS: Collection[] = [
     profitThreshold: 5000,
     alternateNames: [],
   },
-  {
-    address: '0x4f8730e0b32b04beaa5757e5aea3aef970e5b613',
-    symbol: 'BLOOT',
-    name: 'Bloot',
-    twitterUsername: null,
-    slug: CollectionSlug.bloot,
-    profitThreshold: 1000,
-    alternateNames: [],
-  },
 ];

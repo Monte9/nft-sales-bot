@@ -25,7 +25,6 @@ export enum CollectionSlug {
   cryptopunks = "cryptopunks",
   dystopunksv2 = "dystopunks-v2",
   loot = "lootproject",
-  bloot = "blootofficial",
 }
 
 // SALE
