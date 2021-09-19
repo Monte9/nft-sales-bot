@@ -47,15 +47,6 @@ export const NFT_COLLECTIONS: Collection[] = [
     alternateNames: [],
   },
   {
-    address: '0xff9c1b15b16263c61d017ee9f65c50e4ae0113d7',
-    symbol: 'LOOT',
-    name: 'Loot (for Adventurers)',
-    twitterUsername: null,
-    slug: CollectionSlug.loot,
-    profitThreshold: 5000,
-    alternateNames: [],
-  },
-  {
     address: '0x059edd72cd353df5106d2b9cc5ab83a52287ac3a',
     symbol: 'BLOCKS',
     name: 'Art Blocks Curated',
