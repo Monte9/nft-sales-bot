@@ -19,6 +19,7 @@ export function parseSales(saleEvents): Sale[] {
       }
 
       let asset: Asset = {
+        name: saleEvent.asset.name,
         tokenId: saleEvent.asset.token_id,
         image: saleEvent.asset.image_url,
         link: saleEvent.asset.permalink,

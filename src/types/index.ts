@@ -25,6 +25,7 @@ export enum CollectionSlug {
   cryptopunks = "cryptopunks",
   dystopunksv2 = "dystopunks-v2",
   loot = "lootproject",
+  artblocks = "art-blocks",
 }
 
 // SALE
@@ -40,6 +41,7 @@ export interface Sale {
 }
 
 export interface Asset {
+  name: string
   tokenId: string
   image: string
   link: string

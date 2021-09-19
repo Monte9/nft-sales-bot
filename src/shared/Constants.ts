@@ -55,4 +55,13 @@ export const NFT_COLLECTIONS: Collection[] = [
     profitThreshold: 5000,
     alternateNames: [],
   },
+  {
+    address: '0x059edd72cd353df5106d2b9cc5ab83a52287ac3a',
+    symbol: 'BLOCKS',
+    name: 'Art Blocks Curated',
+    twitterUsername: null,
+    slug: CollectionSlug.artblocks,
+    profitThreshold: 5000,
+    alternateNames: ['Chromie Squiggle', 'Art Blocks Curated Chromie Squiggle'],
+  }
 ];

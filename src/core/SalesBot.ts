@@ -9,11 +9,11 @@ import { runDebugBot } from './DebugBot';
 
 import { composeTweet } from './Twitter';
 
-import { Collection, Sale, SalesBot } from '../types';
+import { Collection, CollectionSlug, Sale, SalesBot } from '../types';
 
 import { getCurrentTime } from '../shared/Formatters';
 import { NFT_COLLECTIONS } from '../shared/Constants';
-import { getFloorPriceForCollection } from '../shared/Helpers';
+import { assetBelongsToCollection, getFloorPriceForCollection } from '../shared/Helpers';
 
 export default class NFTSalesBot {
   coinbaseAPI: CoinbaseAPI = null
@@ -128,11 +128,20 @@ export default class NFTSalesBot {
       for (let i=0; i<latestSalesIds.length; i++) {
 
         for (let j=0; j<newSales.length; j++) {
-          const tokenID = newSales[j].asset.tokenId
+          const asset = newSales[j].asset
+          const tokenID = asset.tokenId
 
           // Make sure the latest sale ID is part of the new sales array
           if (latestSalesIds[i] === newSales[j].saleId) {
             console.log(`${currentCollection.collection.name} @ ${getCurrentTime()} - New Sale ID#${latestSalesIds[i]}\n`)
+
+            // We want to be selective about which artblocks we support
+            if (currentCollection.collection.slug == CollectionSlug.artblocks) {
+              if (!assetBelongsToCollection(currentCollection.collection, asset.name)) {
+                console.log(`${currentCollection.collection.symbol} #${tokenID} is ${asset.name} and is not supported`, '\n')
+                continue
+              }
+            }
 
             // Fetches all the sale events for the token
             try {

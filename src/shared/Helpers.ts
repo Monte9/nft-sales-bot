@@ -13,6 +13,18 @@ export function getCollectionFromSlug(slug: CollectionSlug) {
   return NFT_COLLECTIONS.find(collection => collection.slug === slug);
 }
 
+export function assetBelongsToCollection(collection: Collection, name: string) {
+  let belongs = false
+
+  collection.alternateNames.map((alternateName, index) => {
+    if (name.includes(alternateName)) {
+      belongs = true
+    }
+  })
+  
+  return belongs;
+}
+
 export async function getFloorPriceForCollection(collection: Collection): Promise<FloorPrice> {
   const floorAPI = new FloorAPI()
   let floorPrices: FloorPrice[] = [];
