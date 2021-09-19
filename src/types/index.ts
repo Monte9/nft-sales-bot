@@ -78,3 +78,25 @@ export interface FloorPrice {
   activityUrl?: string
   url?: string
 }
+
+// SALES DATA
+
+export interface SaleData {
+  tokenId: string
+  sellerName: string
+  openSeaLink: string
+  isProfit: boolean
+  boughtPrice: number
+  boughtPriceETH: number
+  boughtPriceUSD: number
+  boughtDate: string
+  soldPrice: number
+  soldPriceETH: number
+  soldPriceUSD: number
+  soldDate: string
+  hodlDays: number
+  profitLossETH: number
+  profitLossUSD: number
+  flipPercentage: number
+  annualizedReturns: number
+}

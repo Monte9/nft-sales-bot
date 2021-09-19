@@ -1,16 +1,14 @@
 import CoinbaseAPI from "../api/CoinbaseAPI";
+import { getSaleData, getSaleTypeInfo } from "./SaleData";
 
-import { Collection, Sale } from "../types";
+import { Collection, Sale, SaleData } from "../types";
 
-import { 
-  addCommas, 
-  getYMDaysBetween, 
-  getTotalDaysBetween, 
-  getShortWalletAddress,
-  rounded
+import {
+  addCommas,
+  getYMDaysBetween,
 } from "../shared/Formatters";
 
-interface NamedParameters {
+interface ComposeTweetParams {
   collection: Collection
   purchase: Sale
   sale: Sale
@@ -19,137 +17,78 @@ interface NamedParameters {
 }
 
 // Composes a tweet using the Sale information
-export async function composeTweet({ collection, purchase, sale, coinbaseAPI, floorPrice }: NamedParameters): Promise<string> {
-  // Get Token ID & OpenSea Link
-  const tokenId = sale.asset.tokenId
-  const openSeaLink = sale.asset.link
-
-  // Get rounded Bought & Sold price in ETH
-  const boughtPrice = rounded(purchase.salePrice)
-  const soldPrice = rounded(sale.salePrice)
-  const didSelldBelowFloor = sale.salePrice < floorPrice
-  console.log(`Floor price for ${collection.name} is ${floorPrice} ETH`)
-
-  // Missing BoughtPrice or SoldPrice
-  if (boughtPrice <= 0 || soldPrice <= 0) {
-    console.log("OpenSea Link:", sale.asset.link)
-    throw new Error("missing bought or sold price")
-  }
-
-  // Get formatted Bought & Sold dates
-  const boughtDate = purchase.transaction.timestamp
-  const soldDate = sale.transaction.timestamp
-
-  // Get HODL Duration & Days
-  const hodlDuration = getYMDaysBetween(soldDate, boughtDate)
-  const hodlDays = getTotalDaysBetween(soldDate, boughtDate)
-
-  // Get the bought & sold prices in ETH
-  let boughtPriceETH = 0
-  let soldPriceETH = 0
+export async function composeTweet({ collection, purchase, sale, coinbaseAPI, floorPrice }: ComposeTweetParams): Promise<string> {
+  let salesData: SaleData = null
 
   try {
-    boughtPriceETH = await coinbaseAPI.getUSDPriceForETH(boughtDate)
-    soldPriceETH = await coinbaseAPI.getUSDPriceForETH(soldDate)
-  } catch (error) {
-    throw new Error(error)
+    salesData = await getSaleData({ purchase, sale, coinbaseAPI })
+  } catch(error) {
+    throw error
   }
 
-  // Get the bought & sold prices in USD
-  const boughtPriceUSD = Math.round(purchase.salePrice * boughtPriceETH)
-  const soldPriceUSD = Math.round(sale.salePrice * soldPriceETH)
+  if (salesData === null || !salesData.tokenId) {
+    throw new Error(`unable to get sale data for ${collection.symbol} #${sale.asset.tokenId}\n`)
+  }
+
+  const {
+    tokenId,
+    openSeaLink,
+    sellerName,
+    isProfit,
+    boughtPrice,
+    boughtDate,
+    boughtPriceETH,
+    boughtPriceUSD,
+    soldPrice,
+    soldDate,
+    soldPriceETH,
+    soldPriceUSD,
+    profitLossUSD,
+    flipPercentage,
+    hodlDays
+  } = salesData
+  
+  const didSellBelowFloor = sale.salePrice < floorPrice
+  console.log(`Floor price for ${collection.name} is ${floorPrice} ETH`)
+
+  // Get HODL Duration
+  const hodlDuration = getYMDaysBetween(soldDate, boughtDate)
 
   // Get formatted ETH price for Bought & Sold dates
   const boughtPriceETHFormatted = addCommas(boughtPriceETH)
   const soldPriceETHFormatted = addCommas(soldPriceETH)
   
-  // Get the Profit/Loss value in USD
-  const profitLossUSD = Math.round(soldPriceUSD - boughtPriceUSD)
+  // Get formatted Profit/Loss value in USD
   const profitLossUSDFormatted = addCommas(profitLossUSD)
 
-  // Get the Flip Percentage
-  const flipValueRounded = rounded((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD)
-  const flipPercentage = flipValueRounded * 100
-  const flipPercentageRounded = rounded(flipPercentage)
-  const flipPercentageRoundedFormatted = addCommas(Math.abs(flipPercentageRounded))
+  // Get the formatted Flip Percentage
+  const flipPercentageFormatted = addCommas(Math.abs(flipPercentage))
 
   // Get the Profit/Loss labels
-  const isProfitLoss = flipPercentageRounded > 0 ? 'PROFIT' : 'LOSS'
-  const isProfitLossEmoji = flipPercentageRounded > 0 ? '🚀' : '🧐'
-  const isProfitLossPercentageEmoji = flipPercentageRounded > 0 ? '📈 +' : '📉 -'
-
-  // Calculate Annualized Returns
-  // Formula: return % / no. days held x 365
-  // Credit: Anonn.eth
-  const annualizedReturns = flipPercentageRounded / hodlDays * 365
-  const annualizedReturnsFormatted = addCommas(Math.round(rounded(annualizedReturns)))
-  const annualizedReturnsInfo = `💸 Annualized Returns: ${annualizedReturnsFormatted}%\n`
-  // TODO: not using annualizedReturnsInfo
-
-  // Get Seller Username or Wallet address
-  const seller = sale.seller
-  const sellerWallet = getShortWalletAddress(seller.address)
-  const sellerName = seller.username || sellerWallet
+  const isProfitLoss = isProfit ? 'PROFIT' : 'LOSS'
+  const isProfitLossEmoji = isProfit ? '🚀' : '🧐'
+  const isProfitLossPercentageEmoji = isProfit ? '📈 +' : '📉 -'
 
   // Get Sale type
-  const saleTypeEmoji = flipPercentageRounded > 0 ? '🏆' : '🥲'
-  const saleTypeTitle = flipPercentageRounded > 0 ? 'FLIPPED' : 'FUMBLED'
-  const saleTypeInfo = getSaleTypeInfo(flipPercentageRounded, boughtPriceUSD, soldPriceUSD, hodlDays, didSelldBelowFloor)
+  const saleTypeEmoji = isProfit ? '🏆' : '🥲'
+  const saleTypeTitle = isProfit ? 'FLIPPED' : 'FUMBLED'
+  const saleTypeInfo = getSaleTypeInfo(flipPercentage, boughtPriceUSD, soldPriceUSD, hodlDays, didSellBelowFloor)
 
   // Format the Tweet content
   const intro = `${sellerName} ${saleTypeTitle} ${collection.symbol} #${tokenId}\n`
   const boughtInfo = `🛍 Bought: ${boughtPrice} ${sale.paymentToken.symbol} @ $${boughtPriceETHFormatted}/ETH\n`
   const soldInfo = `💰 Sold: ${soldPrice} ${sale.paymentToken.symbol} @ $${soldPriceETHFormatted}/ETH\n`
   const hodlInfo = `🤝 HODL Duration: ${hodlDuration}\n`
-  const flipInfo = `${isProfitLossEmoji} ${isProfitLoss}: $${profitLossUSDFormatted} (${isProfitLossPercentageEmoji}${flipPercentageRoundedFormatted}%)\n`
+  const flipInfo = `${isProfitLossEmoji} ${isProfitLoss}: $${profitLossUSDFormatted} (${isProfitLossPercentageEmoji}${flipPercentageFormatted}%)\n`
   
   const status = `${saleTypeEmoji} Status: ${saleTypeInfo}\n`
   const tweetContent = intro + '\n' + status + '\n' + boughtInfo + soldInfo + '\n' + hodlInfo + flipInfo + openSeaLink
 
   // Report all losses OR only if profit is > profitThreshold for the collection
-  if (flipPercentageRounded > 0 && profitLossUSD < collection.profitThreshold) {
+  if (isProfit && profitLossUSD < collection.profitThreshold) {
     const fomattedProfitThreshold = addCommas(collection.profitThreshold)
     throw new Error(`profit for ${collection.symbol} #${tokenId} under $${fomattedProfitThreshold}\n${openSeaLink}\n`)
   }
 
   return tweetContent
-}
-
-function getSaleTypeInfo(flipPercentageRounded: number, boughtPriceUSD: number, soldPriceUSD: number, hodlDays: number, didSelldBelowFloor: boolean) {
-  // They accepted a bot offer below current floor price
-  if (didSelldBelowFloor) {
-    return 'Below Floor #NGMI'
-  }
-
-  // If Sold price < 40% of Bought price
-  if (soldPriceUSD <boughtPriceUSD * 0.4) {
-    return 'Noodle Hands'
-  }
-
-  // If Sold price < 40% of Bought price
-  if (soldPriceUSD <boughtPriceUSD * 0.4) {
-    return 'Noodle Hands'
-  }
-
-  // If it's a loss
-  if (flipPercentageRounded < 0) {
-    return 'Paper Hands'
-  }
-
-  // If HODL duration is more than 90 days (3 months)
-  if (hodlDays > 90) {
-    return 'Diamond Hands'
-  }
-
-  // If sold price is 1.5 times bought price
-  if (soldPriceUSD > boughtPriceUSD * 1.5) {
-    return 'Good Flip'
-  }
-
-  // If sold price is 5 times bought price
-  if (soldPriceUSD > boughtPriceUSD * 5) {
-    return 'Expert Flipper'
-  }
-
-  return 'Noob Flipper'
 }
