@@ -46,6 +46,8 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
     hodlDays,
     profitLossETH,
     profitLossUSD,
+    usdFlip,
+    usdFlipPercentage
   } = salesData
 
   // Get the absolute profit without the minus sign for losses
@@ -64,11 +66,15 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   
   // Get formatted Profit/Loss value in USD
   const profitLossUSDFormatted = addCommas(absoluteProfitLossUSD)
+  const usdFlipFormatted = addCommas(Math.abs(usdFlip))
+  const usdFlipPercentageFormatted = addCommas(Math.abs(usdFlipPercentage))
 
-  // Get the Profit/Loss label
-  const isProfitEmoji = isProfit ? '👍🏼' : '👎🏼'
-  const isProfitLoss = isProfit ? 'Profit' : 'Loss'
-  const isProfitSign = isProfit ? '+' : '-'
+  // Get the Profit/Loss labels
+  const isETHProfitLoss = isProfit ? ' Ξ PROFIT' : ' Ξ LOSS'
+  const isETHProfitLossSymbol = isProfit ? '' : '-'
+  const isUSDProfitLoss = usdFlipPercentage > 0 ? '💲 PROFIT' : '💲 LOSS'
+  const isProfitLossPercentageEmoji = usdFlipPercentage > 0 ? '📈 +' : '📉 -'
+  const isUSDProfitLossSymbol = usdFlipPercentage > 0 ? '' : '-'
 
   // Get Sale type
   const saleTypeTitle = isProfit ? 'FLIPPED' : 'FUMBLED'
@@ -76,13 +82,14 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
 
   // Format the Tweet content
   const intro = `${sellerName} ${saleTypeTitle} ${collection.symbol} #${tokenId}\n`
-  const flipInfo = `${isProfitEmoji} ${isProfitLoss}: ${absoluteProfitLossETH} ETH = ${isProfitSign}$${profitLossUSDFormatted}\n`
+  const flipInfoETH = `${isETHProfitLoss}: ${absoluteProfitLossETH} ETH (worth ${isETHProfitLossSymbol}$${profitLossUSDFormatted})\n`
+  const flipInfoUSD = `${isUSDProfitLoss}: ${isUSDProfitLossSymbol}$${usdFlipFormatted} (${isProfitLossPercentageEmoji}${usdFlipPercentageFormatted}%)\n`
   const hodlInfo = `🤝 HODL: ${hodlDuration}\n`
   const boughtInfo = `🛍 Bought: ${boughtPriceETH} ${sale.paymentToken.symbol} @ $${boughtDateETHPriceFormatted}/ETH\n`
   const soldInfo = `💰 Sold: ${soldPriceETH} ${sale.paymentToken.symbol} @ $${soldDateETHPriceFormatted}/ETH\n`
-  const status = `🏆 Status: ${saleTypeInfo}\n`
+  // const status = `🏆 Status: ${saleTypeInfo}\n`
 
-  const tweetContent = intro + '\n' + flipInfo + hodlInfo + '\n' + boughtInfo + soldInfo + '\n' + status + openSeaLink
+  const tweetContent = intro + '\n' + boughtInfo + soldInfo + hodlInfo + '\n' + flipInfoETH + flipInfoUSD + '\n' + openSeaLink
 
   // Only report losses > 1 ETH OR if profit > profitThreshold for the collection
   if (!isProfit && absoluteProfitLossETH < 1 || isProfit && absoluteProfitLossUSD < collection.profitThreshold) {

@@ -32,6 +32,9 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   // Get the Profit/Loss value in ETH
   const profitLossETH = rounded(soldPriceETH - boughtPriceETH)
 
+  // Get whether it's a profit or loss
+  const isProfit = profitLossETH > 0 ? true : false
+
   // Get formatted Bought & Sold dates
   const boughtDate = purchase.transaction.timestamp
   const soldDate = sale.transaction.timestamp
@@ -54,8 +57,12 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   // Get the Profit/Loss value in USD
   const profitLossUSD = Math.round(profitLossETH * soldDateETHPrice)
 
-  // Get whether it's a profit or loss
-  const isProfit = profitLossETH > 0 ? true : false
+  // Get the Profit/Loss Flip value in USD
+  const usdFlip = Math.round(soldPriceUSD - boughtPriceUSD)
+
+  // Get the Flip Percentage
+  const flipValueRounded = rounded((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD)
+  const usdFlipPercentage = rounded(flipValueRounded * 100)
 
   return {
     tokenId,
@@ -70,9 +77,11 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
     soldDateETHPrice,
     soldPriceUSD,
     hodlDays,
+    isProfit,
     profitLossETH,
     profitLossUSD,
-    isProfit,
+    usdFlip,
+    usdFlipPercentage,
   }
 }
 

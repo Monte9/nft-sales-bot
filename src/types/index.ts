@@ -97,4 +97,6 @@ export interface SaleData {
   hodlDays: number
   profitLossETH: number
   profitLossUSD: number
+  usdFlip: number
+  usdFlipPercentage: number
 }
