@@ -51,8 +51,8 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   }
 
   // Get the bought & sold prices in USD
-  const boughtPriceUSD = Math.round(purchase.salePrice * boughtDateETHPrice)
-  const soldPriceUSD = Math.round(sale.salePrice * soldDateETHPrice)
+  const boughtPriceUSD = Math.round(boughtPriceETH * boughtDateETHPrice)
+  const soldPriceUSD = Math.round(soldPriceETH * soldDateETHPrice)
 
   // Get the Profit/Loss value in USD
   const profitLossUSD = Math.round(profitLossETH * soldDateETHPrice)

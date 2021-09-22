@@ -70,7 +70,7 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   const usdFlipPercentageFormatted = addCommas(Math.abs(usdFlipPercentage))
 
   // Get the Profit/Loss labels
-  const isETHProfitLoss = isProfit ? ' Ξ PROFIT' : ' Ξ LOSS'
+  const isETHProfitLoss = isProfit ? ' Ξ   PROFIT' : ' Ξ   LOSS'
   const isETHProfitLossSymbol = isProfit ? '' : '-'
   const isUSDProfitLoss = usdFlipPercentage > 0 ? '💲 PROFIT' : '💲 LOSS'
   const isProfitLossPercentageEmoji = usdFlipPercentage > 0 ? '📈 +' : '📉 -'
