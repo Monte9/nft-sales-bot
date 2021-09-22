@@ -14,18 +14,23 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   const tokenId = sale.asset.tokenId
   const openSeaLink = sale.asset.link
 
-  // Get rounded Bought & Sold price in ETH
-  const boughtPrice = rounded(purchase.salePrice)
-  const soldPrice = rounded(sale.salePrice)
+  // Get Seller Username or Wallet address
+  const seller = sale.seller
+  const sellerWallet = getShortWalletAddress(seller.address)
+  const sellerName = seller.username || sellerWallet
 
-  // Get the Profit/Loss value in ETH
-  const profitLossETH = rounded(soldPrice - boughtPrice)
+  // Get rounded Bought & Sold price in ETH
+  const boughtPriceETH = rounded(purchase.salePrice)
+  const soldPriceETH = rounded(sale.salePrice)
 
   // Missing BoughtPrice or SoldPrice
-  if (boughtPrice <= 0 || soldPrice <= 0) {
+  if (boughtPriceETH <= 0 || soldPriceETH <= 0) {
     console.log("OpenSea Link:", sale.asset.link)
     throw new Error("missing bought or sold price")
   }
+
+  // Get the Profit/Loss value in ETH
+  const profitLossETH = rounded(soldPriceETH - boughtPriceETH)
 
   // Get formatted Bought & Sold dates
   const boughtDate = purchase.transaction.timestamp
@@ -34,63 +39,44 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   // Get HODL Days
   const hodlDays = getTotalDaysBetween(soldDate, boughtDate)
 
-  // Get the bought & sold prices in ETH
-  let boughtPriceETH = 0
-  let soldPriceETH = 0
-
+  // Get the ETH prices on bought & sold dates
   try {
-    boughtPriceETH = await coinbaseAPI.getUSDPriceForETH(boughtDate)
-    soldPriceETH = await coinbaseAPI.getUSDPriceForETH(soldDate)
+    var boughtDateETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate)
+    var soldDateETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate)
   } catch (error) {
     throw new Error(error)
   }
 
   // Get the bought & sold prices in USD
-  const boughtPriceUSD = Math.round(purchase.salePrice * boughtPriceETH)
-  const soldPriceUSD = Math.round(sale.salePrice * soldPriceETH)
+  const boughtPriceUSD = Math.round(purchase.salePrice * boughtDateETHPrice)
+  const soldPriceUSD = Math.round(sale.salePrice * soldDateETHPrice)
 
   // Get the Profit/Loss value in USD
-  const profitLossUSD = Math.round(soldPriceUSD - boughtPriceUSD)
-
-  // Get the Flip Percentage
-  const flipValueRounded = rounded((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD)
-  const flipPercentage = rounded(flipValueRounded * 100)
+  const profitLossUSD = Math.round(profitLossETH * soldDateETHPrice)
 
   // Get whether it's a profit or loss
-  const isProfit = flipPercentage > 0 ? true : false
-
-  // Get Seller Username or Wallet address
-  const seller = sale.seller
-  const sellerWallet = getShortWalletAddress(seller.address)
-  const sellerName = seller.username || sellerWallet
-
-  // Calculate Annualized Returns
-  // Formula: return % / no. days held x 365
-  // Credit: Anonn.eth
-  const annualizedReturns = flipPercentage / hodlDays * 365
+  const isProfit = profitLossETH > 0 ? true : false
 
   return {
     tokenId,
     sellerName,
     openSeaLink,
-    isProfit,
-    boughtPrice,
     boughtPriceETH,
-    boughtPriceUSD,
     boughtDate,
-    soldPrice,
+    boughtDateETHPrice,
+    boughtPriceUSD,
     soldPriceETH,
-    soldPriceUSD,
     soldDate,
+    soldDateETHPrice,
+    soldPriceUSD,
     hodlDays,
     profitLossETH,
     profitLossUSD,
-    flipPercentage,
-    annualizedReturns,
+    isProfit,
   }
 }
 
-export function getSaleTypeInfo(flipPercentageRounded: number, boughtPriceUSD: number, soldPriceUSD: number, hodlDays: number, didSellBelowFloor: boolean) {
+export function getSaleTypeInfo(isProfit: boolean, boughtPriceUSD: number, soldPriceUSD: number, hodlDays: number, didSellBelowFloor: boolean) {
   // They accepted a bot offer below current floor price
   if (didSellBelowFloor) {
     return 'Below Floor #NGMI'
@@ -107,7 +93,7 @@ export function getSaleTypeInfo(flipPercentageRounded: number, boughtPriceUSD: n
   }
 
   // If it's a loss
-  if (flipPercentageRounded < 0) {
+  if (!isProfit) {
     return 'Paper Hands'
   }
 

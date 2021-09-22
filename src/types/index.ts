@@ -86,17 +86,15 @@ export interface SaleData {
   sellerName: string
   openSeaLink: string
   isProfit: boolean
-  boughtPrice: number
   boughtPriceETH: number
   boughtPriceUSD: number
   boughtDate: string
-  soldPrice: number
+  boughtDateETHPrice: number
   soldPriceETH: number
   soldPriceUSD: number
   soldDate: string
+  soldDateETHPrice: number
   hodlDays: number
   profitLossETH: number
   profitLossUSD: number
-  flipPercentage: number
-  annualizedReturns: number
 }
