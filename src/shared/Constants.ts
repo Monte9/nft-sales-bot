@@ -8,6 +8,7 @@ export enum CollectionSlug {
   dystopunksv2 = "dystopunks-v2",
   lazylions = "lazy-lions",
   mutantapeyachtclub = "mutant-ape-yacht-club",
+  supducks = "supducks",
 }
 
 export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
@@ -55,6 +56,15 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.lazylions,
     profitThreshold: 5000,
     alternateNames: ['Lazy Lions'],
+  },
+  {
+    address: '0x3fe1a4c1481c8351e91b64d5c398b159de07cbc5',
+    symbol: 'SD',
+    name: 'SupDucks',
+    twitterUsername: 'realsupducks',
+    slug: CollectionSlug.supducks,
+    profitThreshold: 5000,
+    alternateNames: ['Sup Ducks'],
   },
 ];
 
