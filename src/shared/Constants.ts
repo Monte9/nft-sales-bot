@@ -10,6 +10,7 @@ export enum CollectionSlug {
   lazylions = "lazy-lions",
   mutantapeyachtclub = "mutant-ape-yacht-club",
   supducks = "supducks",
+  timepiececommunity = "timepiece-community",
 }
 
 export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
@@ -75,6 +76,15 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.cyberkongz,
     profitThreshold: 5000,
     alternateNames: ['CyberKongz'],
+  },
+  {
+    address: '0xdd69da9a83cedc730bc4d3c56e96d29acc05ecde',
+    symbol: 'BABF',
+    name: 'TIMEPiece Community',
+    twitterUsername: 'time',
+    slug: CollectionSlug.timepiececommunity,
+    profitThreshold: 5000,
+    alternateNames: [''],
   },
 ];
 
