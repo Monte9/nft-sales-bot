@@ -5,6 +5,7 @@ export enum CollectionSlug {
   boredapeyachtclub = "boredapeyachtclub",
   coolcatsnft = "cool-cats-nft",
   cryptopunks = "cryptopunks",
+  cyberkongz = "cyberkongz",
   dystopunksv2 = "dystopunks-v2",
   lazylions = "lazy-lions",
   mutantapeyachtclub = "mutant-ape-yacht-club",
@@ -65,6 +66,15 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.supducks,
     profitThreshold: 5000,
     alternateNames: ['Sup Ducks'],
+  },
+  {
+    address: '0x57a204aa1042f6e66dd7730813f4024114d74f37',
+    symbol: 'KONGZ',
+    name: 'CyberKongz',
+    twitterUsername: 'CyberKongz',
+    slug: CollectionSlug.cyberkongz,
+    profitThreshold: 5000,
+    alternateNames: ['CyberKongz'],
   },
 ];
 
