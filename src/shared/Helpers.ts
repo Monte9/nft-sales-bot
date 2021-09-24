@@ -1,6 +1,6 @@
 import FloorAPI from "../api/FloorAPI";
-import { Collection, CollectionSlug, FloorPrice } from "../types";
-import { NFT_COLLECTIONS } from "./Constants";
+import { Collection, FloorPrice } from "../types";
+import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from "./Constants";
 
 // https://stackoverflow.com/a/61958148
 export function isError(obj) {
@@ -10,7 +10,7 @@ export function isError(obj) {
 }
 
 export function getCollectionFromSlug(slug: CollectionSlug) {
-  return NFT_COLLECTIONS.find(collection => collection.slug === slug);
+  return ACTIVE_NFT_COLLECTIONS.find(collection => collection.slug === slug);
 }
 
 export function assetBelongsToCollection(collection: Collection, name: string) {

@@ -1,3 +1,5 @@
+import { CollectionSlug } from "../shared/Constants";
+
 // SALES BOT
 
 export interface SalesBot {
@@ -16,15 +18,6 @@ export interface Collection {
   slug: CollectionSlug
   profitThreshold?: number
   alternateNames: string[]
-}
-
-export enum CollectionSlug {
-  boredapeyachtclub = "boredapeyachtclub",
-  mutantapeyachtclub = "mutant-ape-yacht-club",
-  coolcatsnft = "cool-cats-nft",
-  cryptopunks = "cryptopunks",
-  dystopunksv2 = "dystopunks-v2",
-  artblocks = "art-blocks",
 }
 
 // SALE

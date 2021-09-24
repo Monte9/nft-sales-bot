@@ -9,10 +9,10 @@ import { runDebugBot } from './DebugBot';
 
 import { composeTweet } from './Twitter';
 
-import { Collection, CollectionSlug, Sale, SalesBot } from '../types';
+import { Collection, Sale, SalesBot } from '../types';
 
 import { getCurrentTime } from '../shared/Formatters';
-import { NFT_COLLECTIONS } from '../shared/Constants';
+import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from '../shared/Constants';
 import { assetBelongsToCollection, getFloorPriceForCollection } from '../shared/Helpers';
 
 export default class NFTSalesBot {
@@ -200,7 +200,7 @@ export default class NFTSalesBot {
 // Used to initialize the bot and build a Collection object
 export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI): Promise<SalesBot[]> {
   return await Promise.all(
-    NFT_COLLECTIONS.map(async (collection): Promise<SalesBot> => {
+    ACTIVE_NFT_COLLECTIONS.map(async (collection): Promise<SalesBot> => {
       return getCollectionData(collection, openSeaAPI)
     })
   )

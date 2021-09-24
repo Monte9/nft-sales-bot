@@ -7,7 +7,7 @@ import TwitterAPI from '../api/TwitterAPI';
 
 import { getSaleData } from './SaleData';
 
-import { CollectionSlug } from '../types';
+import { CollectionSlug } from '../shared/Constants';
 
 import { getCollectionFromSlug } from '../shared/Helpers';
 
