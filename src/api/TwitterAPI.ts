@@ -21,7 +21,6 @@ export default class TwitterAPI {
   async postTweet(content) {
     try {
       // In DEVELOPMENT environment we don't want to post a tweet
-      // Just console.log the content instead
       if (process.env.NODE_ENV === "DEVELOPMENT") {
         console.log(content)
       } else {

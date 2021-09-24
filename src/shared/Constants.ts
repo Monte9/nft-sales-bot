@@ -11,6 +11,7 @@ export enum CollectionSlug {
   mutantapeyachtclub = "mutant-ape-yacht-club",
   supducks = "supducks",
   timepiececommunity = "timepiece-community",
+  sneakyvampiresyndicate = "sneaky-vampire-syndicate"
 }
 
 export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
@@ -83,6 +84,15 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'TIMEPiece Community',
     twitterUsername: 'time',
     slug: CollectionSlug.timepiececommunity,
+    profitThreshold: 5000,
+    alternateNames: [''],
+  },
+  {
+    address: '0x219b8ab790decc32444a6600971c7c3718252539',
+    symbol: 'SVS',
+    name: 'Sneaky Vampire Syndicate',
+    twitterUsername: 'svsnft',
+    slug: CollectionSlug.sneakyvampiresyndicate,
     profitThreshold: 5000,
     alternateNames: [''],
   },
