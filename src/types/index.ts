@@ -78,7 +78,6 @@ export interface SaleData {
   tokenId: string
   sellerName: string
   openSeaLink: string
-  isProfit: boolean
   boughtPriceETH: number
   boughtPriceUSD: number
   boughtDate: string
@@ -89,7 +88,7 @@ export interface SaleData {
   soldDateETHPrice: number
   hodlDays: number
   profitLossETH: number
-  profitLossUSD: number
-  usdFlip: number
-  usdFlipPercentage: number
+  isProfit: boolean
+  flipValueUSD: number
+  flipPercentageUSD: number
 }

@@ -1,7 +1,6 @@
 import CoinbaseAPI from "../api/CoinbaseAPI"
 import { Sale, SaleData } from "../types"
-
-import { getShortWalletAddress, getTotalDaysBetween, getYMDaysBetween, rounded } from "../shared/Formatters"
+import { getShortWalletAddress, getTotalDaysBetween, rounded } from "../shared/Formatters"
 
 interface SaleDataParams {
   purchase: Sale
@@ -54,15 +53,12 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   const boughtPriceUSD = Math.round(boughtPriceETH * boughtDateETHPrice)
   const soldPriceUSD = Math.round(soldPriceETH * soldDateETHPrice)
 
-  // Get the Profit/Loss value in USD
-  const profitLossUSD = Math.round(profitLossETH * soldDateETHPrice)
-
   // Get the Profit/Loss Flip value in USD
-  const usdFlip = Math.round(soldPriceUSD - boughtPriceUSD)
+  const flipValueUSD = Math.round(soldPriceUSD - boughtPriceUSD)
 
   // Get the Flip Percentage
-  const flipValueRounded = rounded((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD)
-  const usdFlipPercentage = rounded(flipValueRounded * 100)
+  const flipValueUSDRounded = rounded((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD)
+  const flipPercentageUSD = rounded(flipValueUSDRounded * 100)
 
   return {
     tokenId,
@@ -77,11 +73,10 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
     soldDateETHPrice,
     soldPriceUSD,
     hodlDays,
-    isProfit,
     profitLossETH,
-    profitLossUSD,
-    usdFlip,
-    usdFlipPercentage,
+    isProfit,
+    flipValueUSD,
+    flipPercentageUSD,
   }
 }
 
@@ -122,4 +117,27 @@ export function getSaleTypeInfo(isProfit: boolean, boughtPriceUSD: number, soldP
   }
 
   return 'Noob Flipper'
+}
+
+export function getProfitThresholdETH(floorPrice: number): number {
+  // If no floor price available for collection
+  // Default to 2 ETH profit threshold
+  if (!floorPrice || floorPrice == 0) {
+    return 2
+  }
+
+  // For larger collection where floor price is more than 50 ETH
+  // We choose a smaller threshold since the margins are really big
+  if (floorPrice > 50) {
+    return rounded(floorPrice * 0.1)
+  }
+
+  // For mid-sized collection where floor price is more than 5 ETH
+  // We choose a medium threshold since the margins aren't that big
+  if (floorPrice > 5) {
+    return rounded(floorPrice * 0.25)
+  }
+
+  // By defualt for all other collections have a 2 ETH profit threshold
+  return 2
 }

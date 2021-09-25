@@ -6,7 +6,7 @@ import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
 
 import { runDebugBot } from './DebugBot';
-
+import { getProfitThresholdETH } from './SaleData';
 import { composeTweet } from './Twitter';
 
 import { Collection, Sale, SalesBot } from '../types';
@@ -232,7 +232,14 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
 
   // Set the floor price for the collection
   const floorPrice = await getFloorPriceForCollection(collection)
-  salesBot.floorPrice = floorPrice.currentFloor
+  const currentFloorPrice = floorPrice.currentFloor || 0
+  salesBot.floorPrice = currentFloorPrice
+
+  // More Information about the collection
+  console.log(`${collection.symbol}`)
+  console.log(`Floor price: ${floorPrice.currentFloor} ETH`)
+  const profitThresholdETH = getProfitThresholdETH(currentFloorPrice)
+  console.log(`Profit Threshold: ${profitThresholdETH} ETH\n`)
 
   // Update the oldSalesId on the salesBot
   salesBot.oldSalesIds = oldSalesIds

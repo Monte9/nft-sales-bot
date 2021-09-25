@@ -10,8 +10,8 @@ import { CollectionSlug } from '../shared/Constants';
 import { getCollectionFromSlug, getFloorPriceForCollection } from '../shared/Helpers';
 
 export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI, floorAPI: FloorAPI) {
-  const collection = getCollectionFromSlug(CollectionSlug.sneakyvampiresyndicate)
-  const tokenID = '8078'
+  const collection = getCollectionFromSlug(CollectionSlug.coolcatsnft)
+  const tokenID = '3113'
   const floorPrice = await getFloorPriceForCollection(collection)
 
   try {

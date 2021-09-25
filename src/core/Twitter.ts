@@ -1,12 +1,10 @@
 import CoinbaseAPI from "../api/CoinbaseAPI";
-import { getSaleData, getSaleTypeInfo } from "./SaleData";
+
+import { getProfitThresholdETH, getSaleData, getSaleTypeInfo } from "./SaleData";
 
 import { Collection, Sale, SaleData } from "../types";
 
-import {
-  addCommas,
-  getYMDaysBetween,
-} from "../shared/Formatters";
+import { addCommas, getYMDaysBetween } from "../shared/Formatters";
 
 interface ComposeTweetParams {
   collection: Collection
@@ -45,14 +43,12 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
     soldPriceUSD,
     hodlDays,
     profitLossETH,
-    profitLossUSD,
-    usdFlip,
-    usdFlipPercentage
+    flipValueUSD,
+    flipPercentageUSD
   } = salesData
 
-  // Get the absolute profit without the minus sign for losses
+  // Get the absolute profit/loss without the minus sign for losses
   const absoluteProfitLossETH = Math.abs(profitLossETH)
-  const absoluteProfitLossUSD = Math.abs(profitLossUSD)
 
   const didSellBelowFloor = sale.salePrice < floorPrice
   console.log(`Floor price for ${collection.name} is ${floorPrice} ETH`)
@@ -65,14 +61,14 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   const soldDateETHPriceFormatted = addCommas(soldDateETHPrice)
   
   // Get formatted Profit/Loss value in USD
-  const usdFlipFormatted = addCommas(Math.abs(usdFlip))
-  const usdFlipPercentageFormatted = addCommas(Math.abs(usdFlipPercentage))
+  const flipValueUSDFormatted = addCommas(Math.abs(flipValueUSD))
+  const flipPercentageUSDFormatted = addCommas(Math.abs(flipPercentageUSD))
 
   // Get the Profit/Loss labels
   const isETHProfitLoss = isProfit ? '  Ξ  PROFIT' : '  Ξ  LOSS'
-  const isUSDProfitLoss = usdFlipPercentage > 0 ? '💲 PROFIT' : '💲 LOSS'
-  const isProfitLossPercentageEmoji = usdFlipPercentage > 0 ? '📈 +' : '📉 -'
-  const isUSDProfitLossSymbol = usdFlipPercentage > 0 ? '' : '-'
+  const isUSDProfitLoss = flipPercentageUSD > 0 ? '💲 PROFIT' : '💲 LOSS'
+  const isProfitLossPercentageEmoji = flipPercentageUSD > 0 ? '📈 +' : '📉 -'
+  const isUSDProfitLossSymbol = flipPercentageUSD > 0 ? '' : '-'
 
   // Get Sale type
   const saleTypeTitle = isProfit ? 'FLIPPED' : 'FUMBLED'
@@ -81,7 +77,7 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   // Format the Tweet content
   const intro = `${sellerName} ${saleTypeTitle} ${collection.symbol} #${tokenId}\n`
   const flipInfoETH = `${isETHProfitLoss}: ${absoluteProfitLossETH} ETH\n`
-  const flipInfoUSD = `${isUSDProfitLoss}: ${isUSDProfitLossSymbol}$${usdFlipFormatted} (${isProfitLossPercentageEmoji}${usdFlipPercentageFormatted}%)\n`
+  const flipInfoUSD = `${isUSDProfitLoss}: ${isUSDProfitLossSymbol}$${flipValueUSDFormatted} (${isProfitLossPercentageEmoji}${flipPercentageUSDFormatted}%)\n`
   const hodlInfo = `🤝 HODL: ${hodlDuration}\n`
   const boughtInfo = `🛍 Bought: ${boughtPriceETH} ${sale.paymentToken.symbol} @ $${boughtDateETHPriceFormatted}\n`
   const soldInfo = `💰 Sold: ${soldPriceETH} ${sale.paymentToken.symbol} @ $${soldDateETHPriceFormatted}\n`
@@ -89,10 +85,13 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
 
   const tweetContent = intro + '\n' + status + '\n' + boughtInfo + soldInfo + hodlInfo + '\n' + flipInfoETH + flipInfoUSD + '\n' + openSeaLink
 
-  // Only report losses > 1 ETH OR if profit > profitThreshold for the collection
-  if (!isProfit && absoluteProfitLossETH < 1 || isProfit && absoluteProfitLossUSD < collection.profitThreshold) {
-    const fomattedProfitThreshold = addCommas(collection.profitThreshold)
-    throw new Error(`profit/loss for ${collection.symbol} #${tokenId} under $${fomattedProfitThreshold}\n${openSeaLink}\n`)
+  // Dynamically get the Profit Threshold for the collection based on floor prices
+  const profitThresholdETH = getProfitThresholdETH(floorPrice)
+
+  // Only report losses > 1 ETH
+  // OR if profit > profitThreshold for the collection
+  if (!isProfit && absoluteProfitLossETH < 1 || isProfit && profitLossETH < profitThresholdETH) {
+    throw new Error(`${collection.symbol} #${tokenId} flipped for ${profitLossETH} ETH (threshold ${profitThresholdETH} ETH)\n${openSeaLink}\n`)
   }
 
   return tweetContent
