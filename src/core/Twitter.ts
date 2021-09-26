@@ -50,8 +50,8 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   // Get the absolute profit/loss without the minus sign for losses
   const absoluteProfitLossETH = Math.abs(profitLossETH)
 
+  // Check whether they sold below floor - it was a bot offer
   const didSellBelowFloor = sale.salePrice < floorPrice
-  console.log(`Floor price for ${collection.name} is ${floorPrice} ETH`)
 
   // Get HODL Duration
   const hodlDuration = getYMDaysBetween(soldDate, boughtDate)
@@ -90,8 +90,10 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
 
   // Only report losses > 1 ETH
   // OR if profit > profitThreshold for the collection
-  if (!isProfit && absoluteProfitLossETH < 1 || isProfit && profitLossETH < profitThresholdETH) {
-    throw new Error(`${collection.symbol} #${tokenId} flipped for ${profitLossETH} ETH (threshold ${profitThresholdETH} ETH)\n${openSeaLink}\n`)
+  if (!isProfit && absoluteProfitLossETH < 1) {
+    throw new Error(`${collection.symbol} #${tokenId} FUMBLED for ${profitLossETH} ETH (threshold -1 ETH)\n${openSeaLink}\n`)
+  } else if (isProfit && profitLossETH < profitThresholdETH) {
+    throw new Error(`${collection.symbol} #${tokenId} FLIPPED for ${profitLossETH} ETH (threshold ${profitThresholdETH} ETH)\n${openSeaLink}\n`)
   }
 
   return tweetContent

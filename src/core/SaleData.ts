@@ -46,7 +46,7 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
     var boughtDateETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate)
     var soldDateETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate)
   } catch (error) {
-    throw new Error(error)
+    throw error
   }
 
   // Get the bought & sold prices in USD

@@ -40,8 +40,8 @@ export default class CoinbaseAPI {
     }
 
     const amount = Number(response.data.amount)
-    if (amount <= 0) {
-      throw new Error("invalid ETH price")
+    if (!amount || amount <= 0) {
+      throw Error(`invalid ETH price ${response.data.amount}`)
     }
     
     return Math.round(amount)
