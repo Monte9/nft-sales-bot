@@ -12,11 +12,10 @@ export interface SalesBot {
 
 export interface Collection {
   address: string
-  symbol: string
   name: string
-  twitterUsername?: string
   slug: CollectionSlug
-  profitThreshold?: number
+  symbol: string
+  twitterUsername?: string
   alternateNames: string[]
 }
 

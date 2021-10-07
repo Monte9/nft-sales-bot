@@ -89,7 +89,7 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   const profitThresholdETH = getProfitThresholdETH(floorPrice)
 
   // Only report losses > 1 ETH
-  // OR if profit > profitThreshold for the collection
+  // OR if ETH profit > profitThreshold for the collection
   if (!isProfit && absoluteProfitLossETH < 1) {
     throw new Error(`${collection.symbol} #${tokenId} FUMBLED for ${profitLossETH} ETH (threshold -1 ETH)\n${openSeaLink}\n`)
   } else if (isProfit && profitLossETH < profitThresholdETH) {
