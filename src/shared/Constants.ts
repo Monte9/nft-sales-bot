@@ -50,14 +50,6 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     alternateNames: ['Chromie Squiggle', 'Art Blocks Curated Chromie Squiggle'],
   },
   {
-    address: '0x8943c7bac1914c9a7aba750bf2b6b09fd21037e0',
-    name: 'Lazy Lions',
-    slug: CollectionSlug.lazylions,
-    symbol: 'LION',
-    twitterUsername: 'LazyLionsNFT',
-    alternateNames: ['Lazy Lions'],
-  },
-  {
     address: '0x3fe1a4c1481c8351e91b64d5c398b159de07cbc5',
     name: 'SupDucks',
     slug: CollectionSlug.supducks,
@@ -73,22 +65,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     twitterUsername: 'CyberKongz',
     alternateNames: ['CyberKongz'],
   },
-  {
-    address: '0xdd69da9a83cedc730bc4d3c56e96d29acc05ecde',
-    name: 'TIMEPiece Community',
-    slug: CollectionSlug.timepiececommunity,
-    symbol: 'BABF',
-    twitterUsername: 'time',
-    alternateNames: [],
-  },
-  {
-    address: '0x219b8ab790decc32444a6600971c7c3718252539',
-    name: 'Sneaky Vampire Syndicate',
-    slug: CollectionSlug.sneakyvampiresyndicate,
-    symbol: 'SVS',
-    twitterUsername: 'svsnft',
-    alternateNames: [],
-  },
+
   {
     address: '0x1cb1a5e65610aeff2551a50f76a87a7d3fb649c6',
     name: 'Cryptoadz',
@@ -105,9 +82,6 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     twitterUsername: 'creaturenft',
     alternateNames: ['Creature World NFT'],
   },
-];
-
-export const INACTIVE_NFT_COLLECTIONS: Collection[] = [
   {
     address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
     name: 'Mutant Ape Yacht Club',
@@ -122,6 +96,33 @@ export const INACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.dystopunksv2,
     symbol: 'DYSTO',
     twitterUsername: 'DystoPunks',
+    alternateNames: [],
+  },
+];
+
+export const INACTIVE_NFT_COLLECTIONS: Collection[] = [
+  {
+    address: '0x8943c7bac1914c9a7aba750bf2b6b09fd21037e0',
+    name: 'Lazy Lions',
+    slug: CollectionSlug.lazylions,
+    symbol: 'LION',
+    twitterUsername: 'LazyLionsNFT',
+    alternateNames: ['Lazy Lions'],
+  },
+  {
+    address: '0xdd69da9a83cedc730bc4d3c56e96d29acc05ecde',
+    name: 'TIMEPiece Community',
+    slug: CollectionSlug.timepiececommunity,
+    symbol: 'BABF',
+    twitterUsername: 'time',
+    alternateNames: [],
+  },
+  {
+    address: '0x219b8ab790decc32444a6600971c7c3718252539',
+    name: 'Sneaky Vampire Syndicate',
+    slug: CollectionSlug.sneakyvampiresyndicate,
+    symbol: 'SVS',
+    twitterUsername: 'svsnft',
     alternateNames: [],
   },
 ];
