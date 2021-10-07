@@ -4,6 +4,7 @@ export enum CollectionSlug {
   artblocks = "art-blocks",
   boredapeyachtclub = "boredapeyachtclub",
   coolcatsnft = "cool-cats-nft",
+  creatures = "creature-world-collection",
   cryptopunks = "cryptopunks",
   cryptoadz = "cryptoadz-by-gremplin",
   cyberkongz = "cyberkongz",
@@ -95,6 +96,14 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     symbol: 'TOADZ',
     twitterUsername: 'cryptoadzNFT',
     alternateNames: ['CrypToadz by GREMPLIN'],
+  },
+  {
+    address: '0xc92ceddfb8dd984a89fb494c376f9a48b999aafc',
+    name: 'Creature World',
+    slug: CollectionSlug.creatures,
+    symbol: 'CREATURE',
+    twitterUsername: 'creaturenft',
+    alternateNames: ['Creature World NFT'],
   },
 ];
 
