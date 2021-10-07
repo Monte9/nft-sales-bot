@@ -12,6 +12,7 @@ export enum CollectionSlug {
   dystopunksv2 = "dystopunks-v2",
   lazylions = "lazy-lions",
   mutantapeyachtclub = "mutant-ape-yacht-club",
+  pudgypenguins = "pudgypenguins",
   sneakyvampiresyndicate = "sneaky-vampire-syndicate",
   supducks = "supducks",
   timepiececommunity = "timepiece-community",
@@ -105,6 +106,14 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     symbol: 'SD',
     twitterUsername: 'realsupducks',
     alternateNames: ['Sup Ducks'],
+  },
+  {
+    address: '0xbd3531da5cf5857e7cfaa92426877b022e612cf8',
+    name: 'PudgyPenguins',
+    slug: CollectionSlug.pudgypenguins,
+    symbol: 'PPG',
+    twitterUsername: 'pudgy_penguins',
+    alternateNames: ['Pudgy Penguins'],
   },
 ];
 
