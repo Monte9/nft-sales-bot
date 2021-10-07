@@ -1,6 +1,7 @@
 import { Collection } from "../types"
 
 export enum CollectionSlug {
+  anonymice = "anonymice",
   artblocks = "art-blocks",
   boredapeyachtclub = "boredapeyachtclub",
   coolcatsnft = "cool-cats-nft",
@@ -11,27 +12,19 @@ export enum CollectionSlug {
   dystopunksv2 = "dystopunks-v2",
   lazylions = "lazy-lions",
   mutantapeyachtclub = "mutant-ape-yacht-club",
+  sneakyvampiresyndicate = "sneaky-vampire-syndicate",
   supducks = "supducks",
   timepiececommunity = "timepiece-community",
-  sneakyvampiresyndicate = "sneaky-vampire-syndicate"
 }
 
 export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
   {
-    address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
-    name: 'Bored Ape Yacht Club',
-    slug: CollectionSlug.boredapeyachtclub,
-    symbol: 'BAYC',
-    twitterUsername: 'BoredApeYC',
-    alternateNames: ['BAYC'],
-  },
-  {
-    address: '0x1a92f7381b9f03921564a437210bb9396471050c',
-    name: 'Cool Cats NFT',
-    slug: CollectionSlug.coolcatsnft,
-    symbol: 'COOL',
-    twitterUsername: 'coolcatsnft',
-    alternateNames: ['Cool Cats NFTs'],
+    address: '0x57a204aa1042f6e66dd7730813f4024114d74f37',
+    name: 'CyberKongz',
+    slug: CollectionSlug.cyberkongz,
+    symbol: 'KONGZ',
+    twitterUsername: 'CyberKongz',
+    alternateNames: ['CyberKongz'],
   },
   {
     address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
@@ -42,6 +35,14 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     alternateNames: ['Crypto Punks'],
   },
   {
+    address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
+    name: 'Bored Ape Yacht Club',
+    slug: CollectionSlug.boredapeyachtclub,
+    symbol: 'BAYC',
+    twitterUsername: 'BoredApeYC',
+    alternateNames: ['BAYC'],
+  },
+  {
     address: '0x059edd72cd353df5106d2b9cc5ab83a52287ac3a',
     name: 'Art Blocks Curated',
     slug: CollectionSlug.artblocks,
@@ -50,22 +51,13 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     alternateNames: ['Chromie Squiggle', 'Art Blocks Curated Chromie Squiggle'],
   },
   {
-    address: '0x3fe1a4c1481c8351e91b64d5c398b159de07cbc5',
-    name: 'SupDucks',
-    slug: CollectionSlug.supducks,
-    symbol: 'SD',
-    twitterUsername: 'realsupducks',
-    alternateNames: ['Sup Ducks'],
+    address: '0x1a92f7381b9f03921564a437210bb9396471050c',
+    name: 'Cool Cats NFT',
+    slug: CollectionSlug.coolcatsnft,
+    symbol: 'COOL',
+    twitterUsername: 'coolcatsnft',
+    alternateNames: ['Cool Cats NFTs'],
   },
-  {
-    address: '0x57a204aa1042f6e66dd7730813f4024114d74f37',
-    name: 'CyberKongz',
-    slug: CollectionSlug.cyberkongz,
-    symbol: 'KONGZ',
-    twitterUsername: 'CyberKongz',
-    alternateNames: ['CyberKongz'],
-  },
-
   {
     address: '0x1cb1a5e65610aeff2551a50f76a87a7d3fb649c6',
     name: 'Cryptoadz',
@@ -75,12 +67,20 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     alternateNames: ['CrypToadz by GREMPLIN'],
   },
   {
-    address: '0xc92ceddfb8dd984a89fb494c376f9a48b999aafc',
-    name: 'Creature World',
-    slug: CollectionSlug.creatures,
-    symbol: 'CREATURE',
-    twitterUsername: 'creaturenft',
-    alternateNames: ['Creature World NFT'],
+    address: '0xbea8123277142de42571f1fac045225a1d347977',
+    name: 'DystoPunks V2',
+    slug: CollectionSlug.dystopunksv2,
+    symbol: 'DYSTO',
+    twitterUsername: 'DystoPunks',
+    alternateNames: [],
+  },
+  {
+    address: '0xbad6186e92002e312078b5a1dafd5ddf63d3f731',
+    name: 'Anonymice',
+    slug: CollectionSlug.anonymice,
+    symbol: 'MICE',
+    twitterUsername: 'AnonymiceNFT',
+    alternateNames: ['Anonymice'],
   },
   {
     address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
@@ -91,12 +91,20 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     alternateNames: ['MAYC'],
   },
   {
-    address: '0xbea8123277142de42571f1fac045225a1d347977',
-    name: 'DystoPunks V2',
-    slug: CollectionSlug.dystopunksv2,
-    symbol: 'DYSTO',
-    twitterUsername: 'DystoPunks',
-    alternateNames: [],
+    address: '0xc92ceddfb8dd984a89fb494c376f9a48b999aafc',
+    name: 'Creature World',
+    slug: CollectionSlug.creatures,
+    symbol: 'CREATURE',
+    twitterUsername: 'creaturenft',
+    alternateNames: ['Creature World NFT'],
+  },
+  {
+    address: '0x3fe1a4c1481c8351e91b64d5c398b159de07cbc5',
+    name: 'SupDucks',
+    slug: CollectionSlug.supducks,
+    symbol: 'SD',
+    twitterUsername: 'realsupducks',
+    alternateNames: ['Sup Ducks'],
   },
 ];
 
