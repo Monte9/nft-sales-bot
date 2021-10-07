@@ -10,6 +10,7 @@ export enum CollectionSlug {
   cryptoadz = "cryptoadz-by-gremplin",
   cyberkongz = "cyberkongz",
   dystopunksv2 = "dystopunks-v2",
+  guttercatgang = "guttercatgang",
   lazylions = "lazy-lions",
   mutantapeyachtclub = "mutant-ape-yacht-club",
   pudgypenguins = "pudgypenguins",
@@ -82,6 +83,14 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     symbol: 'MICE',
     twitterUsername: 'AnonymiceNFT',
     alternateNames: ['Anonymice'],
+  },
+  {
+    address: '0xedb61f74b0d09b2558f1eeb79b247c1f363ae452',
+    name: 'Gutter Cat Gang',
+    slug: CollectionSlug.guttercatgang,
+    symbol: 'GANG',
+    twitterUsername: 'guttercatgang',
+    alternateNames: ['Gutter Cat Gang'],
   },
   {
     address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',

@@ -83,7 +83,7 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
 export function getSaleTypeInfo(isProfit: boolean, boughtPriceUSD: number, soldPriceUSD: number, hodlDays: number, didSellBelowFloor: boolean) {
   // They accepted a bot offer below current floor price
   if (didSellBelowFloor) {
-    return 'Below Floor #NGMI'
+    return 'Below Floor'
   }
 
   // If Sold price < 40% of Bought price
