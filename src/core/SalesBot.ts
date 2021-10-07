@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import CoinbaseAPI from '../api/CoinbaseAPI';
 import FloorAPI from '../api/FloorAPI';
+import LeaderboardAPI from '../api/LeaderboardAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
 
@@ -11,7 +12,7 @@ import { composeTweet } from './Twitter';
 
 import { Collection, Sale, SalesBot } from '../types';
 
-import { getCurrentTime } from '../shared/Formatters';
+import { getCurrentTime, rounded } from '../shared/Formatters';
 import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from '../shared/Constants';
 import { assetBelongsToCollection, getFloorPriceForCollection } from '../shared/Helpers';
 
@@ -20,11 +21,13 @@ export default class NFTSalesBot {
   floorAPI: FloorAPI = null
   openSeaAPI: OpenSeaAPI = null
   twitterAPI: TwitterAPI = null
+  leaderboardAPI: LeaderboardAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI();
     this.openSeaAPI = new OpenSeaAPI();
     this.floorAPI = new FloorAPI();
+    this.leaderboardAPI = new LeaderboardAPI();
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
@@ -39,11 +42,11 @@ export default class NFTSalesBot {
 
     // Runs DebugBot in DEVELOPMENT environment
     if (process.env.NODE_ENV === "DEVELOPMENT") {
-      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.floorAPI)
+      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.leaderboardAPI)
       return
     }
 
-    const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI)
+    const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI, this.leaderboardAPI)
     console.log('\Initial Collections', collectionsData, '\n')
 
     let currentIndex = 0
@@ -64,7 +67,7 @@ export default class NFTSalesBot {
         console.log(`Missing oldSalesIds for ${currentCollection.collection.name}`)
 
         // Update the missing collection again
-        collectionsData[collectionIndex] = await getCollectionData(currentCollection.collection, this.openSeaAPI)
+        collectionsData[collectionIndex] = await getCollectionData(currentCollection.collection, this.openSeaAPI, this.leaderboardAPI)
 
         // Delay the next OpenSea API call by 30 seconds
         console.log(`Waiting for 30 secs...\n`)
@@ -198,17 +201,17 @@ export default class NFTSalesBot {
 
 // Gets the oldSales events for all Collections
 // Used to initialize the bot and build a Collection object
-export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI): Promise<SalesBot[]> {
+export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI, leaderboardAPI: LeaderboardAPI): Promise<SalesBot[]> {
   return await Promise.all(
     ACTIVE_NFT_COLLECTIONS.map(async (collection): Promise<SalesBot> => {
-      return getCollectionData(collection, openSeaAPI)
+      return getCollectionData(collection, openSeaAPI, leaderboardAPI)
     })
   )
 }
 
 // Gets the oldSales events for all Collections
 // Used to initialize the bot and build a Collection object
-export async function getCollectionData(collection: Collection, openSeaAPI: OpenSeaAPI): Promise<SalesBot> {
+export async function getCollectionData(collection: Collection, openSeaAPI: OpenSeaAPI, leaderboardAPI: LeaderboardAPI): Promise<SalesBot> {
   let oldSales: Sale[] = null;
   let oldSalesIds: number[] = []
 
@@ -219,7 +222,6 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
 
   try {
     oldSales = await openSeaAPI.fetchSaleEventsForCollection(collection.slug)
-    
     for (let i=0; i<oldSales.length; i++) {
       oldSalesIds.push(oldSales[i].saleId)
     }
@@ -230,18 +232,31 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
     return salesBot
   }
 
-  // Set the floor price for the collection
-  const floorPrice = await getFloorPriceForCollection(collection)
-  const currentFloorPrice = floorPrice.currentFloor || 0
-  salesBot.floorPrice = currentFloorPrice
-
-  // More Information about the collection
-  console.log(`${collection.symbol}`)
-  console.log(`Floor price: ${floorPrice.currentFloor} ETH`)
-  const profitThresholdETH = getProfitThresholdETH(currentFloorPrice)
-  console.log(`Profit Threshold: ${profitThresholdETH} ETH\n`)
-
   // Update the oldSalesId on the salesBot
   salesBot.oldSalesIds = oldSalesIds
+
+  // Set the floor price for the collection
+  const floorPrice = await getFloorPriceForCollection(collection)
+  const currentFloorPrice = rounded(floorPrice.currentFloor || 0)
+  salesBot.floorPrice = currentFloorPrice
+
+  // Calculate the profit threshold for the collection
+  const profitThresholdETH = getProfitThresholdETH(currentFloorPrice)
+
+  // Setup collectionData
+  const collectionData = {
+    collection,
+    floorPrice: currentFloorPrice,
+    profitThreshold: profitThresholdETH
+  }
+
+  // Send collectionData to the NFT Leaderboard API
+  try {
+    await leaderboardAPI.saveCollectionData(collectionData)
+    console.log(`Leaderboard API: ${collection.symbol} collection data updated`)
+  } catch (error) {
+    console.log(`Leaderboard API Error: Unable to save ${collection.symbol} collection data -`, error.message)
+  }
+
   return salesBot
 }

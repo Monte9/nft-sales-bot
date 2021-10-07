@@ -10,12 +10,12 @@ interface ComposeTweetParams {
   collection: Collection
   purchase: Sale
   sale: Sale
-  floorPrice: number
+  floorPrice?: number
   coinbaseAPI: CoinbaseAPI
 }
 
 // Composes a tweet using the Sale information
-export async function composeTweet({ collection, purchase, sale, coinbaseAPI, floorPrice }: ComposeTweetParams): Promise<string> {
+export async function composeTweet({ collection, purchase, sale, coinbaseAPI, floorPrice = 0 }: ComposeTweetParams): Promise<string> {
   let salesData: SaleData = null
 
   try {

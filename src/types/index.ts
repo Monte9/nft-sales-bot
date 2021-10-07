@@ -91,3 +91,11 @@ export interface SaleData {
   flipValueUSD: number
   flipPercentageUSD: number
 }
+
+// LEADERBOARD COLLECTION
+
+export interface LeaderboardCollection {
+  collection: Collection
+  floorPrice: number
+  profitThreshold: number
+}
