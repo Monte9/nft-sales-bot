@@ -1,5 +1,7 @@
 import { Collection } from "../types"
 
+export const SUPPORTED_PAYMENT_TOKEN_SYMBOLS = ['ETH', 'WETH']
+
 export enum CollectionSlug {
   anonymice = "anonymice",
   artblocks = "art-blocks",

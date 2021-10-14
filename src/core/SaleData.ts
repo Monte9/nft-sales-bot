@@ -1,5 +1,8 @@
 import CoinbaseAPI from "../api/CoinbaseAPI"
+
 import { Sale, SaleData } from "../types"
+
+import { SUPPORTED_PAYMENT_TOKEN_SYMBOLS } from "../shared/Constants"
 import { getShortWalletAddress, getTotalDaysBetween, rounded } from "../shared/Formatters"
 
 interface SaleDataParams {
@@ -17,6 +20,17 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   const seller = sale.seller
   const sellerWallet = getShortWalletAddress(seller.address)
   const sellerName = seller.username || sellerWallet
+
+  const purchaseToken = purchase.paymentToken && purchase.paymentToken.symbol || 'ETH'
+  const saleToken = sale.paymentToken && sale.paymentToken.symbol || 'ETH'
+
+  // Currently we only support ETH & WETH
+  // For any other paymentToken, throw an error
+  if (!SUPPORTED_PAYMENT_TOKEN_SYMBOLS.includes(purchaseToken)) {
+    throw new Error(`unsupported purchaseToken ${purchaseToken}`)
+  } else if (!SUPPORTED_PAYMENT_TOKEN_SYMBOLS.includes(saleToken)) {
+    throw new Error(`unsupported saleToken ${saleToken}`)
+  }
 
   // Get rounded Bought & Sold price in ETH
   const boughtPriceETH = rounded(purchase.salePrice)

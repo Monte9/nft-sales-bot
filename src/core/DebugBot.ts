@@ -12,9 +12,9 @@ import { getCollectionFromSlug } from '../shared/Helpers';
 
 export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI, leaderboardAPI: LeaderboardAPI) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug(CollectionSlug.dystopunks)
+  const collection = getCollectionFromSlug(CollectionSlug.cyberkongz)
   const collectionData = await getCollectionData(collection, openSeaAPI, leaderboardAPI)
-  const tokenID = '244'
+  const tokenID = '3157'
 
   try {
     const tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)
@@ -37,7 +37,7 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
       // Post a tweet with sale information
       await twitterAPI.postTweet(newSalesTweet)
     } catch (error) {
-      console.log("Unable to post Tweet:", error.message)
+      console.log(`Unable to post Tweet for ${collection.symbol} ${tokenID}:`, error.message)
     }
   } catch (error) {
     console.log(`Unable to get Sales Events for ${collection.symbol} #${tokenID}:`, error.message)

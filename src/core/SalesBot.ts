@@ -168,7 +168,7 @@ export default class NFTSalesBot {
                 // Post a tweet with sale information
                 await this.twitterAPI.postTweet(tweetText)
               } catch (error) {
-                console.log("Unable to post Tweet:", error.message)
+                console.log(`Unable to post Tweet for ${currentCollection.collection.symbol} ${tokenID}:`, error.message)
               }
             } catch (error) {
               console.log(`Unable to get Sales Events for ${currentCollection.collection.symbol} #${tokenID}:`, error.message)
