@@ -12,6 +12,7 @@ export enum CollectionSlug {
   dystopunksv2 = "dystopunks-v2",
   guttercatgang = "guttercatgang",
   lazylions = "lazy-lions",
+  mekaverse = "mekaverse",
   mutantapeyachtclub = "mutant-ape-yacht-club",
   pudgypenguins = "pudgypenguins",
   sneakyvampiresyndicate = "sneaky-vampire-syndicate",
@@ -99,6 +100,14 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     symbol: 'MAYC',
     twitterUsername: 'BoredApeYC',
     alternateNames: ['MAYC'],
+  },
+  {
+    address: '0x9a534628b4062e123ce7ee2222ec20b86e16ca8f',
+    name: 'MekaVerse',
+    slug: CollectionSlug.mekaverse,
+    symbol: 'MEKA',
+    twitterUsername: 'MekaVerse',
+    alternateNames: [''],
   },
   {
     address: '0xc92ceddfb8dd984a89fb494c376f9a48b999aafc',

@@ -20,6 +20,10 @@ export const getYMDaysBetween = (start: string, end: string): string => {
   const startDate = moment(start)
   const endDate = moment(end)
   const duration = moment.duration(startDate.diff(endDate));
+  
+  // Get the time in mins, hrs, days, months and years
+  const minutes = duration.minutes()
+  const hours = duration.hours()
   const days = duration.days()
   const months = duration.months()
   const years = duration.years()
@@ -36,14 +40,25 @@ export const getYMDaysBetween = (start: string, end: string): string => {
     durationString = durationString + `${months} ${monthsString} `
   }
 
-  if (days != 0) {
+  if (days > 0) {
     const daysString = days === 1 ? 'day' : 'days'
-    durationString = durationString + `${days} ${daysString}`
+    durationString = durationString + `${days} ${daysString} `
   }
 
-  // Sometimes the days can be 0 as the trade happened on the same day
-  // So check if it's empty and default to 1 day
-  // Verify with Token 6002
+  // If the duration is less than 1 day break it down further
+  if (!durationString) {
+    if (hours > 0) {
+      const hoursString = hours === 1 ? 'hour' : 'hours'
+      durationString = durationString + `${hours} ${hoursString} `
+    }
+    
+    if (minutes > 0) {
+      const minutesString = minutes === 1 ? 'minute' : 'minutes'
+      durationString = durationString + `${minutes} ${minutesString}`
+    }
+  }
+
+  // If there is still not duration then default to 1 day
   if (!durationString) {
     durationString = "1 day"
   }

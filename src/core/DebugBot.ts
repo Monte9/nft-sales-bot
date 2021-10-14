@@ -8,13 +8,13 @@ import { getCollectionData } from './SalesBot';
 
 import { CollectionSlug } from '../shared/Constants';
 
-import { getCollectionFromSlug, getFloorPriceForCollection } from '../shared/Helpers';
+import { getCollectionFromSlug } from '../shared/Helpers';
 
 export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI, leaderboardAPI: LeaderboardAPI) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug(CollectionSlug.guttercatgang)
+  const collection = getCollectionFromSlug(CollectionSlug.mekaverse)
   const collectionData = await getCollectionData(collection, openSeaAPI, leaderboardAPI)
-  const tokenID = '2980'
+  const tokenID = '7663'
 
   try {
     const tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)
