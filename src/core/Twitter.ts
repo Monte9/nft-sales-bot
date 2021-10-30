@@ -49,12 +49,17 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
 
   // Get the absolute profit/loss without the minus sign for losses
   const absoluteProfitLossETH = Math.abs(profitLossETH)
+  const absoluteProfitLossETHFormatted = addCommas(absoluteProfitLossETH)
 
   // Check whether they sold below floor - it was a bot offer
   const didSellBelowFloor = sale.salePrice < floorPrice
 
   // Get HODL Duration
   const hodlDuration = getYMDaysBetween(soldDate, boughtDate)
+
+  // Get formatted bought and sold ETH price 
+  const boughtPriceETHFormatted = addCommas(boughtPriceETH)
+  const soldPriceETHFormatted = addCommas(soldPriceETH)
 
   // Get formatted ETH price for Bought & Sold dates
   const boughtDateETHPriceFormatted = addCommas(boughtDateETHPrice)
@@ -72,15 +77,15 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
 
   // Get Sale type
   const saleTypeTitle = isProfit ? 'FLIPPED' : 'FUMBLED'
-  const saleTypeInfo = getSaleTypeInfo(isProfit, boughtPriceUSD, soldPriceUSD, hodlDays, didSellBelowFloor)
+  const saleTypeInfo = getSaleTypeInfo(isProfit, profitLossETH, hodlDays, flipValueUSD)
 
   // Format the Tweet content
   const intro = `${sellerName} ${saleTypeTitle} ${collection.symbol} #${tokenId}\n`
-  const flipInfoETH = `${isETHProfitLoss}: ${absoluteProfitLossETH} ETH\n`
+  const flipInfoETH = `${isETHProfitLoss}: ${absoluteProfitLossETHFormatted} ETH\n`
   const flipInfoUSD = `${isUSDProfitLoss}: ${isUSDProfitLossSymbol}$${flipValueUSDFormatted} (${isProfitLossPercentageEmoji}${flipPercentageUSDFormatted}%)\n`
   const hodlInfo = `🤝 HODL: ${hodlDuration}\n`
-  const boughtInfo = `🛍 Bought: ${boughtPriceETH} ${sale.paymentToken.symbol} @ $${boughtDateETHPriceFormatted}\n`
-  const soldInfo = `💰 Sold: ${soldPriceETH} ${sale.paymentToken.symbol} @ $${soldDateETHPriceFormatted}\n`
+  const boughtInfo = `🛍 Bought: ${boughtPriceETHFormatted} ${sale.paymentToken.symbol} @ $${boughtDateETHPriceFormatted}\n`
+  const soldInfo = `💰 Sold: ${soldPriceETHFormatted} ${sale.paymentToken.symbol} @ $${soldDateETHPriceFormatted}\n`
   const status = `🏆 Status: ${saleTypeInfo}\n`
 
   const tweetContent = intro + '\n' + status + '\n' + boughtInfo + soldInfo + hodlInfo + '\n' + flipInfoETH + flipInfoUSD + '\n' + openSeaLink
