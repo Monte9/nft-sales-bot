@@ -220,7 +220,6 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
 
     console.log(`Got ${oldSales.length} sales events for ${collection.slug}`)
   } catch (error) {
-    console.log(`Unable to get sale events for ${collection.slug}:`, error.message, '\n')
     return salesBot
   }
 

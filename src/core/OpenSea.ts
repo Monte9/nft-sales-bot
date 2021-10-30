@@ -15,7 +15,6 @@ export function parseSales(saleEvents): Sale[] {
         name: saleEvent.asset.collection.name,
         twitterUsername: saleEvent.asset.collection.twitter_username,
         slug: saleEvent.asset.collection.slug,
-        alternateNames: []
       }
 
       let asset: Asset = {

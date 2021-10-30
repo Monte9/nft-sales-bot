@@ -44,8 +44,6 @@ export default class FloorAPI {
 }
 
 export function parseFloorPrices(collections): FloorPrice[] {
-  console.log(collections[0])
-
   return collections.reduce((acc, collection) => {
     let info: FloorPrice = {
       name: collection.project_name,

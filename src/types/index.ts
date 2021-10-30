@@ -16,7 +16,6 @@ export interface Collection {
   slug: CollectionSlug
   symbol: string
   twitterUsername?: string
-  alternateNames: string[]
 }
 
 // SALE

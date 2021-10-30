@@ -167,18 +167,25 @@ export function getProfitThresholdETH(floorPrice: number): number {
     return rounded(floorPrice * 0.1)
   }
 
-  // For larger collection where floor price is more than 50 ETH
-  // We choose a smaller threshold since the margins are really big
-  if (floorPrice > 50) {
+  if (floorPrice > 75) {
     return rounded(floorPrice * 0.15)
   }
 
-  // For mid-sized collection where floor price is more than 5 ETH
-  // We choose a medium threshold since the margins aren't that big
-  if (floorPrice > 5) {
+  if (floorPrice > 50) {
     return rounded(floorPrice * 0.2)
   }
 
-  // By defualt for all other collections have a 1 ETH profit threshold
-  return 1
+  if (floorPrice > 25) {
+    return rounded(floorPrice * 0.25)
+  }
+
+  if (floorPrice > 10) {
+    return rounded(floorPrice * 0.3)
+  }
+
+  if (floorPrice > 5) {
+    return rounded(floorPrice * 0.4)
+  }
+
+  return rounded(floorPrice * 0.5)
 }
