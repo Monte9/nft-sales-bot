@@ -12,6 +12,7 @@ export enum CollectionSlug {
   cryptopunks = "cryptopunks",
   cryptoadz = "cryptoadz-by-gremplin",
   cyberkongz = "cyberkongz",
+  doodlesofficial = "doodles-official",
   dystopunks = "dystopunks",
   fidenzabytylerhobbs = "fidenza-by-tyler-hobbs",
   guttercatgang = "guttercatgang",
@@ -23,6 +24,7 @@ export enum CollectionSlug {
   sneakyvampiresyndicate = "sneaky-vampire-syndicate",
   supducks = "supducks",
   timepiececommunity = "timepiece-community",
+  veefriends = "veefriends",
 }
 
 export const ART_BLOCKS_CURATED_COLLECTIONS: Collection[] = [
@@ -61,6 +63,7 @@ export const ART_BLOCKS_CURATED_COLLECTIONS: Collection[] = [
 ]
 
 export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
+  ...ART_BLOCKS_CURATED_COLLECTIONS,
   {
     address: '0x57a204aa1042f6e66dd7730813f4024114d74f37',
     name: 'CyberKongz',
@@ -134,6 +137,25 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     alternateNames: ['MAYC'],
   },
   {
+    address: '0x8a90cab2b38dba80c64b7734e58ee1db38b8992e',
+    name: 'Doodles',
+    slug: CollectionSlug.doodlesofficial,
+    symbol: 'DOODLE',
+    twitterUsername: 'doodles',
+    alternateNames: [''],
+  },
+  {
+    address: '0xa3aee8bce55beea1951ef834b99f3ac60d1abeeb',
+    name: 'VeeFriends',
+    slug: CollectionSlug.veefriends,
+    symbol: 'VFT',
+    twitterUsername: 'veefriends',
+    alternateNames: [''],
+  },
+];
+
+export const INACTIVE_NFT_COLLECTIONS: Collection[] = [
+  {
     address: '0x9a534628b4062e123ce7ee2222ec20b86e16ca8f',
     name: 'MekaVerse',
     slug: CollectionSlug.mekaverse,
@@ -165,10 +187,6 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     twitterUsername: 'pudgy_penguins',
     alternateNames: ['Pudgy Penguins'],
   },
-  ...ART_BLOCKS_CURATED_COLLECTIONS
-];
-
-export const INACTIVE_NFT_COLLECTIONS: Collection[] = [
   {
     address: '0x8943c7bac1914c9a7aba750bf2b6b09fd21037e0',
     name: 'Lazy Lions',
