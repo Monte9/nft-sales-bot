@@ -138,14 +138,6 @@ export default class NFTSalesBot {
           if (latestSalesIds[i] === newSales[j].saleId) {
             console.log(`${currentCollection.collection.name} @ ${getCurrentTime()} - New Sale ID#${latestSalesIds[i]}\n`)
 
-            // We want to be selective about which artblocks we support
-            if (currentCollection.collection.slug == CollectionSlug.artblocks) {
-              if (!assetBelongsToCollection(currentCollection.collection, asset.name)) {
-                console.log(`${currentCollection.collection.symbol} #${tokenID} is ${asset.name} and is not supported`, '\n')
-                continue
-              }
-            }
-
             // Fetches all the sale events for the token
             try {
               const tokenSales = await this.openSeaAPI.fetchSaleEventsForToken(currentCollection.collection.address, tokenID)

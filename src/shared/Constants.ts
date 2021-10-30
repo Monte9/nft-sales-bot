@@ -4,7 +4,8 @@ export const SUPPORTED_PAYMENT_TOKEN_SYMBOLS = ['ETH', 'WETH']
 
 export enum CollectionSlug {
   anonymice = "anonymice",
-  artblocks = "art-blocks",
+  archetypebykjetilgolid = "archetype-by-kjetil-golid",
+  chromiesquigglebysnowfro = "chromie-squiggle-by-snowfro",
   boredapeyachtclub = "boredapeyachtclub",
   coolcatsnft = "cool-cats-nft",
   creatures = "creature-world-collection",
@@ -12,15 +13,52 @@ export enum CollectionSlug {
   cryptoadz = "cryptoadz-by-gremplin",
   cyberkongz = "cyberkongz",
   dystopunks = "dystopunks",
+  fidenzabytylerhobbs = "fidenza-by-tyler-hobbs",
   guttercatgang = "guttercatgang",
   lazylions = "lazy-lions",
   mekaverse = "mekaverse",
   mutantapeyachtclub = "mutant-ape-yacht-club",
   pudgypenguins = "pudgypenguins",
+  ringersbydmitricherniak = "ringers-by-dmitri-cherniak",
   sneakyvampiresyndicate = "sneaky-vampire-syndicate",
   supducks = "supducks",
   timepiececommunity = "timepiece-community",
 }
+
+export const ART_BLOCKS_CURATED_COLLECTIONS: Collection[] = [
+  {
+    address: '0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270',
+    name: 'Ringers by Dmitri Cherniak',
+    slug: CollectionSlug.ringersbydmitricherniak,
+    symbol: 'BLOCKS',
+    twitterUsername: null,
+    alternateNames: ['Art Blocks Curated Ringers'],
+  },
+  {
+    address: '0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270',
+    name: 'Fidenza by Tyler Hobbs',
+    slug: CollectionSlug.fidenzabytylerhobbs,
+    symbol: 'BLOCKS',
+    twitterUsername: null,
+    alternateNames: ['Art Blocks Curated Fidenza'],
+  },
+  {
+    address: '0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270',
+    name: 'Archetype by Kjetil Golid',
+    slug: CollectionSlug.archetypebykjetilgolid,
+    symbol: 'BLOCKS',
+    twitterUsername: null,
+    alternateNames: ['Art Blocks Curated Archetypes'],
+  },
+  {
+    address: '0x059edd72cd353df5106d2b9cc5ab83a52287ac3a',
+    name: 'Chromie Squiggle by Snowfro',
+    slug: CollectionSlug.chromiesquigglebysnowfro,
+    symbol: 'BLOCKS',
+    twitterUsername: null,
+    alternateNames: ['Art Blocks Curated Chromie Squiggle'],
+  },
+]
 
 export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
   {
@@ -46,14 +84,6 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     symbol: 'BAYC',
     twitterUsername: 'BoredApeYC',
     alternateNames: ['BAYC'],
-  },
-  {
-    address: '0x059edd72cd353df5106d2b9cc5ab83a52287ac3a',
-    name: 'Art Blocks Curated',
-    slug: CollectionSlug.artblocks,
-    symbol: 'BLOCKS',
-    twitterUsername: null,
-    alternateNames: ['Chromie Squiggle', 'Art Blocks Curated Chromie Squiggle'],
   },
   {
     address: '0x1a92f7381b9f03921564a437210bb9396471050c',
@@ -135,6 +165,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     twitterUsername: 'pudgy_penguins',
     alternateNames: ['Pudgy Penguins'],
   },
+  ...ART_BLOCKS_CURATED_COLLECTIONS
 ];
 
 export const INACTIVE_NFT_COLLECTIONS: Collection[] = [
