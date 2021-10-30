@@ -41,7 +41,7 @@ export default class Leaderboard {
       
       // If only 1 sale exists, it's not considered a FLIP - just ignore it
       if (tokenSales.length < 2) {
-        console.log(`${collection.symbol} #${tokenID} only has 1 sales event`, '\n')
+        console.log(`${collection.symbol} #${tokenID} only has 1 sales event`)
         return
       }
 

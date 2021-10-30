@@ -25,10 +25,10 @@ export default class TwitterAPI {
         console.log(content)
       } else {
         const tweet = await this.twitterV1.tweet(content)
-        console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}\n`)
+        console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
       }
     } catch (error) {
-      console.log("Error:", error.message, '\n')
+      console.log("Error:", error.message)
     }
   }
 }

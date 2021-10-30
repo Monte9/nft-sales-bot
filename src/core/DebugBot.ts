@@ -12,16 +12,16 @@ import { getCollectionFromSlug } from '../shared/Helpers';
 
 export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI, leaderboardAPI: LeaderboardAPI) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug(CollectionSlug.cryptopunks)
+  const collection = getCollectionFromSlug(CollectionSlug.doodlesofficial)
   const collectionData = await getCollectionData(collection, openSeaAPI, leaderboardAPI)
-  const tokenID = '6913'
+  const tokenID = '7407'
 
   try {
     const tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)
     
     // If only 1 sale exists, it's not considered a FLIP - just ignore it
     if (tokenSales.length < 2) {
-      console.log(`${collection.symbol} #${tokenID} only has 1 sales event`, '\n')
+      console.log(`${collection.symbol} #${tokenID} only has 1 sales event`)
       return
     }
 

@@ -38,7 +38,7 @@ export default class NFTSalesBot {
   }
 
   async start() {
-    console.log(`Starting NFT Sales Bot in ${process.env.NODE_ENV}\n`)
+    console.log(`Starting NFT Sales Bot in ${process.env.NODE_ENV}`)
 
     // Runs DebugBot in DEVELOPMENT environment
     if (process.env.NODE_ENV === "DEVELOPMENT") {
@@ -47,7 +47,7 @@ export default class NFTSalesBot {
     }
 
     const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI, this.leaderboardAPI)
-    console.log('\Initial Collections', collectionsData, '\n')
+    console.log('\Initial Collections', collectionsData)
 
     let currentIndex = 0
 
@@ -70,7 +70,7 @@ export default class NFTSalesBot {
         collectionsData[collectionIndex] = await getCollectionData(currentCollection.collection, this.openSeaAPI, this.leaderboardAPI)
 
         // Delay the next OpenSea API call by 30 seconds
-        console.log(`Waiting for 30 secs...\n`)
+        console.log(`Waiting for 30 secs...`)
         await new Promise(resolve => setTimeout(resolve, 30000));
 
         // Increment currentIndex to go to the next collection
@@ -92,10 +92,10 @@ export default class NFTSalesBot {
           newSalesIds.push(newSale.saleId)
         })
       } catch (error) {
-        console.log(`Unable to get new sales events for ${currentCollection.collection.symbol} @ ${getCurrentTime()}:`, error.message, "\n")
+        console.log(`Unable to get new sales events for ${currentCollection.collection.symbol} @ ${getCurrentTime()}:`, error.message)
 
         // Delay the next OpenSea API call by 30 seconds
-        console.log(`Waiting for 30 secs...\n`)
+        console.log(`Waiting for 30 secs...`)
         await new Promise(resolve => setTimeout(resolve, 30000));
 
         // Increment currentIndex to got to the next collection
@@ -111,13 +111,13 @@ export default class NFTSalesBot {
         .concat(currentCollection.oldSalesIds.filter(id => !newSalesIds.includes(id)));
 
       if (latestSalesIds.length < 1) {
-        console.log(`${getCurrentTime()} - No new sales!\n`)
+        console.log(`${getCurrentTime()} - No new sales!`)
 
         // Update the oldSalesIds to prevent duplicates in the next iteration
         currentCollection.oldSalesIds = newSalesIds
 
         // Delay the next OpenSea API call by 30 seconds
-        console.log(`Waiting for 30 secs...\n`)
+        console.log(`Waiting for 30 secs...`)
         await new Promise(resolve => setTimeout(resolve, 30000));
 
         // Increment currentIndex to got to the next collection
@@ -136,7 +136,7 @@ export default class NFTSalesBot {
 
           // Make sure the latest sale ID is part of the new sales array
           if (latestSalesIds[i] === newSales[j].saleId) {
-            console.log(`${currentCollection.collection.name} @ ${getCurrentTime()} - New Sale ID#${latestSalesIds[i]}\n`)
+            console.log(`${currentCollection.collection.name} @ ${getCurrentTime()} - New Sale ID#${latestSalesIds[i]}`)
 
             // Fetches all the sale events for the token
             try {
@@ -144,7 +144,7 @@ export default class NFTSalesBot {
 
               // If only 1 sale exists, it's not considered a FLIP - just ignore it
               if (tokenSales.length < 2) {
-                console.log(`${currentCollection.collection.symbol} #${tokenID} only has 1 sales event`, '\n')
+                console.log(`${currentCollection.collection.symbol} #${tokenID} only has 1 sales event`)
                 continue
               }
 
@@ -166,7 +166,7 @@ export default class NFTSalesBot {
               console.log(`Unable to get Sales Events for ${currentCollection.collection.symbol} #${tokenID}:`, error.message)
 
               // Delay the next OpenSea API call by 30 seconds
-              console.log(`Waiting for 30 secs...\n`)
+              console.log(`Waiting for 30 secs...`)
               await new Promise(resolve => setTimeout(resolve, 30000));
 
               // Increment currentIndex to got to the next collection
@@ -182,7 +182,7 @@ export default class NFTSalesBot {
       currentCollection.oldSalesIds = newSalesIds
 
       // Delay the next OpenSea API call by 30 seconds
-      console.log(`Waiting for 30 secs...\n`)
+      console.log(`Waiting for 30 secs...`)
       await new Promise(resolve => setTimeout(resolve, 30000));
 
       // Increment currentIndex to got to the next collection

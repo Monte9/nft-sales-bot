@@ -96,9 +96,9 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   // Only report losses > 1 ETH
   // OR if ETH profit > profitThreshold for the collection
   if (!isProfit && absoluteProfitLossETH < 1) {
-    throw new Error(`${collection.symbol} #${tokenId} FUMBLED for ${profitLossETH} ETH (threshold -1 ETH)\n${openSeaLink}\n`)
+    throw new Error(`${profitLossETH} ETH fumble (threshold -1 ETH) | ${openSeaLink}`)
   } else if (isProfit && profitLossETH < profitThresholdETH) {
-    throw new Error(`${collection.symbol} #${tokenId} FLIPPED for ${profitLossETH} ETH (threshold ${profitThresholdETH} ETH)\n${openSeaLink}\n`)
+    throw new Error(`${profitLossETH} ETH flip (threshold ${profitThresholdETH} ETH) | ${openSeaLink}`)
   }
 
   return tweetContent
