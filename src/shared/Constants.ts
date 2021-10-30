@@ -150,7 +150,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.veefriends,
     symbol: 'VFT',
     twitterUsername: 'veefriends',
-    alternateNames: [''],
+    alternateNames: ['Vee Friends'],
   },
 ];
 

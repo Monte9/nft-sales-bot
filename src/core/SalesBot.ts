@@ -13,8 +13,8 @@ import { composeTweet } from './Twitter';
 import { Collection, Sale, SalesBot } from '../types';
 
 import { getCurrentTime, rounded } from '../shared/Formatters';
-import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from '../shared/Constants';
-import { assetBelongsToCollection, getFloorPriceForCollection } from '../shared/Helpers';
+import { ACTIVE_NFT_COLLECTIONS } from '../shared/Constants';
+import { getFloorPriceForCollection } from '../shared/Helpers';
 
 export default class NFTSalesBot {
   coinbaseAPI: CoinbaseAPI = null
@@ -245,9 +245,9 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
   // Send collectionData to the NFT Leaderboard API
   try {
     await leaderboardAPI.saveCollectionData(collectionData)
-    console.log(`Leaderboard API: ${collection.symbol} collection data updated`)
+    console.log(`Leaderboard API: ${collection.slug} collection data updated`)
   } catch (error) {
-    console.log(`Leaderboard API Error: Unable to save ${collection.symbol} collection data -`, error.message)
+    console.log(`Leaderboard API: ERROR unable to save ${collection.slug} collection data -`, error.message)
   }
 
   return salesBot
