@@ -6,7 +6,7 @@ import { isError } from '../shared/Helpers';
 
 export default class FloorAPI {
   // The URL for the /floor endpoint
-  floorURL = 'https://hokvuhs3gi.execute-api.us-east-1.amazonaws.com/floors';
+  floorURL = 'https://9b5uos52uh.execute-api.us-east-1.amazonaws.com/prod/freeFloors';
 
   // The request options for making a GET request
   // Includes the x-api-key for OpenSea to bypass the rate limiting
@@ -35,25 +35,27 @@ export default class FloorAPI {
 
     if (isError(response)) {
       throw Error(response.message);
-    } else if (!response || !response['Items'] || response['Items'].length == 0) {
-      throw Error('missing floor prices');
+    } else if (!response || response.length == 0) {
+      throw Error('missing data from API');
     }
 
-    return parseFloorPrices(response['Items'])
+    return parseFloorPrices(response)
   }
 }
 
-export function parseFloorPrices(floorPrices): FloorPrice[] {
-  return floorPrices.reduce((acc, floorPrice) => {
-    let price: FloorPrice = {
-      name: floorPrice.name,
-      currentFloor: floorPrice.currentFloor,
-      lastUpdated: floorPrice.lastUpdated,
-      activityUrl: floorPrice.activityUrl,
-      url: floorPrice.url,
+export function parseFloorPrices(collections): FloorPrice[] {
+  console.log(collections[0])
+
+  return collections.reduce((acc, collection) => {
+    let info: FloorPrice = {
+      name: collection.project_name,
+      currentFloor: collection.project_floor,
+      lastUpdated: collection.last_updated,
+      activityUrl: collection.activity_url,
+      url: collection.project_url,
     }
 
-    acc.push(price)
+    acc.push(info)
     return acc;
   }, [])
 }

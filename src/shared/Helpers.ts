@@ -32,7 +32,7 @@ export async function getFloorPriceForCollection(collection: Collection): Promis
   try {
     floorPrices = await floorAPI.getFloorPrices()
   } catch (error) {
-    console.log(`Unable to get floor prices. Skipping!`)
+    console.log(`Unable to get floor prices: ${error}`)
     return { currentFloor: 0 }
   }
   
