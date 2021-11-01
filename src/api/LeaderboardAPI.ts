@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-import { LeaderboardCollection } from '../types';
+import { LeaderboardCollection, LeaderboardSale } from '../types';
 import { isError } from '../shared/Helpers';
 
 export default class LeaderboardAPI {
@@ -28,6 +28,31 @@ export default class LeaderboardAPI {
     this.fetchOptions.body = JSON.stringify(collectionData)
 
     const response = await fetch(`${this.leaderboardAPI}/v1/collection`, this.fetchOptions)
+      .then(response => {
+        if (response.status >= 200 && response.status <= 299) {
+          return response.json();
+        } else {
+          return Error(response.statusText);
+        }
+      })
+      .catch(error => {
+        return Error(error);
+      });
+
+    if (isError(response)) {
+      throw Error(response.message);
+    }
+  }
+
+  // API: /v1/sales
+  // https://nft-leaderboard.herokuapp.com/api/v1/sales
+
+  async saveSaleData(saleData: LeaderboardSale) {
+    // Add the collectionData as JSON to the body of the request
+    this.fetchOptions.method = 'POST'
+    this.fetchOptions.body = JSON.stringify(saleData)
+
+    const response = await fetch(`${this.leaderboardAPI}/v1/sale`, this.fetchOptions)
       .then(response => {
         if (response.status >= 200 && response.status <= 299) {
           return response.json();

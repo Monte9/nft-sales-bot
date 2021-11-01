@@ -1,5 +1,5 @@
+import { Collection, Asset, User, PaymentToken, Sale } from "../types";
 import { rounded } from "../shared/Formatters";
-import { Collection, Asset, User, PaymentToken, Sale, Transaction } from "../types";
 
 export function parseSales(saleEvents): Sale[] {
   return saleEvents.reduce((acc, saleEvent) => {
@@ -46,23 +46,15 @@ export function parseSales(saleEvents): Sale[] {
         } 
       }
 
-      let transaction: Transaction = {
-        id: saleEvent.transaction.id,
-        block_hash: saleEvent.transaction.block_hash,
-        block_number: saleEvent.transaction.block_number,
-        timestamp: saleEvent.transaction.timestamp,
-        transaction_hash: saleEvent.transaction.transaction_hash,
-        transaction_index: saleEvent.transaction.transaction_index,
-      }
-
       const sale = {
         asset,
         buyer,
         seller,
         paymentToken,
         salePrice: saleEvent.total_price / Math.pow(10, paymentToken && paymentToken.decimals || 18),
-        saleId: saleEvent.id,
-        transaction
+        openseaSaleId: saleEvent.id,
+        timestamp: saleEvent.transaction.timestamp,
+        transactionHash: saleEvent.transaction.transaction_hash,
       }
 
       acc.push(sale)

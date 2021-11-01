@@ -8,8 +8,9 @@
     "clean-install": "rm -rf node_modules && yarn clean && yarn",
     "build": "npm run clean && babel -d ./build ./src -s --extensions '.js,.ts,.tsx'",
     "tsc": "tsc",
-    "start": "node build/index.js",
-    "start:dev": "nodemon --exec babel-node src/index.ts --extensions '.js,.ts,.tsx'"
+    "start": "node build/salesbot.js",
+    "start:dev": "nodemon --exec babel-node src/salesbot.ts --extensions '.js,.ts,.tsx'",
+    "start:leaderboard": "nodemon --exec babel-node src/leaderboard.ts --extensions '.js,.ts,.tsx'"
   },
   "repository": {
     "type": "git",

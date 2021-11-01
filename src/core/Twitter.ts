@@ -1,5 +1,6 @@
 import CoinbaseAPI from "../api/CoinbaseAPI";
 
+import Leaderboard from "./Leaderboard";
 import { getProfitThresholdETH, getSaleData, getSaleTypeInfo } from "./SaleData";
 
 import { Collection, Sale, SaleData } from "../types";
@@ -16,6 +17,7 @@ interface ComposeTweetParams {
 
 // Composes a tweet using the Sale information
 export async function composeTweet({ collection, purchase, sale, coinbaseAPI, floorPrice = 0 }: ComposeTweetParams): Promise<string> {
+  const leaderboard = new Leaderboard()
   let salesData: SaleData = null
 
   try {
@@ -101,5 +103,9 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
     throw new Error(`${profitLossETH} ETH flip (threshold ${profitThresholdETH} ETH) | ${openSeaLink}`)
   }
 
+  // Save the Sale in the Leaderboard database
+  await leaderboard.saveSaleInDatabase(collection, salesData.tokenId, salesData, sale)
+
+  // Return the content for the tweet
   return tweetContent
 }

@@ -26,8 +26,9 @@ export interface Sale {
   buyer: User
   paymentToken?: PaymentToken
   salePrice: number
-  saleId: number
-  transaction: Transaction
+  openseaSaleId: number,
+  timestamp: string,
+  transactionHash: string,
 }
 
 export interface Asset {
@@ -49,15 +50,6 @@ export interface PaymentToken {
   imageUrl: string
   decimals: number
   usdPrice: number
-}
-
-export interface Transaction {
-  id: number
-  block_hash: string
-  block_number: string
-  timestamp: string
-  transaction_hash: string
-  transaction_index: string
 }
 
 // FLOOR PRICE
@@ -89,12 +81,23 @@ export interface SaleData {
   isProfit: boolean
   flipValueUSD: number
   flipPercentageUSD: number
+  annualizedReturns: number
 }
 
-// LEADERBOARD COLLECTION
+// LEADERBOARD API COLLECTION DATA
 
 export interface LeaderboardCollection {
   collection: Collection
   floorPrice: number
   profitThreshold: number
+}
+
+// LEADERBOARD API SALE DATA
+
+export interface LeaderboardSale {
+  collection: Collection
+  sale: SaleData
+  openseaSaleId: number
+  timestamp: string
+  transactionHash: string
 }

@@ -1,33 +1,25 @@
 import 'dotenv/config';
 
 import CoinbaseAPI from '../api/CoinbaseAPI';
-import FloorAPI from '../api/FloorAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
-import TwitterAPI from '../api/TwitterAPI';
+import LeaderboardAPI from '../api/LeaderboardAPI';
 
 import { getSaleData } from './SaleData';
 
-import { CollectionSlug } from '../shared/Constants';
+import { Collection, LeaderboardSale, Sale, SaleData } from '../types';
 
+import { CollectionSlug } from '../shared/Constants';
 import { getCollectionFromSlug } from '../shared/Helpers';
 
 export default class Leaderboard {
   coinbaseAPI: CoinbaseAPI = null
-  floorAPI: FloorAPI = null
   openSeaAPI: OpenSeaAPI = null
-  twitterAPI: TwitterAPI = null
+  leaderboardAPI: LeaderboardAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI();
     this.openSeaAPI = new OpenSeaAPI();
-    this.floorAPI = new FloorAPI();
-
-    this.twitterAPI = new TwitterAPI(
-      process.env.TWITTER_API_KEY,
-      process.env.TWITTER_API_SECRET_KEY,
-      process.env.TWITTER_ACCESS_TOKEN,
-      process.env.TWITTER_ACCESS_TOKEN_SECRET,
-    );
+    this.leaderboardAPI = new LeaderboardAPI();
   }
 
   async start() {
@@ -37,7 +29,9 @@ export default class Leaderboard {
     const tokenID = '4098'
     
     try {
-      const tokenSales = await this.openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)
+      const tokenSales: Sale[] = await this.openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)
+      const boughtTransaction = tokenSales[2]
+      const soldTransaction = tokenSales[1]
       
       // If only 1 sale exists, it's not considered a FLIP - just ignore it
       if (tokenSales.length < 2) {
@@ -45,16 +39,51 @@ export default class Leaderboard {
         return
       }
 
-      const salesData = await getSaleData({
-        purchase: tokenSales[1],
-        sale: tokenSales[0],
+      const sale = await getSaleData({
+        purchase: boughtTransaction,
+        sale: soldTransaction,
         coinbaseAPI: this.coinbaseAPI,
       })
 
-      // Make API request to NFT Leaderboard & store in Database
-      console.log(salesData)
+      // Save the Sale in the Leaderboard database
+      await this.saveSaleInDatabase(collection, tokenID, sale, soldTransaction)
     } catch (error) {
       console.log(`Unable to get Sales Events for ${collection.symbol} #${tokenID}:`, error.message)
+    }
+  }
+
+  async saveCollectionInDatabase(collection: Collection, currentFloorPrice: number, profitThresholdETH: number) {
+    // Setup collectionData
+    const collectionData = {
+      collection,
+      floorPrice: currentFloorPrice,
+      profitThreshold: profitThresholdETH
+    }
+
+    // Send collectionData to the NFT Leaderboard API
+    try {
+      await this.leaderboardAPI.saveCollectionData(collectionData)
+      console.log(`Leaderboard API: ${collection.slug} collection updated`)
+    } catch (error) {
+      console.log(`Leaderboard API: ERROR unable to save ${collection.slug} collection -`, error.message)
+    }
+  }
+
+  async saveSaleInDatabase(collection: Collection, tokenID: string, sale: SaleData, soldTransaction: Sale) {
+    const saleData: LeaderboardSale = {
+      collection,
+      sale,
+      openseaSaleId: soldTransaction.openseaSaleId,
+      timestamp: soldTransaction.timestamp,
+      transactionHash: soldTransaction.transactionHash
+    }
+
+    // Send saleData to the NFT Leaderboard API
+    try {
+      await this.leaderboardAPI.saveSaleData(saleData)
+      console.log(`Leaderboard API: ${collection.symbol} #${tokenID} sale updated`)
+    } catch (error) {
+      console.log(`Leaderboard API: ERROR unable to save ${collection.symbol} #${tokenID} sale -`, error.message)
     }
   }
 }

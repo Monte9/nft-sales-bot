@@ -9,6 +9,7 @@ import TwitterAPI from '../api/TwitterAPI';
 import { runDebugBot } from './DebugBot';
 import { getProfitThresholdETH } from './SaleData';
 import { composeTweet } from './Twitter';
+import Leaderboard from './Leaderboard';
 
 import { Collection, Sale, SalesBot } from '../types';
 
@@ -89,7 +90,7 @@ export default class NFTSalesBot {
         newSales = await this.openSeaAPI.fetchSaleEventsForCollection(currentCollection.collection.slug)
 
         newSales.map(newSale => {
-          newSalesIds.push(newSale.saleId)
+          newSalesIds.push(newSale.openseaSaleId)
         })
       } catch (error) {
         console.log(`Unable to get new sales events for ${currentCollection.collection.symbol} @ ${getCurrentTime()}:`, error.message)
@@ -135,7 +136,7 @@ export default class NFTSalesBot {
           const tokenID = asset.tokenId
 
           // Make sure the latest sale ID is part of the new sales array
-          if (latestSalesIds[i] === newSales[j].saleId) {
+          if (latestSalesIds[i] === newSales[j].openseaSaleId) {
             console.log(`${currentCollection.collection.name} @ ${getCurrentTime()} - New Sale ID#${latestSalesIds[i]}`)
 
             // Fetches all the sale events for the token
@@ -204,6 +205,7 @@ export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI, lead
 // Gets the oldSales events for all Collections
 // Used to initialize the bot and build a Collection object
 export async function getCollectionData(collection: Collection, openSeaAPI: OpenSeaAPI, leaderboardAPI: LeaderboardAPI): Promise<SalesBot> {
+  const leaderboard = new Leaderboard()
   let oldSales: Sale[] = null;
   let oldSalesIds: number[] = []
 
@@ -215,7 +217,7 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
   try {
     oldSales = await openSeaAPI.fetchSaleEventsForCollection(collection.slug)
     for (let i=0; i<oldSales.length; i++) {
-      oldSalesIds.push(oldSales[i].saleId)
+      oldSalesIds.push(oldSales[i].openseaSaleId)
     }
 
     console.log(`Got ${oldSales.length} sales events for ${collection.slug}`)
@@ -234,20 +236,9 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
   // Calculate the profit threshold for the collection
   const profitThresholdETH = getProfitThresholdETH(currentFloorPrice)
 
-  // Setup collectionData
-  const collectionData = {
-    collection,
-    floorPrice: currentFloorPrice,
-    profitThreshold: profitThresholdETH
-  }
+  // Save the Sale in the Leaderboard database
+  await leaderboard.saveCollectionInDatabase(collection, currentFloorPrice, profitThresholdETH)
 
-  // Send collectionData to the NFT Leaderboard API
-  try {
-    await leaderboardAPI.saveCollectionData(collectionData)
-    console.log(`Leaderboard API: ${collection.slug} collection data updated`)
-  } catch (error) {
-    console.log(`Leaderboard API: ERROR unable to save ${collection.slug} collection data -`, error.message)
-  }
-
+  // Return the salesBot data
   return salesBot
 }

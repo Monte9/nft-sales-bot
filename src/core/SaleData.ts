@@ -49,8 +49,8 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   const isProfit = profitLossETH > 0 ? true : false
 
   // Get formatted Bought & Sold dates
-  const boughtDate = purchase.transaction.timestamp
-  const soldDate = sale.transaction.timestamp
+  const boughtDate = purchase.timestamp
+  const soldDate = sale.timestamp
 
   // Get HODL Days
   const hodlDays = getTotalDaysBetween(soldDate, boughtDate)
@@ -74,6 +74,11 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   const flipValueUSDRounded = rounded((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD)
   const flipPercentageUSD = rounded(flipValueUSDRounded * 100)
 
+  // Calculate Annualized Returns
+  // Formula: return % / no. days held x 365
+  // Credit: Anonn.eth
+  const annualizedReturns = rounded(flipPercentageUSD / hodlDays * 365)
+
   return {
     tokenId,
     sellerName,
@@ -91,6 +96,7 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
     hodlDays,
     flipValueUSD,
     flipPercentageUSD,
+    annualizedReturns
   }
 }
 
@@ -144,8 +150,10 @@ export function getSaleTypeInfo(isProfit: boolean, profitLossETH: number, hodlDa
   } else if (profitLossETH > 2) {
     status = addStatus(status, 'Be More Ambitious')
   } else if (profitLossETH < -10) {
-    status = addStatus(status, 'Noodle Hands')
+    status = addStatus(status, 'Fatality')
   } else if (profitLossETH < -5) {
+    status = addStatus(status, 'Noodle Hands')
+  } else if (profitLossETH < -2) {
     status = addStatus(status, 'Paper Hands')
   } else if (profitLossETH < -2) {
     status = addStatus(status, 'Weak Hands')
