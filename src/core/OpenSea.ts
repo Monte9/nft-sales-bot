@@ -26,13 +26,13 @@ export function parseSales(saleEvents): Sale[] {
       }
 
       let buyer: User = {
-        address: saleEvent.winner_account.address,
-        username: saleEvent.winner_account.user && saleEvent.winner_account.user.username || null
+        address: saleEvent.winner_account && saleEvent.winner_account.address || "0x0000000000000000000000000000000000000000",
+        username: saleEvent.winner_account && saleEvent.winner_account.user && saleEvent.winner_account.user.username || "NullAddress"
       }
 
       let seller: User = {
-        address: saleEvent.seller && saleEvent.seller.address || "Unknown",
-        username: saleEvent.seller && saleEvent.seller.user && saleEvent.seller.user.username || null
+        address: saleEvent.seller && saleEvent.seller.address || "0x0000000000000000000000000000000000000000",
+        username: saleEvent.seller && saleEvent.seller.user && saleEvent.seller.user.username || "NullAddress"
       }
 
       let paymentToken: PaymentToken = null
@@ -46,12 +46,15 @@ export function parseSales(saleEvents): Sale[] {
         } 
       }
 
+      // Default to 0.08 ETH as the mint price
+      const salePrice = Number(saleEvent.total_price) || 80000000000000000
+
       const sale = {
         asset,
         buyer,
         seller,
         paymentToken,
-        salePrice: saleEvent.total_price / Math.pow(10, paymentToken && paymentToken.decimals || 18),
+        salePrice: salePrice / Math.pow(10, paymentToken && paymentToken.decimals || 18),
         openseaSaleId: saleEvent.id,
         timestamp: saleEvent.transaction.timestamp,
         transactionHash: saleEvent.transaction.transaction_hash,

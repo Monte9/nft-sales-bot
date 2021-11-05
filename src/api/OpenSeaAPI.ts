@@ -46,8 +46,8 @@ export default class OpenSeaAPI {
     return parseSales(response.asset_events)
   }
 
-  async fetchSaleEventsForToken(assetContractAddress: string, tokenId: number): Promise<Sale[]> {
-    let params = `only_opensea=false&asset_contract_address=${assetContractAddress}&token_id=${tokenId}&event_type=successful&offset=0&limit=20`
+  async fetchSaleEventsForToken(assetContractAddress: string, tokenId: number, eventType: string = 'successful'): Promise<Sale[]> {
+    let params = `only_opensea=false&asset_contract_address=${assetContractAddress}&token_id=${tokenId}&event_type=${eventType}&offset=0&limit=20`
     
     const response = await fetch(`${this.eventsURL}?${params}`, this.getOptions)
       .then(response => {

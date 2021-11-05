@@ -143,10 +143,12 @@ export default class NFTSalesBot {
             try {
               const tokenSales = await this.openSeaAPI.fetchSaleEventsForToken(currentCollection.collection.address, tokenID)
 
-              // If only 1 sale exists, it's not considered a FLIP - just ignore it
+              // If only 1 sale exists, get the token mint sale event
               if (tokenSales.length < 2) {
-                console.log(`${currentCollection.collection.symbol} #${tokenID} only has 1 sales event`)
-                continue
+                const transferEvents = await this.openSeaAPI.fetchSaleEventsForToken(currentCollection.collection.address, tokenID, 'transfer')
+
+                const mintSale = transferEvents[transferEvents.length-1]
+                tokenSales.push(mintSale)
               }
 
               try {

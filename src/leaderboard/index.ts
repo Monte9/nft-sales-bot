@@ -29,41 +29,37 @@ export default class Leaderboard {
     const collection = getCollectionFromSlug(CollectionSlug.boredapeyachtclub)
     console.log(`\nGetting Sale Events for ${collection.name}`)
 
-    for (let i=0; i<=100; i++) {
+    for (let i=95; i<=100; i++) {
       // Dynamic tokenID
       const tokenID = i
 
       try {
         const tokenSales: Sale[] = await this.openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)
-        
-        // If only 1 sale exists, it's not considered a FLIP - just ignore it
-        if (tokenSales.length < 2) {
-          throw new Error(`only has 1 sale event`)
-        }
 
-        console.log(`\n${collection.symbol} #${tokenID} has ${tokenSales.length} sale events (doesn't support minted transaction)`)
+        // Get the token mint sale event
+        const transferEvents = await this.openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID, 'transfer')
+        const mintSale = transferEvents[transferEvents.length-1]
+        tokenSales.push(mintSale)
+
+        console.log(`\n${collection.symbol} #${tokenID} has ${tokenSales.length-1} sale events`)
 
         for (let i=0; i<tokenSales.length-1; i++) {
           const soldTransaction = tokenSales[i]
           const boughtTransaction = tokenSales[i+1]
 
-          await this.secretCode(collection, tokenID, boughtTransaction, soldTransaction)
+          const sale = await getSaleData({
+            purchase: boughtTransaction,
+            sale: soldTransaction,
+            coinbaseAPI: this.coinbaseAPI,
+          })
+
+          // Save the Sale in the Leaderboard database
+          await this.saveSaleInDatabase(collection, tokenID, sale, soldTransaction)
         }
       } catch (error) {
         console.log(`Error: ${collection.symbol} #${tokenID} -`, error.message)
       }
     }
-  }
-
-  async secretCode(collection: Collection, tokenID: number, boughtTransaction: Sale, soldTransaction: Sale) {
-    const sale = await getSaleData({
-      purchase: boughtTransaction,
-      sale: soldTransaction,
-      coinbaseAPI: this.coinbaseAPI,
-    })
-
-    // Save the Sale in the Leaderboard database
-    await this.saveSaleInDatabase(collection, tokenID, sale, soldTransaction)
   }
 
   async saveCollectionInDatabase(collection: Collection, currentFloorPrice: number, profitThresholdETH: number) {
