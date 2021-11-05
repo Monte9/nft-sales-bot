@@ -1,11 +1,11 @@
 import CoinbaseAPI from "../api/CoinbaseAPI";
 
-import Leaderboard from "./Leaderboard";
+import Leaderboard from "../leaderboard/index";
 import { getProfitThresholdETH, getSaleData, getSaleTypeInfo } from "./SaleData";
 
 import { Collection, Sale, SaleData } from "../types";
 
-import { addCommas, getYMDaysBetween } from "../shared/Formatters";
+import { addCommas, getShortWalletAddress, getYMDaysBetween } from "../shared/Formatters";
 
 interface ComposeTweetParams {
   collection: Collection
@@ -33,21 +33,24 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   const {
     tokenId,
     openSeaLink,
-    sellerName,
+    sellerAddress,
+    sellerUsername,
     isProfit,
     boughtPriceETH,
     boughtDate,
     boughtDateETHPrice,
-    boughtPriceUSD,
     soldPriceETH,
     soldDate,
     soldDateETHPrice,
-    soldPriceUSD,
     hodlDays,
     profitLossETH,
     flipValueUSD,
     flipPercentageUSD
   } = salesData
+
+  // Get seller name
+  const sellerWallet = getShortWalletAddress(sellerAddress)
+  const sellerName = sellerUsername || sellerWallet
 
   // Get the absolute profit/loss without the minus sign for losses
   const absoluteProfitLossETH = Math.abs(profitLossETH)
@@ -102,9 +105,6 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   } else if (isProfit && profitLossETH < profitThresholdETH) {
     throw new Error(`${profitLossETH} ETH flip (threshold ${profitThresholdETH} ETH) | ${openSeaLink}`)
   }
-
-  // Save the Sale in the Leaderboard database
-  await leaderboard.saveSaleInDatabase(collection, salesData.tokenId, salesData, sale)
 
   // Return the content for the tweet
   return tweetContent

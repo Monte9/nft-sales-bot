@@ -33,7 +33,7 @@ export interface Sale {
 
 export interface Asset {
   name: string
-  tokenId: string
+  tokenId: number
   image: string
   link: string
   collection: Collection
@@ -65,8 +65,9 @@ export interface FloorPrice {
 // SALES DATA
 
 export interface SaleData {
-  tokenId: string
-  sellerName: string
+  tokenId: number
+  sellerAddress: string
+  sellerUsername: string
   openSeaLink: string
   boughtPriceETH: number
   boughtPriceUSD: number

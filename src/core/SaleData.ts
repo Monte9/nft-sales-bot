@@ -3,7 +3,7 @@ import CoinbaseAPI from "../api/CoinbaseAPI"
 import { Sale, SaleData } from "../types"
 
 import { SUPPORTED_PAYMENT_TOKEN_SYMBOLS } from "../shared/Constants"
-import { getShortWalletAddress, getTotalDaysBetween, rounded } from "../shared/Formatters"
+import { getTotalDaysBetween, rounded } from "../shared/Formatters"
 
 interface SaleDataParams {
   purchase: Sale
@@ -13,13 +13,13 @@ interface SaleDataParams {
 
 export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParams): Promise<SaleData> {
   // Get Token ID & OpenSea Link
-  const tokenId = sale.asset.tokenId
+  const tokenId = Number(sale.asset.tokenId)
   const openSeaLink = sale.asset.link
 
   // Get Seller Username or Wallet address
   const seller = sale.seller
-  const sellerWallet = getShortWalletAddress(seller.address)
-  const sellerName = seller.username || sellerWallet
+  const sellerAddress = seller.address
+  const sellerUsername = seller.username
 
   const purchaseToken = purchase.paymentToken && purchase.paymentToken.symbol || 'ETH'
   const saleToken = sale.paymentToken && sale.paymentToken.symbol || 'ETH'
@@ -81,7 +81,8 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
 
   return {
     tokenId,
-    sellerName,
+    sellerAddress,
+    sellerUsername,
     openSeaLink,
     boughtPriceETH,
     boughtDate,

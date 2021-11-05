@@ -1,4 +1,4 @@
-import Leaderboard from "./core/Leaderboard"
+import Leaderboard from "./leaderboard/index"
 
 // Scrape data for the NFT Leaderboard
 const leaderBoard = new Leaderboard()

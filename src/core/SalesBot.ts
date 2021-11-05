@@ -9,7 +9,7 @@ import TwitterAPI from '../api/TwitterAPI';
 import { runDebugBot } from './DebugBot';
 import { getProfitThresholdETH } from './SaleData';
 import { composeTweet } from './Twitter';
-import Leaderboard from './Leaderboard';
+import Leaderboard from '../leaderboard/index';
 
 import { Collection, Sale, SalesBot } from '../types';
 
@@ -133,7 +133,7 @@ export default class NFTSalesBot {
 
         for (let j=0; j<newSales.length; j++) {
           const asset = newSales[j].asset
-          const tokenID = asset.tokenId
+          const tokenID = Number(asset.tokenId)
 
           // Make sure the latest sale ID is part of the new sales array
           if (latestSalesIds[i] === newSales[j].openseaSaleId) {
