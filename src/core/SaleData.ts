@@ -1,3 +1,5 @@
+import moment from 'moment-timezone';
+
 import CoinbaseAPI from "../api/CoinbaseAPI"
 
 import { Sale, SaleData } from "../types"
@@ -57,8 +59,11 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
 
   // Get the ETH prices on bought & sold dates
   try {
-    var boughtDateETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate)
-    var soldDateETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate)
+    const todayDate = moment(new Date()).format("YYYY-MM-DDT00:00:00")    
+    var todayETHPrice = await coinbaseAPI.getUSDPriceForETH(todayDate)
+
+    var boughtDateETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate, todayETHPrice)
+    var soldDateETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate, todayETHPrice)
   } catch (error) {
     throw error
   }

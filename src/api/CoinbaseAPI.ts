@@ -18,7 +18,7 @@ export default class CoinbaseAPI {
   // API: /v2/prices/ETH-USD/spot
   // https://developers.coinbase.com/api/v2#get-spot-price
 
-  async getUSDPriceForETH(date: string): Promise<number> {
+  async getUSDPriceForETH(date: string, defaultPrice?: number): Promise<number> {
     let params = `date=${date}`
 
     const response = await fetch(`${this.spotPriceURL}?${params}`, this.getOptions)
@@ -41,7 +41,7 @@ export default class CoinbaseAPI {
 
     const amount = Number(response.data.amount)
     if (!amount || amount <= 0) {
-      throw Error(`invalid ETH price ${response.data.amount}`)
+      return defaultPrice
     }
     
     return Math.round(amount)

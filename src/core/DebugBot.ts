@@ -14,7 +14,7 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
   // Get the Collection Data
   const collection = getCollectionFromSlug(CollectionSlug.mutantapeyachtclub)
   const collectionData = await getCollectionData(collection, openSeaAPI, leaderboardAPI)
-  const tokenID = 6067
+  const tokenID = 7617
 
   try {
     const tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID)
