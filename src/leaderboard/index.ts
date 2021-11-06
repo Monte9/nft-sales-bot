@@ -57,7 +57,11 @@ export default class Leaderboard {
           await this.saveSaleInDatabase(collection, tokenID, sale, soldTransaction)
         }
       } catch (error) {
-        console.log(`Error: ${collection.symbol} #${tokenID} -`, error.message)
+        if (error.message === 'no sale events') {
+          console.log(`\n${collection.symbol} #${tokenID} has 0 sale events`)
+        } else {
+          console.log(`Error: ${collection.symbol} #${tokenID} -`, error.message)
+        }
       }
     }
   }
@@ -91,9 +95,9 @@ export default class Leaderboard {
     // Send saleData to the NFT Leaderboard API
     try {
       await this.leaderboardAPI.saveSaleData(saleData)
-      console.log(`Leaderboard API: ${collection.symbol} #${tokenID} ${soldTransaction.openseaSaleId} sale updated`)
+      console.log(`Leaderboard API: ${collection.symbol} #${tokenID} (${soldTransaction.openseaSaleId}) sale updated`)
     } catch (error) {
-      console.log(`Leaderboard API: ERROR unable to save ${collection.symbol} #${tokenID} ${soldTransaction.openseaSaleId} sale -`, error.message)
+      console.log(`Leaderboard API: ERROR unable to save ${collection.symbol} #${tokenID} (${soldTransaction.openseaSaleId}) sale -`, error.message)
     }
   }
 }

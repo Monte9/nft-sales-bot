@@ -76,9 +76,9 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
 
   // Get the Profit/Loss labels
   const isETHProfitLoss = isProfit ? '  Ξ  PROFIT' : '  Ξ  LOSS'
-  const isUSDProfitLoss = flipPercentageUSD > 0 ? '💲 PROFIT' : '💲 LOSS'
-  const isProfitLossPercentageEmoji = flipPercentageUSD > 0 ? '📈 +' : '📉 -'
-  const isUSDProfitLossSymbol = flipPercentageUSD > 0 ? '' : '-'
+  const isUSDProfitLoss = flipPercentageUSD >= 0 ? '💲 PROFIT' : '💲 LOSS'
+  const isProfitLossPercentageEmoji = flipPercentageUSD >= 0 ? '📈 +' : '📉 -'
+  const isUSDProfitLossSymbol = flipPercentageUSD >= 0 ? '' : '-'
 
   // Get Sale type
   const saleTypeTitle = isProfit ? 'FLIPPED' : 'FUMBLED'

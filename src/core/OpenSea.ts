@@ -27,12 +27,12 @@ export function parseSales(saleEvents): Sale[] {
 
       let buyer: User = {
         address: saleEvent.winner_account && saleEvent.winner_account.address || "0x0000000000000000000000000000000000000000",
-        username: saleEvent.winner_account && saleEvent.winner_account.user && saleEvent.winner_account.user.username || "NullAddress"
+        username: saleEvent.winner_account && saleEvent.winner_account.user && saleEvent.winner_account.user.username
       }
 
       let seller: User = {
         address: saleEvent.seller && saleEvent.seller.address || "0x0000000000000000000000000000000000000000",
-        username: saleEvent.seller && saleEvent.seller.user && saleEvent.seller.user.username || "NullAddress"
+        username: saleEvent.seller && saleEvent.seller.user && saleEvent.seller.user.username
       }
 
       let paymentToken: PaymentToken = null

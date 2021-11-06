@@ -1,11 +1,11 @@
 import moment from 'moment-timezone';
 
 export function addCommas(value: number): String {
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  return value && value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") || '0'
 }
 
 export function rounded(value: number): number {
-  return Math.round(value * 100) / 100
+  return Math.round(value * 100) / 100 || 0
 }
 
 export const getCurrentTime = (): string => {
