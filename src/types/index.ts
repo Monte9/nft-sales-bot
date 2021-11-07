@@ -102,3 +102,15 @@ export interface LeaderboardSale {
   timestamp: string
   transactionHash: string
 }
+
+// LEADERBOARD API TOKEN DATA
+
+export interface LeaderboardToken {
+  id?: number
+  collectionSlug: CollectionSlug
+  tokenId: number
+  openSeaLink: string
+  salesCount: number
+  createdAt?: string
+  updatedAt?: string
+}

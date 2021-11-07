@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-import { LeaderboardCollection, LeaderboardSale } from '../types';
+import { Collection, LeaderboardCollection, LeaderboardSale, LeaderboardToken } from '../types';
 import { isError } from '../shared/Helpers';
 
 export default class LeaderboardAPI {
@@ -53,6 +53,51 @@ export default class LeaderboardAPI {
     this.fetchOptions.body = JSON.stringify(saleData)
 
     const response = await fetch(`${this.leaderboardAPI}/v1/sale`, this.fetchOptions)
+      .then(response => {
+        if (response.status >= 200 && response.status <= 299) {
+          return response.json();
+        } else {
+          return Error(response.statusText);
+        }
+      })
+      .catch(error => {
+        return Error(error);
+      });
+
+    if (isError(response)) {
+      throw Error(response.message);
+    }
+  }
+
+  // API: /v1/tokens
+  // https://nft-leaderboard.herokuapp.com/api/v1/token
+
+  async getTokens(collection: Collection): Promise<LeaderboardToken[]> {
+    const response = await fetch(`${this.leaderboardAPI}/v1/tokens`, this.fetchOptions)
+      .then(response => {
+        if (response.status >= 200 && response.status <= 299) {
+          return response.json();
+        } else {
+          return Error(response.statusText);
+        }
+      })
+      .catch(error => {
+        return Error(error);
+      });
+
+    if (isError(response)) {
+      throw Error(response.message);
+    }
+
+    return response
+  }
+
+  async saveTokenData(tokenData: LeaderboardToken) {
+    // Add the collectionData as JSON to the body of the request
+    this.fetchOptions.method = 'POST'
+    this.fetchOptions.body = JSON.stringify(tokenData)
+
+    const response = await fetch(`${this.leaderboardAPI}/v1/token`, this.fetchOptions)
       .then(response => {
         if (response.status >= 200 && response.status <= 299) {
           return response.json();
