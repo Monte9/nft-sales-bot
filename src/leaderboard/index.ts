@@ -1,4 +1,6 @@
 import 'dotenv/config';
+const yargs = require('yargs/yargs')
+const { hideBin } = require('yargs/helpers')
 
 import CoinbaseAPI from '../api/CoinbaseAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
@@ -25,6 +27,11 @@ export default class Leaderboard {
   async start() {
     console.log(`Starting NFT Leaderboard`)
 
+    // Get the CLI Arguments for startTokenId & endTokenId
+    const argv = yargs(hideBin(process.argv)).argv
+    const startTokenId = argv.startTokenId || 0
+    const endTokenId = argv.endTokenId || 10
+
     // Support multiple collections
     const collection = getCollectionFromSlug(CollectionSlug.boredapeyachtclub)
 
@@ -38,7 +45,7 @@ export default class Leaderboard {
 
     console.log(`\nGetting Sale Events for ${collection.name}`)
 
-    for (let i=0; i<=100; i++) {
+    for (let i=startTokenId; i<=endTokenId; i++) {
       // Dynamic tokenID
       const tokenID = i
 
@@ -72,7 +79,7 @@ export default class Leaderboard {
           })
 
           // Save the Sale in the Leaderboard database
-          await this.saveSaleInDatabase(collection, tokenID, sale, soldTransaction)
+          await this.saveSaleInDatabase(collection, tokenID, boughtTransaction.asset.image, sale, soldTransaction)
         }
       } catch (error) {
         // If there are No Sale Events we handle that case as well
@@ -109,10 +116,11 @@ export default class Leaderboard {
     }
   }
 
-  async saveSaleInDatabase(collection: Collection, tokenID: number, sale: SaleData, soldTransaction: Sale) {
+  async saveSaleInDatabase(collection: Collection, tokenID: number, tokenImage: string, sale: SaleData, soldTransaction: Sale) {
     const saleData: LeaderboardSale = {
       collection,
       sale,
+      tokenImage,
       openseaSaleId: soldTransaction.openseaSaleId,
       timestamp: soldTransaction.timestamp,
       transactionHash: soldTransaction.transactionHash

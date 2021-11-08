@@ -98,6 +98,7 @@ export interface LeaderboardCollection {
 export interface LeaderboardSale {
   collection: Collection
   sale: SaleData
+  tokenImage: string
   openseaSaleId: number
   timestamp: string
   transactionHash: string
