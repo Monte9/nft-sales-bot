@@ -12,9 +12,9 @@ import { getCollectionFromSlug } from '../shared/Helpers';
 
 export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI, leaderboardAPI: LeaderboardAPI) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug(CollectionSlug.wolfgame)
+  const collection = getCollectionFromSlug(CollectionSlug.cryptopunks)
   const collectionData = await getCollectionData(collection, openSeaAPI, leaderboardAPI)
-  const tokenID = 2772
+  const tokenID = 8116
 
   try {
     let tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID, 'successful')

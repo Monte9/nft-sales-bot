@@ -6,6 +6,7 @@ import { getProfitThresholdETH, getSaleData, getSaleTypeInfo } from "./SaleData"
 import { Collection, Sale, SaleData } from "../types";
 
 import { addCommas, getShortWalletAddress, getYMDaysBetween } from "../shared/Formatters";
+import { CollectionSlug } from "../shared/Constants";
 
 interface ComposeTweetParams {
   collection: Collection
@@ -19,6 +20,10 @@ interface ComposeTweetParams {
 export async function composeTweet({ collection, purchase, sale, coinbaseAPI, floorPrice = 0 }: ComposeTweetParams): Promise<string> {
   const leaderboard = new Leaderboard()
   let salesData: SaleData = null
+
+  if (sale.salePrice === 0 && collection.slug === CollectionSlug.cryptopunks) {
+    throw new Error("Punks interacting with contract")
+  }
 
   try {
     salesData = await getSaleData({ purchase, sale, coinbaseAPI })
