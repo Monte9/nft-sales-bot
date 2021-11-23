@@ -25,6 +25,7 @@ export enum CollectionSlug {
   supducks = "supducks",
   timepiececommunity = "timepiece-community",
   veefriends = "veefriends",
+  wolfgame = "wolf-game",
   worldofwomennft = "world-of-women-nft",
 }
 
@@ -137,6 +138,13 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.veefriends,
     symbol: 'VFT',
     twitterUsername: 'veefriends',
+  },
+  {
+    address: '0xeb834ae72b30866af20a6ce5440fa598bfad3a42',
+    name: 'Wolf Game',
+    slug: CollectionSlug.wolfgame,
+    symbol: 'WGAME',
+    twitterUsername: 'wolfdotgame',
   },
   {
     address: '0xe785e82358879f061bc3dcac6f0444462d4b5330',
