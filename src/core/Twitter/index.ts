@@ -24,10 +24,10 @@ interface ComposeTweetParams {
 
 // Composes a tweet using the Sale information
 export async function composeTweet({ collection, purchase, sale, coinbaseAPI, floorPrice = 0 }: ComposeTweetParams): Promise<string> {
-  // TODO: This doesn't actually fix the bug
-  // https://twitter.com/nftsalesbot/status/1467826298030632961
-  if (sale.salePrice === 0 && collection.slug === CollectionSlug.cryptopunks) {
-    throw new Error("Punks interacting with contract")
+  // When the sale price is missing, we default to 0.08
+  // This happens when PUNKS interact with a smart contract
+  if (sale.salePrice === 0.08) {
+    throw new Error(`missing sale price | ${sale.asset.link}`)
   }
 
   try {

@@ -14,7 +14,7 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
   // Get the Collection Data
   const collection = getCollectionFromSlug(CollectionSlug.cryptopunks)
   const collectionData = await getCollectionData(collection, openSeaAPI, leaderboardAPI)
-  const tokenID = 385
+  const tokenID = 2905
 
   try {
     let tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID, 'successful')
