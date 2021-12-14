@@ -7,6 +7,7 @@ export enum CollectionSlug {
   archetypebykjetilgolid = "archetype-by-kjetil-golid",
   chromiesquigglebysnowfro = "chromie-squiggle-by-snowfro",
   boredapeyachtclub = "boredapeyachtclub",
+  clonex = "clonex",
   coolcatsnft = "cool-cats-nft",
   creatures = "creature-world-collection",
   cryptopunks = "cryptopunks",
@@ -103,6 +104,13 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.dystopunks,
     symbol: 'DYSTO',
     twitterUsername: 'DystoPunks'
+  },
+  {
+    address: '0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b',
+    name: 'CLONE X',
+    slug: CollectionSlug.clonex,
+    symbol: 'CloneX',
+    twitterUsername: 'RTFKTstudios'
   },
   {
     address: '0xbad6186e92002e312078b5a1dafd5ddf63d3f731',

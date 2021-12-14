@@ -40,8 +40,7 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
 
   // Missing BoughtPrice or SoldPrice
   if (boughtPriceETH <= 0 || soldPriceETH <= 0) {
-    console.log("OpenSea Link:", sale.asset.link)
-    throw new Error("missing bought or sold price")
+    throw new Error(`missing bought or sold price | ${sale.asset.link}`)
   }
 
   // Get the Profit/Loss value in ETH

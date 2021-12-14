@@ -1,5 +1,7 @@
 import { Collection, Asset, User, PaymentToken, Sale } from "../types";
+
 import { rounded } from "../shared/Formatters";
+import { CollectionSlug } from "../shared/Constants";
 
 export function parseSales(saleEvents): Sale[] {
   return saleEvents.reduce((acc, saleEvent) => {
@@ -47,7 +49,15 @@ export function parseSales(saleEvents): Sale[] {
       }
 
       // Default to 0.08 ETH as the mint price
-      const salePrice = Number(saleEvent.total_price) || 80000000000000000
+      let mintPrice = 80000000000000000
+
+      // For RTFKT CLONE X use the mint cost as 2 ETH
+      if (collection.slug === CollectionSlug.clonex) {
+        mintPrice = 2000000000000000000
+      }
+
+      // Get the sales price or the mint price
+      const salePrice = Number(saleEvent.total_price) || mintPrice
 
       const sale = {
         asset,

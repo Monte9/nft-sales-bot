@@ -5,7 +5,7 @@ import { isError } from '../shared/Helpers';
 
 export default class LeaderboardAPI {
   // The URL for the leaderboard API
-  leaderboardAPI = process.env.NODE_ENV === 'DEVELOPMENT' ? 'http://localhost:5000/api' : 'https://nft-leaderboard.herokuapp.com/api';
+  leaderboardAPI = process.env.NODE_ENV === 'DEVELOPMENT' ? 'http://localhost:8080/api' : 'https://nft-leaderboard.herokuapp.com/api';
 
   // The request options for making a GET or POST request
   // Includes the x-api-key to access the private API
