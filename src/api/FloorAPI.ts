@@ -17,9 +17,6 @@ export default class FloorAPI {
     }
   };
 
-  // API: /v2/prices/ETH-USD/spot
-  // https://developers.coinbase.com/api/v2#get-spot-price
-
   async getFloorPrices(): Promise<FloorPrice[]> {
     const response = await fetch(this.floorURL, this.getOptions)
       .then(response => {

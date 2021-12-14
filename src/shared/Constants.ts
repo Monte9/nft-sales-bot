@@ -72,7 +72,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
   },
   {
     address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
-    name: 'Crypto Punks',
+    name: 'CryptoPunks',
     slug: CollectionSlug.cryptopunks,
     symbol: 'PUNK',
     twitterUsername: 'larvalabs',
@@ -86,7 +86,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
   },
   {
     address: '0x1a92f7381b9f03921564a437210bb9396471050c',
-    name: 'Cool Cats NFTs',
+    name: 'Cool Cats NFT',
     slug: CollectionSlug.coolcatsnft,
     symbol: 'COOL',
     twitterUsername: 'coolcatsnft',
@@ -142,14 +142,14 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
   },
   {
     address: '0xa3aee8bce55beea1951ef834b99f3ac60d1abeeb',
-    name: 'Vee Friends',
+    name: 'VeeFriends',
     slug: CollectionSlug.veefriends,
     symbol: 'VFT',
     twitterUsername: 'veefriends',
   },
   {
     address: '0xeb834ae72b30866af20a6ce5440fa598bfad3a42',
-    name: 'Wolf Game',
+    name: 'Wolf Game Wolves',
     slug: CollectionSlug.wolfgame,
     symbol: 'WGAME',
     twitterUsername: 'wolfdotgame',
