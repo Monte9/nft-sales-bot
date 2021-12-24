@@ -6,7 +6,7 @@ import { isError } from '../shared/Helpers';
 
 export default class FloorAPI {
   // The URL for the /floor endpoint
-  floorURL = 'https://9b5uos52uh.execute-api.us-east-1.amazonaws.com/prod/freeFloors';
+  floorURL = 'https://9b5uos52uh.execute-api.us-east-1.amazonaws.com/prod/v1/freeFloors';
 
   // The request options for making a GET request
   // Includes the x-api-key for OpenSea to bypass the rate limiting

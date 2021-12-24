@@ -58,11 +58,8 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
 
   // Get the ETH prices on bought & sold dates
   try {
-    const todayDate = moment(new Date()).format("YYYY-MM-DDT00:00:00")    
-    var todayETHPrice = await coinbaseAPI.getUSDPriceForETH(todayDate)
-
-    var boughtDateETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate, todayETHPrice)
-    var soldDateETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate, todayETHPrice)
+    var boughtDateETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate)
+    var soldDateETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate)
   } catch (error) {
     throw error
   }
