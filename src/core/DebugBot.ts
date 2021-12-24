@@ -1,4 +1,5 @@
 import CoinbaseAPI from '../api/CoinbaseAPI';
+import DearEarthAPI from '../api/DearEarthAPI';
 import LeaderboardAPI from '../api/LeaderboardAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
@@ -15,6 +16,9 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
   const collection = getCollectionFromSlug(CollectionSlug.boredapeyachtclub)
   const collectionData = await getCollectionData(collection, openSeaAPI, leaderboardAPI)
   const tokenID = 2402
+
+  const dearEarthAPI = new DearEarthAPI();
+  dearEarthAPI.fetchCollections();
 
   try {
     let tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID, 'successful')
