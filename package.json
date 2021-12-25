@@ -10,7 +10,6 @@
     "tsc": "tsc",
     "start": "node build/salesbot.js",
     "start:dev": "nodemon --exec babel-node src/salesbot.ts --extensions '.js,.ts,.tsx'",
-    "start:leaderboard": "nodemon --exec babel-node src/leaderboard.ts --extensions '.js,.ts,.tsx'",
     "gql-gen": "graphql-codegen --require dotenv/config --config codegen.yml"
   },
   "repository": {

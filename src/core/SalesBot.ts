@@ -2,14 +2,13 @@ import 'dotenv/config';
 
 import CoinbaseAPI from '../api/CoinbaseAPI';
 import FloorAPI from '../api/FloorAPI';
-import LeaderboardAPI from '../api/LeaderboardAPI';
+import DearEarthAPI from '../api/DearEarthAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
 
 import { runDebugBot } from './DebugBot';
 import { getProfitThresholdETH } from './SaleData';
 import { composeTweet } from './Twitter';
-import Leaderboard from '../leaderboard/index';
 
 import { Collection, Sale, SalesBot } from '../types';
 
@@ -22,13 +21,13 @@ export default class NFTSalesBot {
   floorAPI: FloorAPI = null
   openSeaAPI: OpenSeaAPI = null
   twitterAPI: TwitterAPI = null
-  leaderboardAPI: LeaderboardAPI = null
+  dearEarthAPI: DearEarthAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI();
     this.openSeaAPI = new OpenSeaAPI();
     this.floorAPI = new FloorAPI();
-    this.leaderboardAPI = new LeaderboardAPI();
+    this.dearEarthAPI = new DearEarthAPI();
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
@@ -43,11 +42,11 @@ export default class NFTSalesBot {
 
     // Runs DebugBot in DEVELOPMENT environment
     if (process.env.NODE_ENV === "DEVELOPMENT") {
-      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.leaderboardAPI)
+      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.dearEarthAPI)
       return
     }
 
-    const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI, this.leaderboardAPI)
+    const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI, this.dearEarthAPI)
     console.log('\Initial Collections', collectionsData)
 
     let currentIndex = 0
@@ -68,7 +67,7 @@ export default class NFTSalesBot {
         console.log(`Missing oldSalesIds for ${currentCollection.collection.name}`)
 
         // Update the missing collection again
-        collectionsData[collectionIndex] = await getCollectionData(currentCollection.collection, this.openSeaAPI, this.leaderboardAPI)
+        collectionsData[collectionIndex] = await getCollectionData(currentCollection.collection, this.openSeaAPI, this.dearEarthAPI)
 
         // Delay the next OpenSea API call by 30 seconds
         console.log(`Waiting for 30 secs...`)
@@ -196,18 +195,17 @@ export default class NFTSalesBot {
 
 // Gets the oldSales events for all Collections
 // Used to initialize the bot and build a Collection object
-export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI, leaderboardAPI: LeaderboardAPI): Promise<SalesBot[]> {
+export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI, dearEarthAPI: DearEarthAPI): Promise<SalesBot[]> {
   return await Promise.all(
     ACTIVE_NFT_COLLECTIONS.map(async (collection): Promise<SalesBot> => {
-      return getCollectionData(collection, openSeaAPI, leaderboardAPI)
+      return getCollectionData(collection, openSeaAPI, dearEarthAPI)
     })
   )
 }
 
 // Gets the oldSales events for all Collections
 // Used to initialize the bot and build a Collection object
-export async function getCollectionData(collection: Collection, openSeaAPI: OpenSeaAPI, leaderboardAPI: LeaderboardAPI): Promise<SalesBot> {
-  const leaderboard = new Leaderboard()
+export async function getCollectionData(collection: Collection, openSeaAPI: OpenSeaAPI, dearEarthAPI: DearEarthAPI): Promise<SalesBot> {
   let oldSales: Sale[] = null;
   let oldSalesIds: number[] = []
 
@@ -236,10 +234,10 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
   salesBot.floorPrice = currentFloorPrice
 
   // Calculate the profit threshold for the collection
-  const profitThresholdETH = getProfitThresholdETH(currentFloorPrice)
+  const profitThreshold = getProfitThresholdETH(currentFloorPrice)
 
-  // Save the Sale in the Leaderboard database
-  await leaderboard.saveCollectionInDatabase(collection, currentFloorPrice, profitThresholdETH)
+  // Save the Sale in the DearEarth database
+  await dearEarthAPI.saveCollectionData(collection, currentFloorPrice, profitThreshold)
 
   // Return the salesBot data
   return salesBot

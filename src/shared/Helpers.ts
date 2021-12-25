@@ -1,5 +1,5 @@
 import FloorAPI from "../api/FloorAPI";
-import { Collection, FloorPrice, LeaderboardToken } from "../types";
+import { Collection, FloorPrice } from "../types";
 import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from "./Constants";
 
 // https://stackoverflow.com/a/61958148
@@ -11,16 +11,6 @@ export function isError(obj) {
 
 export function getCollectionFromSlug(slug: CollectionSlug) {
   return ACTIVE_NFT_COLLECTIONS.find(collection => collection.slug === slug);
-}
-
-export function getOpenSeaLink(collection: Collection, tokenID: number) {
-  return `https://opensea.io/assets/${collection.address}/${tokenID}`
-}
-
-export function getTokenFromLeaderboardTokens(tokens: LeaderboardToken[], tokenId: number): LeaderboardToken | undefined {
-  return tokens.find(token => {
-    return token.tokenId === tokenId
-  })
 }
 
 export async function getFloorPriceForCollection(collection: Collection): Promise<FloorPrice> {

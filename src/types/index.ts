@@ -84,34 +84,3 @@ export interface SaleData {
   flipPercentageUSD: number
   annualizedReturns: number
 }
-
-// LEADERBOARD API COLLECTION DATA
-
-export interface LeaderboardCollection {
-  collection: Collection
-  floorPrice: number
-  profitThreshold: number
-}
-
-// LEADERBOARD API SALE DATA
-
-export interface LeaderboardSale {
-  collection: Collection
-  sale: SaleData
-  tokenImage: string
-  openseaSaleId: number
-  timestamp: string
-  transactionHash: string
-}
-
-// LEADERBOARD API TOKEN DATA
-
-export interface LeaderboardToken {
-  id?: number
-  collectionSlug: CollectionSlug
-  tokenId: number
-  openSeaLink: string
-  salesCount: number
-  createdAt?: string
-  updatedAt?: string
-}
