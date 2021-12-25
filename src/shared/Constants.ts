@@ -107,7 +107,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
   },
   {
     address: '0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b',
-    name: 'CLONE X',
+    name: 'CLONE X - X TAKASHI MURAKAMI',
     slug: CollectionSlug.clonex,
     symbol: 'CloneX',
     twitterUsername: 'RTFKTstudios'

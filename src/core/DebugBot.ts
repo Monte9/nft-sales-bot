@@ -12,7 +12,7 @@ import { getCollectionFromSlug } from '../shared/Helpers';
 
 export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI, dearEarthAPI: DearEarthAPI) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug(CollectionSlug.boredapeyachtclub)
+  const collection = getCollectionFromSlug(CollectionSlug.clonex)
   const collectionData = await getCollectionData(collection, openSeaAPI, dearEarthAPI)
   const tokenID = 2402
 
