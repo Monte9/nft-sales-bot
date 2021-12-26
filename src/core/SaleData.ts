@@ -61,24 +61,21 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
     var boughtDateETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate)
     var soldDateETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate)
   } catch (error) {
-    throw error
+    throw new Error(`unable to fetch ETH price for Bought date ${boughtDate} or Sold date ${soldDate} | ${sale.asset.link}`)
   }
 
   // Get the bought & sold prices in USD
   const boughtPriceUSD = Math.round(boughtPriceETH * boughtDateETHPrice)
   const soldPriceUSD = Math.round(soldPriceETH * soldDateETHPrice)
 
-  // Get the Profit/Loss Flip value in USD
-  const flipValueUSD = Math.round(soldPriceUSD - boughtPriceUSD)
-
-  // Get the Flip Percentage
-  const flipValueUSDRounded = rounded((soldPriceUSD - boughtPriceUSD) / boughtPriceUSD)
-  const flipPercentageUSD = rounded(flipValueUSDRounded * 100)
-
-  // Calculate Annualized Returns
-  // Formula: return % / no. days held x 365
-  // Credit: Anonn.eth
-  const annualizedReturns = rounded(flipPercentageUSD / hodlDays * 365)
+  // Get the flip profit or loss value in USD & the flip percentage
+  if (boughtPriceUSD === 0 || soldPriceUSD === 0) {
+    var flipValueUSD = 0
+  } else {
+    flipValueUSD = Math.round(soldPriceUSD - boughtPriceUSD)
+  }
+  
+  const flipPercentageUSD = Math.round(flipValueUSD / boughtPriceUSD * 100)
 
   return {
     tokenId,
@@ -98,7 +95,6 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
     hodlDays,
     flipValueUSD,
     flipPercentageUSD,
-    annualizedReturns
   }
 }
 

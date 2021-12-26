@@ -1,11 +1,11 @@
 import { addCommas } from "../../shared/Formatters"
 
-export const BoughtInfo = (boughtPriceETH, boughtDateETHPrice, sale) => {
+export const BoughtInfo = (boughtPriceETH, boughtDateETHPrice, sale, flipValueUSD) => {
   // Get formatted bought ETH price 
   const boughtPriceETHFormatted = addCommas(boughtPriceETH)
   let priceInfoETH = `🛍 Bought: ${boughtPriceETHFormatted} ${sale.paymentToken.symbol}`
 
-  if (boughtDateETHPrice <= 0) {
+  if (boughtDateETHPrice <= 0 || flipValueUSD === 0) {
     return priceInfoETH + '\n'
   }
 

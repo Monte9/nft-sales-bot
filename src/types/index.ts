@@ -82,5 +82,4 @@ export interface SaleData {
   isProfit: boolean
   flipValueUSD: number
   flipPercentageUSD: number
-  annualizedReturns: number
 }

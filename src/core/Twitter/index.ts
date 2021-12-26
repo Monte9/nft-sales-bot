@@ -68,8 +68,8 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   return (
     TweetIntro(collection.symbol, tokenId, isProfit, salesData.sellerAddress, salesData.sellerUsername) + '\n' +
     TweetStatus(isProfit, profitLossETH, hodlDays, flipValueUSD) + '\n' +
-    BoughtInfo(boughtPriceETH, boughtDateETHPrice, sale) +
-    SoldInfo(soldPriceETH, soldDateETHPrice, sale) +
+    BoughtInfo(boughtPriceETH, boughtDateETHPrice, sale, flipValueUSD) +
+    SoldInfo(soldPriceETH, soldDateETHPrice, sale, flipValueUSD) +
     HodlInfo(soldDate, boughtDate) + '\n' +
     FlipInfoETH(isProfit, absoluteProfitLossETH) +
     FlipInfoUSD(flipPercentageUSD, flipValueUSD)  + '\n' + 
