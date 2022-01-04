@@ -39,6 +39,7 @@ export const ART_BLOCKS_CURATED_COLLECTIONS: Collection[] = [
     name: 'Ringers by Dmitri Cherniak',
     slug: CollectionSlug.ringersbydmitricherniak,
     symbol: 'BLOCKS',
+    displaySymbol: 'RINGERS',
     twitterUsername: null,
   },
   {
@@ -46,6 +47,7 @@ export const ART_BLOCKS_CURATED_COLLECTIONS: Collection[] = [
     name: 'Fidenza by Tyler Hobbs',
     slug: CollectionSlug.fidenzabytylerhobbs,
     symbol: 'BLOCKS',
+    displaySymbol: 'FIDENZA',
     twitterUsername: null,
   },
   {
@@ -53,6 +55,7 @@ export const ART_BLOCKS_CURATED_COLLECTIONS: Collection[] = [
     name: 'Archetype by Kjetil Golid',
     slug: CollectionSlug.archetypebykjetilgolid,
     symbol: 'BLOCKS',
+    displaySymbol: 'ARCHETYPE',
     twitterUsername: null,
   },
   {
@@ -60,6 +63,7 @@ export const ART_BLOCKS_CURATED_COLLECTIONS: Collection[] = [
     name: 'Chromie Squiggle by Snowfro',
     slug: CollectionSlug.chromiesquigglebysnowfro,
     symbol: 'BLOCKS',
+    displaySymbol: 'CHROMIE SQUIGGLE',
     twitterUsername: null,
   },
 ]
@@ -71,6 +75,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'Anonymice',
     slug: CollectionSlug.anonymice,
     symbol: 'MICE',
+    displaySymbol: 'ANONYMICE',
     twitterUsername: 'AnonymiceNFT',
   },
   {
@@ -92,6 +97,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'Cool Cats NFT',
     slug: CollectionSlug.coolcatsnft,
     symbol: 'COOL',
+    displaySymbol: 'COOL CAT',
     twitterUsername: 'coolcatsnft',
   },
   {
@@ -99,6 +105,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'CrypToadz by GREMPLIN',
     slug: CollectionSlug.cryptoadz,
     symbol: 'TOADZ',
+    displaySymbol: 'CRYPTOADZ',
     twitterUsername: 'cryptoadzNFT',
   },
   {
@@ -106,6 +113,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'CryptoPunks',
     slug: CollectionSlug.cryptopunks,
     symbol: 'PUNK',
+    displaySymbol: 'CRYPTOPUNK',
     twitterUsername: 'larvalabs',
   },
   {
@@ -113,6 +121,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'CyberKongz',
     slug: CollectionSlug.cyberkongz,
     symbol: 'KONGZ',
+    displaySymbol: 'CYBERKONG',
     twitterUsername: 'CyberKongz',
   },
   {
@@ -120,6 +129,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'DystoPunks',
     slug: CollectionSlug.dystopunks,
     symbol: 'DYSTO',
+    displaySymbol: 'DYSTOPUNK',
     twitterUsername: 'DystoPunks'
   },
   {
@@ -127,6 +137,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'CLONE X - X TAKASHI MURAKAMI',
     slug: CollectionSlug.clonex,
     symbol: 'CloneX',
+    displaySymbol: 'CLONEX',
     twitterUsername: 'RTFKTstudios'
   },
   {
@@ -134,6 +145,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'DeadFellaz',
     slug: CollectionSlug.deadfellaz,
     symbol: 'DEADFELLAZ',
+    displaySymbol: 'DEADFELLAZ',
     twitterUsername: 'deadfellaznft',
   },
   {
@@ -141,6 +153,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'Gutter Cat Gang',
     slug: CollectionSlug.guttercatgang,
     symbol: 'GANG',
+    displaySymbol: 'GUTTER CAT',
     twitterUsername: 'guttercatgang',
   },
   {
@@ -155,6 +168,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'Meebits',
     slug: CollectionSlug.meebits,
     symbol: 'MEEBITS',
+    displaySymbol: 'MEEBIT',
     twitterUsername: 'larvalabs',
   },
   {
@@ -169,6 +183,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'VeeFriends',
     slug: CollectionSlug.veefriends,
     symbol: 'VFT',
+    displaySymbol: 'VEEFRIENDS',
     twitterUsername: 'veefriends',
   },
   {
@@ -176,6 +191,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'Wolf Game Wolves',
     slug: CollectionSlug.wolfgame,
     symbol: 'WGAME',
+    displaySymbol: 'WOLF',
     twitterUsername: 'wolfdotgame',
   },
   {

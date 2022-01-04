@@ -26,6 +26,7 @@ export default class DearEarthAPI {
           symbol
           twitterUsername
           updated_at
+          displaySymbol
         }
       }
     `
@@ -47,6 +48,7 @@ export default class DearEarthAPI {
             slug
             symbol
             twitterUsername
+            displaySymbol
           }
         }
       }
@@ -65,7 +67,8 @@ export default class DearEarthAPI {
         "profitThreshold",
         "slug",
         "symbol",
-        "twitterUsername"
+        "twitterUsername",
+        "displaySymbol"
       ]
     }
 

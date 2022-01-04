@@ -15,6 +15,7 @@ export interface Collection {
   name: string
   slug: CollectionSlug
   symbol: string
+  displaySymbol?: string
   twitterUsername?: string
 }
 

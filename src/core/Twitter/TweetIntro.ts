@@ -1,8 +1,11 @@
 import { getShortWalletAddress } from "../../shared/Formatters"
 
-export const TweetIntro = (collectionSymbol, tokenId, isProfit, sellerAddress, sellerUsername) => {
+export const TweetIntro = (collection, tokenId, isProfit, sellerAddress, sellerUsername) => {
   // Get Sale type
   const saleTypeTitle = isProfit ? '↗️  flipped ↗️ ' : '↘️ fumbled ↘️'
+
+  // Get Collection Name
+  const collectionSymbol = collection.displaySymbol ?? collection.symbol
 
   // Get seller name
   const sellerWallet = getShortWalletAddress(sellerAddress)
