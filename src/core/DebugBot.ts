@@ -12,9 +12,9 @@ import { getCollectionFromSlug } from '../shared/Helpers';
 
 export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI, dearEarthAPI: DearEarthAPI) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug(CollectionSlug.boredapekennelclub)
+  const collection = getCollectionFromSlug(CollectionSlug.coolcatsnft)
   const collectionData = await getCollectionData(collection, openSeaAPI, dearEarthAPI)
-  const tokenID = 7015
+  const tokenID = 6471
 
   try {
     let tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID, 'successful')

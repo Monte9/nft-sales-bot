@@ -51,7 +51,7 @@ export function TweetStatus(isProfit: boolean, profitLossETH: number, hodlDays: 
     status = addStatus(status, 'Noob Flip')
   }
 
-  return `🏆 Status: ${status}\n`
+  return `🏆 status: ${status}\n`
 }
 
 function addStatus(currentStatus: string, newStatus: string) {

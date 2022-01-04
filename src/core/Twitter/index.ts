@@ -6,13 +6,12 @@ import { BoughtInfo } from "./BoughtInfo";
 import { SoldInfo } from "./SoldInfo";
 import { HodlInfo } from "./HodlInfo";
 import { FlipInfoETH } from "./FlipInfoETH";
+import { BuyInUSD } from "./BuyInUSD";
 import { FlipInfoUSD } from "./FlipInfoUSD";
 
 import { getProfitThresholdETH, getSaleData } from "../SaleData";
 
 import { Collection, Sale, SaleData } from "../../types";
-
-import { CollectionSlug } from "../../shared/Constants";
 
 interface ComposeTweetParams {
   collection: Collection
@@ -68,11 +67,12 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   return (
     TweetIntro(collection.symbol, tokenId, isProfit, salesData.sellerAddress, salesData.sellerUsername) + '\n' +
     TweetStatus(isProfit, profitLossETH, hodlDays, flipValueUSD) + '\n' +
-    BoughtInfo(boughtPriceETH, boughtDateETHPrice, sale, flipValueUSD) +
-    SoldInfo(soldPriceETH, soldDateETHPrice, sale, flipValueUSD) +
+    BoughtInfo(boughtPriceETH, sale) +
+    SoldInfo(soldPriceETH, sale) +
     HodlInfo(soldDate, boughtDate) + '\n' +
-    FlipInfoETH(isProfit, absoluteProfitLossETH) +
-    FlipInfoUSD(flipPercentageUSD, flipValueUSD)  + '\n' + 
+    FlipInfoETH(isProfit, absoluteProfitLossETH) + '\n' + 
+    BuyInUSD(flipPercentageUSD, boughtPriceETH, boughtDateETHPrice, boughtDate) +
+    FlipInfoUSD(flipPercentageUSD, flipValueUSD) + '\n' + 
     openSeaLink
   )
 }

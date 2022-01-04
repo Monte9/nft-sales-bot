@@ -16,6 +16,11 @@ export const getShortWalletAddress = (address): string => {
   return address.slice(0, 6) + '..' + address.substr(address.length - 4)
 }
 
+export const getShortDate = (date: string): string => {
+  const momentDate = moment(date)
+  return momentDate.format("MM/YYYY")
+}
+
 export const getYMDaysBetween = (start: string, end: string): string => {
   const startDate = moment(start)
   const endDate = moment(end)
