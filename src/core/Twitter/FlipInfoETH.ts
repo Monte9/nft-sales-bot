@@ -2,7 +2,7 @@ import { addCommas } from "../../shared/Formatters"
 
 export const FlipInfoETH = (isProfit, absoluteProfitLossETH) => {
   // Get the Profit/Loss labels
-  const isETHProfitLoss = isProfit ? '  Ξ  profit' : '  Ξ  loss'
+  const isETHProfitLoss = isProfit ? ' Ξ  profit' : ' Ξ  loss'
   const profitLossSymbol = isProfit ? '+' : '-'
   const profitLossEmoji = isProfit ? '🔥' : '❌'
 
