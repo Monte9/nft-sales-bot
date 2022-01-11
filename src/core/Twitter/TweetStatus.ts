@@ -1,63 +1,59 @@
 export function TweetStatus(isProfit: boolean, profitLossETH: number, hodlDays: number, flipValueUSD: number) {
-  let status = '';
+  const status = '🏆 status: '
 
-  if (hodlDays === 1) {
-    status = addStatus(status, 'Pancake')
-  } else if (hodlDays < 5) {
-    status = addStatus(status, 'Rapid')
-  } else if (hodlDays < 10) {
-    status = addStatus(status, 'Quick')
-  } else if (hodlDays < 30) {
-    status = addStatus(status, 'Swift')
-  } else if (hodlDays < 180) {
-    status = addStatus(status, 'Thoughtful')
-  } else if (hodlDays < 365) {
-    status = addStatus(status, 'Calculated')
-  } else {
-    status = addStatus(status, 'Diamond Hands')
+  // If HODL is more than 8 months
+  if (hodlDays >= 240) {
+    return status + 'Diamond Hands'
   }
 
+  // If ETH profit but dollar loss
   if (flipValueUSD < 0 && isProfit) {
-    status = addStatus(status, 'Tax Loss Harvesting')
-  } else if (profitLossETH > 1000) {
-    status = addStatus(status, 'God Tier')
-  } else if (profitLossETH > 500) {
-    status = addStatus(status, 'Ready to Retire')
-  } else if (profitLossETH > 250) {
-    status = addStatus(status, 'Life-Changing')
-  } else if (profitLossETH > 100) {
-    status = addStatus(status, 'Exceptional Flip')
-  } else if (profitLossETH > 75) {
-    status = addStatus(status, 'Expert Flip')
-  } else if (profitLossETH > 50) {
-    status = addStatus(status, 'Incredible Flip')
-  } else if (profitLossETH > 25) {
-    status = addStatus(status, 'Excellent Flip')
-  } else if (profitLossETH > 10) {
-    status = addStatus(status, 'Good Flip')
-  } else if (profitLossETH > 5) {
-    status = addStatus(status, "It's Alright")
-  } else if (profitLossETH > 2) {
-    status = addStatus(status, 'Be More Ambitious')
-  } else if (profitLossETH < -10) {
-    status = addStatus(status, 'Fatality')
-  } else if (profitLossETH < -5) {
-    status = addStatus(status, 'Noodle Hands')
-  } else if (profitLossETH < -2) {
-    status = addStatus(status, 'Paper Hands')
-  } else if (profitLossETH < -2) {
-    status = addStatus(status, 'Weak Hands')
-  } else {
-    status = addStatus(status, 'Noob Flip')
+    return status + 'Tax Loss Harvesting'
   }
 
-  return `🏆 status: ${status}\n`
-}
-
-function addStatus(currentStatus: string, newStatus: string) {
-  if (currentStatus.length > 0) {
-    return currentStatus + ` & ${newStatus}`
+  if (profitLossETH < -10) {
+    return status + 'No Hands'
   }
 
-  return newStatus
+  if (profitLossETH < -5) {
+    return status + 'Noodle Hands'
+  }
+
+  if (profitLossETH < -2) {
+    return status + 'Weak Hands'
+  }
+
+  if (profitLossETH > 300) {
+    return status + 'Legend'
+  }
+  
+  if (profitLossETH > 150) {
+    return status + 'Master'
+  }
+  
+  if (profitLossETH > 75) {
+    return status + 'Elite'
+  }
+  
+  if (profitLossETH > 50) {
+    return status + 'Diamond'
+  }
+  
+  if (profitLossETH > 25) {
+    return status + 'Emerald'
+  }
+  
+  if (profitLossETH > 10) {
+    return status + 'Gold'
+  }
+  
+  if (profitLossETH > 5) {
+    return status + 'Silver'
+  }
+  
+  if (profitLossETH > 2) {
+    return status + 'Bronze'
+  }
+
+  return status + 'Rookie'
 }
