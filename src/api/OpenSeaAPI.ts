@@ -21,7 +21,6 @@ export default class OpenSeaAPI {
 
   // API: /v1/events
   // https://docs.opensea.io/reference/retrieving-asset-events
-
   async fetchSaleEventsForCollection(collectionSlug: string): Promise<Sale[]> {
     let params = `only_opensea=false&collection_slug=${collectionSlug}&event_type=successful&offset=0&limit=20`
     
@@ -46,6 +45,8 @@ export default class OpenSeaAPI {
     return parseSales(response.asset_events)
   }
 
+  // API: /v1/events
+  // https://docs.opensea.io/reference/retrieving-asset-events
   async fetchSaleEventsForToken(assetContractAddress: string, tokenId: number, eventType: string = 'successful'): Promise<Sale[]> {
     let params = `only_opensea=false&asset_contract_address=${assetContractAddress}&token_id=${tokenId}&event_type=${eventType}&offset=0&limit=20`
     

@@ -3,6 +3,7 @@ import { Collection } from "../types"
 export const SUPPORTED_PAYMENT_TOKEN_SYMBOLS = ['ETH', 'WETH']
 
 export enum CollectionSlug {
+  alienfrensnft = "alienfrensnft",
   anonymice = "anonymice",
   archetypebykjetilgolid = "archetype-by-kjetil-golid",
   chromiesquigglebysnowfro = "chromie-squiggle-by-snowfro",
@@ -70,6 +71,13 @@ export const ART_BLOCKS_CURATED_COLLECTIONS: Collection[] = [
 
 export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
   ...ART_BLOCKS_CURATED_COLLECTIONS,
+  {
+    address: '0x123b30e25973fecd8354dd5f41cc45a3065ef88c',
+    name: 'alien frens',
+    slug: CollectionSlug.alienfrensnft,
+    symbol: 'ALIENFRENS',
+    twitterUsername: 'alienfrens',
+  },
   {
     address: '0xbad6186e92002e312078b5a1dafd5ddf63d3f731',
     name: 'Anonymice',

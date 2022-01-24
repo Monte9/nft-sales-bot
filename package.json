@@ -9,7 +9,7 @@
     "build": "npm run clean && babel -d ./build ./src -s --extensions '.js,.ts,.tsx'",
     "tsc": "tsc",
     "start": "node build/salesbot.js",
-    "start:dev": "nodemon --exec babel-node src/salesbot.ts --extensions '.js,.ts,.tsx'",
+    "dev": "nodemon --exec babel-node src/salesbot.ts --extensions '.js,.ts,.tsx'",
     "gql-gen": "graphql-codegen --require dotenv/config --config codegen.yml"
   },
   "repository": {
