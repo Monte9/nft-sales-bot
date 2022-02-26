@@ -2,15 +2,21 @@ import CoinbaseAPI from '../api/CoinbaseAPI';
 import DearEarthAPI from '../api/DearEarthAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
+import LooksRareAPI from '../api/LooksRareAPI';
 
 import { composeTweet } from './Twitter';
 import { getCollectionData } from './SalesBot';
-
+import { composeLooksRareTweet } from './LooksRare';
 import { CollectionSlug } from '../shared/Constants';
-
 import { getCollectionFromSlug } from '../shared/Helpers';
 
-export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseAPI, twitterAPI: TwitterAPI, dearEarthAPI: DearEarthAPI) {
+export async function runDebugBot(
+  openSeaAPI: OpenSeaAPI,
+  coinbaseAPI: CoinbaseAPI,
+  twitterAPI: TwitterAPI,
+  dearEarthAPI: DearEarthAPI,
+  looksRareAPI: LooksRareAPI
+) {
   // Get the Collection Data
   const collection = getCollectionFromSlug(CollectionSlug.alienfrensnft)
   const collectionData = await getCollectionData(collection, openSeaAPI, dearEarthAPI)
@@ -18,6 +24,10 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
 
   try {
     let tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID, 'successful')
+
+    // Fetch transactions from LooksRareAPI
+    const transactions = await looksRareAPI.fetchTransactions()
+    // console.log(transactions)
     
     // If only 1 sale exists, get the token mint sale event
     if (tokenSales.length < 2) {
@@ -28,6 +38,11 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
     }
 
     try {
+      // Post a tweet for LooksRare Transction
+      const looksRareSaleTweet = await composeLooksRareTweet({ transaction: transactions[2], coinbaseAPI})
+      await twitterAPI.postTweet(looksRareSaleTweet)
+
+      // Post a tweet with sale information
       const newSalesTweet = await composeTweet({
         collection,
         purchase: tokenSales[1],
@@ -35,8 +50,6 @@ export async function runDebugBot(openSeaAPI: OpenSeaAPI, coinbaseAPI: CoinbaseA
         coinbaseAPI,
         floorPrice: collectionData.floorPrice
       })
-
-      // Post a tweet with sale information
       await twitterAPI.postTweet(newSalesTweet)
     } catch (error) {
       console.log(`Unable to post Tweet for ${collection.symbol} ${tokenID}:`, error.message)

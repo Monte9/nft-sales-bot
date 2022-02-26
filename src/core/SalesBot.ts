@@ -15,6 +15,7 @@ import { Collection, Sale, SalesBot } from '../types';
 import { getCurrentTime, rounded } from '../shared/Formatters';
 import { ACTIVE_NFT_COLLECTIONS } from '../shared/Constants';
 import { getFloorPriceForCollection } from '../shared/Helpers';
+import LooksRareAPI from '../api/LooksRareAPI';
 
 export default class NFTSalesBot {
   coinbaseAPI: CoinbaseAPI = null
@@ -22,12 +23,14 @@ export default class NFTSalesBot {
   openSeaAPI: OpenSeaAPI = null
   twitterAPI: TwitterAPI = null
   dearEarthAPI: DearEarthAPI = null
+  looksRareAPI: LooksRareAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI();
     this.openSeaAPI = new OpenSeaAPI();
     this.floorAPI = new FloorAPI();
     this.dearEarthAPI = new DearEarthAPI();
+    this.looksRareAPI = new LooksRareAPI();
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
@@ -42,7 +45,7 @@ export default class NFTSalesBot {
 
     // Runs DebugBot in DEVELOPMENT environment
     if (process.env.NODE_ENV === "DEVELOPMENT") {
-      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.dearEarthAPI)
+      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.dearEarthAPI, this.looksRareAPI)
       return
     }
 
