@@ -72,19 +72,20 @@ export default class NFTSalesBot {
       const hourMark = dateTime.split(':')[1]
 
       // 5 mins before the 15 mins mark, toggle the shouldFetchLooksRareTransactions bool value
-      if (shouldFetchLooksRareTransactions === false && hourMark === '55' || hourMark === '10' || hourMark === '25' || hourMark === '40') {
+      if (shouldFetchLooksRareTransactions === false && (hourMark === '55' || hourMark === '10' || hourMark === '25' || hourMark === '40')) {
         shouldFetchLooksRareTransactions = true
+        console.log(`LooksRare API Transactions @ ${formattedDateTime} - shouldFetchLooksRareTransactions: ${shouldFetchLooksRareTransactions}`)
       }
 
       // Get LooksRare Transactions every 15 mins
-      if (shouldFetchLooksRareTransactions && hourMark === '00' || hourMark === '15' || hourMark === '30' || hourMark === '45') {
-        console.log(`Fetch LooksRare API Transactions`)
+      if (shouldFetchLooksRareTransactions && (hourMark === '00' || hourMark === '15' || hourMark === '30' || hourMark === '45')) {
         shouldFetchLooksRareTransactions = false
+        console.log(`LooksRare API Transactions @ ${formattedDateTime} - shouldFetchLooksRareTransactions: ${shouldFetchLooksRareTransactions}`)
 
         try {
           // Fetch transactions from LooksRareAPI
           const transactions = await this.looksRareAPI.fetchTransactions(getCurrentUnixTimeMinusFifteenMinutes())
-          console.log(`LooksRare Transactions @ ${formattedDateTime} since ${getCurrentUnixTimeMinusFifteenMinutes()}: ${transactions.length}`)
+          console.log(`LooksRare API Transactions @ ${formattedDateTime} since ${getCurrentUnixTimeMinusFifteenMinutes()}: ${transactions.length}`)
 
           await Promise.all(
             transactions.map(async transaction => {
