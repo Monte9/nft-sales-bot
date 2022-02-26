@@ -1,7 +1,7 @@
 import TwitterApi from 'twitter-api-v2';
 import TwitterApiv1ReadWrite from 'twitter-api-v2/dist/v1/client.v1.write';
 
-import { getCurrentTime } from '../shared/Formatters';
+import { getCurrentDateTime } from '../shared/Formatters';
 
 export default class TwitterAPI {
   twitterV1: TwitterApiv1ReadWrite = null
@@ -25,7 +25,7 @@ export default class TwitterAPI {
         console.log(content)
       } else {
         const tweet = await this.twitterV1.tweet(content)
-        console.log(`Tweet Posted @ ${getCurrentTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
+        console.log(`Tweet Posted @ ${getCurrentDateTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
       }
     } catch (error) {
       console.log("Error:", error.message)

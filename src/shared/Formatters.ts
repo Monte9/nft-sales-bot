@@ -8,8 +8,13 @@ export function rounded(value: number): number {
   return Math.round(value * 100) / 100 || 0
 }
 
-export const getCurrentTime = (): string => {
-  return moment.tz('Asia/Kolkata').format("MMM Do, hh:mm A")
+export const getCurrentDateTime = (format: string = "MMM Do, hh:mm A"): string => {
+  return moment.tz('Asia/Kolkata').format(format)
+}
+
+// Get UNIX Timestamp: https://timestamp.online/timestamp/1645856871
+export const getCurrentUnixTimeMinusFifteenMinutes = (): number => {
+  return moment().subtract(15, 'minutes').unix()
 }
 
 export const getShortWalletAddress = (address): string => {

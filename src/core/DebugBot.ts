@@ -9,6 +9,7 @@ import { getCollectionData } from './SalesBot';
 import { composeLooksRareTweet } from './LooksRare';
 import { CollectionSlug } from '../shared/Constants';
 import { getCollectionFromSlug } from '../shared/Helpers';
+import { getCurrentUnixTimeMinusFifteenMinutes } from '../shared/Formatters';
 
 export async function runDebugBot(
   openSeaAPI: OpenSeaAPI,
@@ -23,11 +24,11 @@ export async function runDebugBot(
   const tokenID = 3630
 
   try {
+    // Fetch transactions from OpenSeaAPI
     let tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID, 'successful')
 
     // Fetch transactions from LooksRareAPI
-    const transactions = await looksRareAPI.fetchTransactions()
-    // console.log(transactions)
+    const transactions = await looksRareAPI.fetchTransactions(getCurrentUnixTimeMinusFifteenMinutes())
     
     // If only 1 sale exists, get the token mint sale event
     if (tokenSales.length < 2) {
@@ -38,9 +39,16 @@ export async function runDebugBot(
     }
 
     try {
-      // Post a tweet for LooksRare Transction
-      const looksRareSaleTweet = await composeLooksRareTweet({ transaction: transactions[2], coinbaseAPI})
-      await twitterAPI.postTweet(looksRareSaleTweet)
+      if (transactions.length > 0) {
+        console.log(`\nGot ${transactions.length} LooksRare Transctions in the last 15 mins`)
+        // Post a tweet for LooksRare Transction
+        const looksRareSaleTweet = await composeLooksRareTweet({ transaction: transactions[0], coinbaseAPI})
+        await twitterAPI.postTweet(looksRareSaleTweet)
+      } else {
+        console.log(`\nNo LooksRare Transaction. Change the dateSince Unix timestamp`)
+      }
+
+      console.log('')
 
       // Post a tweet with sale information
       const newSalesTweet = await composeTweet({

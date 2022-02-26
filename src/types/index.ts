@@ -90,9 +90,12 @@ export interface SaleData {
 export interface LooksRareTransaction {
   id: string
   date: string
-  collection: {
-    id: string
-  }
   tokenId: string
   price: string
+  collection: {
+    id: string
+    totalRoyaltyPaid: string
+    totalTransactions: string
+    totalVolume: string
+  }
 }

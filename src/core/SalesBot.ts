@@ -9,10 +9,11 @@ import TwitterAPI from '../api/TwitterAPI';
 import { runDebugBot } from './DebugBot';
 import { getProfitThresholdETH } from './SaleData';
 import { composeTweet } from './Twitter';
+import { composeLooksRareTweet } from './LooksRare';
 
 import { Collection, Sale, SalesBot } from '../types';
 
-import { getCurrentTime, rounded } from '../shared/Formatters';
+import { getCurrentDateTime, getCurrentUnixTimeMinusFifteenMinutes, rounded } from '../shared/Formatters';
 import { ACTIVE_NFT_COLLECTIONS } from '../shared/Constants';
 import { getFloorPriceForCollection } from '../shared/Helpers';
 import LooksRareAPI from '../api/LooksRareAPI';
@@ -64,6 +65,49 @@ export default class NFTSalesBot {
       const collectionIndex = currentIndex % collectionsData.length
       const currentCollection = collectionsData[collectionIndex]
 
+      // Date Time data for LooksRare API
+      const dateTime = getCurrentDateTime('YYYY-MM-DDTHH:mm')
+      const formattedDateTime = getCurrentDateTime()
+      const hourMark = dateTime.split(':')[1]
+
+      // Get LooksRare Transactions every 15 mins
+      if (hourMark === '00' || hourMark === '15' || hourMark === '30' || hourMark === '45') {
+        console.log(`Fetch LooksRare API Transactions`)
+
+        try {
+          // Fetch transactions from LooksRareAPI
+          const transactions = await this.looksRareAPI.fetchTransactions(getCurrentUnixTimeMinusFifteenMinutes())
+          console.log(`LooksRare Transactions @ ${formattedDateTime} since ${getCurrentUnixTimeMinusFifteenMinutes()}: ${transactions.length}`)
+
+          await Promise.all(
+            transactions.map(async transaction => {
+              try {
+                // Post a tweet for LooksRare Transction
+                const looksRareSaleTweet = await composeLooksRareTweet({ transaction: transaction, coinbaseAPI: this.coinbaseAPI})
+                return await this.twitterAPI.postTweet(looksRareSaleTweet)
+              } catch (error) {
+                console.log(`Unable to post Tweet for LooksRare collection ${transaction.collection.id}/${transaction.tokenId}:`, error.message)
+              }
+            })
+          )
+
+          continue
+        } catch (error) {
+          console.log(`Unable to get Sales Events for LooksRare API:`, error.message)
+          continue
+        }
+      }
+
+      if (!currentCollection) {
+        // Delay the next OpenSea API call by 30 seconds
+        console.log(`Waiting for 30 secs...`)
+        await new Promise(resolve => setTimeout(resolve, 30000));
+
+        // Increment currentIndex to got to the next collection
+        currentIndex = currentIndex + 1
+        continue
+      }
+
       // -------- Step 1
       // Make sure we have oldSaleIds for the currect collection
       if (currentCollection.oldSalesIds.length <= 0) {
@@ -95,7 +139,7 @@ export default class NFTSalesBot {
           newSalesIds.push(newSale.openseaSaleId)
         })
       } catch (error) {
-        console.log(`Unable to get new sales events for ${currentCollection.collection.symbol} @ ${getCurrentTime()}:`, error.message)
+        console.log(`Unable to get new sales events for ${currentCollection.collection.symbol} @ ${getCurrentDateTime()}:`, error.message)
 
         // Delay the next OpenSea API call by 30 seconds
         console.log(`Waiting for 30 secs...`)
@@ -114,7 +158,7 @@ export default class NFTSalesBot {
         .concat(currentCollection.oldSalesIds.filter(id => !newSalesIds.includes(id)));
 
       if (latestSalesIds.length < 1) {
-        console.log(`${getCurrentTime()} - No new sales!`)
+        console.log(`${getCurrentDateTime()} - No new sales!`)
 
         // Update the oldSalesIds to prevent duplicates in the next iteration
         currentCollection.oldSalesIds = newSalesIds
@@ -139,7 +183,7 @@ export default class NFTSalesBot {
 
           // Make sure the latest sale ID is part of the new sales array
           if (latestSalesIds[i] === newSales[j].openseaSaleId) {
-            console.log(`${currentCollection.collection.name} @ ${getCurrentTime()} - New Sale ID#${latestSalesIds[i]}`)
+            console.log(`${currentCollection.collection.name} @ ${getCurrentDateTime()} - New Sale ID#${latestSalesIds[i]}`)
 
             // Fetches all the sale events for the token
             try {
