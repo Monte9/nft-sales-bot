@@ -9,7 +9,7 @@ export function rounded(value: number): number {
 }
 
 export const getCurrentDateTime = (format: string = "MMM Do, hh:mm A"): string => {
-  return moment.tz('Asia/Kolkata').format(format)
+  return moment.tz('America/Chicago').format(format)
 }
 
 // Get UNIX Timestamp: https://timestamp.online/timestamp/1645856871

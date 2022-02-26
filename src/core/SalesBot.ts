@@ -54,6 +54,7 @@ export default class NFTSalesBot {
     console.log('\Initial Collections', collectionsData)
 
     let currentIndex = 0
+    let shouldFetchLooksRareTransactions = true
 
     // Loops through event collection
     // Gets new sale events from OpenSea API
@@ -70,9 +71,15 @@ export default class NFTSalesBot {
       const formattedDateTime = getCurrentDateTime()
       const hourMark = dateTime.split(':')[1]
 
+      // 5 mins before the 15 mins mark, toggle the shouldFetchLooksRareTransactions bool value
+      if (shouldFetchLooksRareTransactions === false && hourMark === '55' || hourMark === '10' || hourMark === '25' || hourMark === '40') {
+        shouldFetchLooksRareTransactions = true
+      }
+
       // Get LooksRare Transactions every 15 mins
-      if (hourMark === '00' || hourMark === '15' || hourMark === '30' || hourMark === '45') {
+      if (shouldFetchLooksRareTransactions && hourMark === '00' || hourMark === '15' || hourMark === '30' || hourMark === '45') {
         console.log(`Fetch LooksRare API Transactions`)
+        shouldFetchLooksRareTransactions = false
 
         try {
           // Fetch transactions from LooksRareAPI
