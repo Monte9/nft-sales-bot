@@ -3,6 +3,7 @@ import DearEarthAPI from '../api/DearEarthAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
 import LooksRareAPI from '../api/LooksRareAPI';
+import CoinMarketCapAPI from '../api/CoinMarketCapAPI';
 
 import { composeTweet } from './Twitter';
 import { getCollectionData } from './SalesBot';
@@ -16,7 +17,8 @@ export async function runDebugBot(
   coinbaseAPI: CoinbaseAPI,
   twitterAPI: TwitterAPI,
   dearEarthAPI: DearEarthAPI,
-  looksRareAPI: LooksRareAPI
+  looksRareAPI: LooksRareAPI,
+  coinMarketCapAPI: CoinMarketCapAPI
 ) {
   // Get the Collection Data
   const collection = getCollectionFromSlug(CollectionSlug.alienfrensnft)
@@ -29,6 +31,10 @@ export async function runDebugBot(
 
     // Fetch transactions from LooksRareAPI
     const transactions = await looksRareAPI.fetchTransactions(getCurrentUnixTimeMinusFifteenMinutes())
+
+    // Get a cryptocurrency quote from CoinMarketCapAPI
+    const apeCoinData = await coinMarketCapAPI.getLatestQuote()
+    console.log(apeCoinData)
     
     // If only 1 sale exists, get the token mint sale event
     if (tokenSales.length < 2) {

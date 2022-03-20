@@ -5,6 +5,8 @@ import FloorAPI from '../api/FloorAPI';
 import DearEarthAPI from '../api/DearEarthAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
+import LooksRareAPI from '../api/LooksRareAPI';
+import CoinMarketCapAPI from '../api/CoinMarketCapAPI';
 
 import { runDebugBot } from './DebugBot';
 import { getProfitThresholdETH } from './SaleData';
@@ -16,7 +18,6 @@ import { Collection, Sale, SalesBot } from '../types';
 import { getCurrentDateTime, getCurrentUnixTimeMinusFifteenMinutes, rounded } from '../shared/Formatters';
 import { ACTIVE_NFT_COLLECTIONS } from '../shared/Constants';
 import { getFloorPriceForCollection } from '../shared/Helpers';
-import LooksRareAPI from '../api/LooksRareAPI';
 
 export default class NFTSalesBot {
   coinbaseAPI: CoinbaseAPI = null
@@ -25,6 +26,7 @@ export default class NFTSalesBot {
   twitterAPI: TwitterAPI = null
   dearEarthAPI: DearEarthAPI = null
   looksRareAPI: LooksRareAPI = null
+  coinMarketCapAPI: CoinMarketCapAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI();
@@ -32,6 +34,7 @@ export default class NFTSalesBot {
     this.floorAPI = new FloorAPI();
     this.dearEarthAPI = new DearEarthAPI();
     this.looksRareAPI = new LooksRareAPI();
+    this.coinMarketCapAPI = new CoinMarketCapAPI();
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
@@ -46,7 +49,7 @@ export default class NFTSalesBot {
 
     // Runs DebugBot in DEVELOPMENT environment
     if (process.env.NODE_ENV === "DEVELOPMENT") {
-      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.dearEarthAPI, this.looksRareAPI)
+      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.dearEarthAPI, this.looksRareAPI, this.coinMarketCapAPI)
       return
     }
 
