@@ -31,7 +31,7 @@ export async function runDebugBot(
   const TWEET_OPENSEA_SALE = true
 
   // Don't debug the LooksRare sale & tweet
-  const TWEET_LOOKSRARE_SALE = false
+  const TWEET_LOOKSRARE_SALE = true
 
   // The file path of the downloaded collection image
   let filePath = undefined
@@ -102,7 +102,6 @@ export async function runDebugBot(
 
   if (TWEET_LOOKSRARE_SALE) {
     const timeStamp = getCurrentUnixTimeMinusFifteenMinutes()
-
     try {
       // Fetch transactions from LooksRareAPI
       const transactions = await looksRareAPI.fetchTransactions(timeStamp)
