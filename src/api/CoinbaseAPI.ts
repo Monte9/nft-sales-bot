@@ -18,7 +18,7 @@ export default class CoinbaseAPI {
   // https://developers.coinbase.com/api/v2#get-spot-price
 
   async getUSDPriceForETH(date: string): Promise<number> {
-    let params = `date=${date}`
+    const params = `date=${date}`
 
     const response = await fetch(`${this.spotPriceURL}?${params}`, this.getOptions)
       .then(response => {

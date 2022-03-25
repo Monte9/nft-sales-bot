@@ -1,7 +1,7 @@
 import { GraphQLClient, gql } from 'graphql-request'
 
 import { Collection } from '../types'
-import { Collection as DBCollection, Collection_Mutation_Response, Mutation_Root } from './graphql/generated'
+import { Collection as DBCollection, Collection_Mutation_Response, Mutation_Root } from '../graphql/generated'
 
 export default class DearEarthAPI {
   // The GraphQL Client for making the request

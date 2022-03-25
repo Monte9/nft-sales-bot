@@ -84,3 +84,9 @@ package-lock.json
 
 # Mac file
 .DS_Store
+
+### ESLint
+.eslintcache
+
+### GraphQL generated files
+src/graphql/generated.ts

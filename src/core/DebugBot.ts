@@ -26,7 +26,7 @@ export async function runDebugBot(
 
   try {
     // Fetch transactions from OpenSeaAPI
-    let tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID, 'successful')
+    const tokenSales = await openSeaAPI.fetchSaleEventsForToken(collection.address, tokenID, 'successful')
 
     // Fetch transactions from LooksRareAPI
     const transactions = await looksRareAPI.fetchTransactions(getCurrentUnixTimeMinusFifteenMinutes())
@@ -70,4 +70,4 @@ export async function runDebugBot(
   } catch (error) {
     console.log(`Unable to get Sales Events for ${collection.symbol} #${tokenID}:`, error.message)
   }
-};
+}

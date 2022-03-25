@@ -26,13 +26,8 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
     throw new Error(`missing sale price | ${sale.asset.link}`)
   }
 
-  try {
-    var salesData: SaleData = await getSaleData({ purchase, sale, coinbaseAPI })
-  } catch(error) {
-    throw error
-  }
-  
-  // Get the Sales Data
+  // Get the Sale data for the NFT sale
+  const salesData: SaleData = await getSaleData({ purchase, sale, coinbaseAPI })
   const {
     tokenId, openSeaLink, isProfit, 
     boughtPriceETH, boughtDate, boughtDateETHPrice,

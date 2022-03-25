@@ -52,7 +52,7 @@ export default class NFTSalesBot {
     }
 
     const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI, this.dearEarthAPI)
-    console.log('\Initial Collections', collectionsData)
+    console.log('\nInitial Collections', collectionsData)
 
     let currentIndex = 0
     let shouldFetchLooksRareTransactions = true
@@ -138,7 +138,7 @@ export default class NFTSalesBot {
       // -------- Step 2
       // Get the NEW sale events for the current collection
       let newSales: Sale[] = null;
-      let newSalesIds: number[] = []
+      const newSalesIds: number[] = []
 
       console.log(`Getting sales events for ${currentCollection.collection.name}`)
       try {
@@ -163,7 +163,7 @@ export default class NFTSalesBot {
       // -------- Step 3
       // Get the LATEST sale events for the current collection
       // If not events found, go to next collection
-      let latestSalesIds: number[] = newSalesIds.filter(id => !currentCollection.oldSalesIds.includes(id))
+      const latestSalesIds: number[] = newSalesIds.filter(id => !currentCollection.oldSalesIds.includes(id))
         .concat(currentCollection.oldSalesIds.filter(id => !newSalesIds.includes(id)));
 
       if (latestSalesIds.length < 1) {
@@ -263,9 +263,9 @@ export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI, dear
 // Used to initialize the bot and build a Collection object
 export async function getCollectionData(collection: Collection, openSeaAPI: OpenSeaAPI, dearEarthAPI: DearEarthAPI): Promise<SalesBot> {
   let oldSales: Sale[] = null;
-  let oldSalesIds: number[] = []
+  const oldSalesIds: number[] = []
 
-  let salesBot: SalesBot = {
+  const salesBot: SalesBot = {
     collection,
     oldSalesIds
   }

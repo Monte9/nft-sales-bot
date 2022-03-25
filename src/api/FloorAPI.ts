@@ -41,7 +41,7 @@ export default class FloorAPI {
 
 export function parseFloorPrices(collections): FloorPrice[] {
   return collections.reduce((acc, collection) => {
-    let info: FloorPrice = {
+    const info: FloorPrice = {
       name: collection.project_name,
       currentFloor: collection.project_floor,
       lastUpdated: collection.last_updated,

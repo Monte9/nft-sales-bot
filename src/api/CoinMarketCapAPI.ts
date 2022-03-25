@@ -19,7 +19,7 @@ export default class CoinMarketCapAPI {
   // https://coinmarketcap.com/api/documentation/v1/#operation/getV2CryptocurrencyQuotesLatest
   async getLatestQuote(): Promise<object> {
     // ApeCoin ID
-    let params = `id=18876`
+    const params = `id=18876`
 
     const response = await fetch(`${this.quotesURL}?${params}`, this.getOptions)
       .then(response => {

@@ -21,7 +21,7 @@ export default class OpenSeaAPI {
   // API: /v1/events
   // https://docs.opensea.io/reference/retrieving-asset-events
   async fetchSaleEventsForCollection(collectionSlug: string): Promise<Sale[]> {
-    let params = `only_opensea=false&collection_slug=${collectionSlug}&event_type=successful`
+    const params = `only_opensea=false&collection_slug=${collectionSlug}&event_type=successful`
     
     const response = await fetch(`${this.eventsURL}?${params}`, this.getOptions)
       .then(response => {
@@ -46,8 +46,8 @@ export default class OpenSeaAPI {
 
   // API: /v1/events
   // https://docs.opensea.io/reference/retrieving-asset-events
-  async fetchSaleEventsForToken(assetContractAddress: string, tokenId: number, eventType: string = 'successful'): Promise<Sale[]> {
-    let params = `only_opensea=false&asset_contract_address=${assetContractAddress}&token_id=${tokenId}&event_type=${eventType}`
+  async fetchSaleEventsForToken(assetContractAddress: string, tokenId: number, eventType = 'successful'): Promise<Sale[]> {
+    const params = `only_opensea=false&asset_contract_address=${assetContractAddress}&token_id=${tokenId}&event_type=${eventType}`
     
     const response = await fetch(`${this.eventsURL}?${params}`, this.getOptions)
       .then(response => {

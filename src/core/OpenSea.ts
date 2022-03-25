@@ -11,7 +11,7 @@ export function parseSales(saleEvents): Sale[] {
       // Uncomment the line below when adding a new collection
       // console.log(saleEvent.asset)
 
-      let collection: Collection = {
+      const collection: Collection = {
         address: saleEvent.asset.asset_contract.address,
         symbol: saleEvent.asset.asset_contract.symbol,
         name: saleEvent.asset.collection.name,
@@ -19,7 +19,7 @@ export function parseSales(saleEvents): Sale[] {
         slug: saleEvent.asset.collection.slug,
       }
 
-      let asset: Asset = {
+      const asset: Asset = {
         name: saleEvent.asset.name,
         tokenId: Number(saleEvent.asset.token_id),
         image: saleEvent.asset.image_url,
@@ -27,12 +27,12 @@ export function parseSales(saleEvents): Sale[] {
         collection,
       }
 
-      let buyer: User = {
+      const buyer: User = {
         address: saleEvent.winner_account && saleEvent.winner_account.address || DEFAULT_WALLET_ADDRESS,
         username: saleEvent.winner_account && saleEvent.winner_account.user && saleEvent.winner_account.user.username
       }
 
-      let seller: User = {
+      const seller: User = {
         address: saleEvent.seller && saleEvent.seller.address || DEFAULT_WALLET_ADDRESS,
         username: saleEvent.seller && saleEvent.seller.user && saleEvent.seller.user.username
       }

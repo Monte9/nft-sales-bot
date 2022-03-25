@@ -1,6 +1,6 @@
 import moment from 'moment-timezone';
 
-export const getCurrentDateTime = (format: string = "MMM Do, hh:mm A"): string => {
+export const getCurrentDateTime = (format = "MMM Do, hh:mm A"): string => {
   return moment.tz('America/Chicago').format(format)
 }
 
