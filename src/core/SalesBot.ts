@@ -11,7 +11,7 @@ import { runDebugBot } from './DebugBot';
 import { getProfitThresholdETH } from './SaleData';
 import { composeTweet } from './Twitter';
 import { composeLooksRareTweet } from './LooksRare';
-import { ACTIVE_NFT_COLLECTIONS } from '../shared/Constants';
+import { ACTIVE_NFT_COLLECTIONS, IS_PRODUCTION } from '../shared/Constants';
 import { getCurrentDateTime, getCurrentUnixTimeMinusFifteenMinutes } from '../utils/DateTime';
 import { getFloorPriceForCollection } from '../utils/OpenSea';
 import { rounded } from '../utils/Number';
@@ -43,10 +43,10 @@ export default class NFTSalesBot {
   }
 
   async start() {
-    console.log(`Starting NFT Sales Bot in ${process.env.NODE_ENV}`)
+    console.log(`Starting NFT Sales Bot in production: ${IS_PRODUCTION}`)
 
-    // Runs DebugBot in DEVELOPMENT environment
-    if (process.env.NODE_ENV === "DEVELOPMENT") {
+    // Run debug bot if it's not in production
+    if (!IS_PRODUCTION) {
       runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.dearEarthAPI, this.looksRareAPI, this.coinMarketCapAPI)
       return
     }
