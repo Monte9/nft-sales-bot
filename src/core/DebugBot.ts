@@ -45,9 +45,17 @@ export async function runDebugBot(
         tokenSales.push(mintSale)
       }
 
+      const tweetText = await composeTweet({
+        collection,
+        purchase: tokenSales[1],
+        sale: tokenSales[0],
+        coinbaseAPI,
+        floorPrice: collectionData.floorPrice
+      })
+
       // This is the twitter mediaId that we'll include with the tweet
       let mediaId = undefined
-        
+  
       try {
         // Download the collection image to the file path
         filePath = await downloadImage(
@@ -63,14 +71,6 @@ export async function runDebugBot(
           `Oops! Unable to download image from ${tokenSales[0].asset.image}\n`
         )
       }
-
-      const tweetText = await composeTweet({
-        collection,
-        purchase: tokenSales[1],
-        sale: tokenSales[0],
-        coinbaseAPI,
-        floorPrice: collectionData.floorPrice
-      })
 
       // Post a tweet with sale information
       await twitterAPI.postTweet(tweetText, mediaId)

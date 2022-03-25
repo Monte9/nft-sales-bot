@@ -208,6 +208,14 @@ export default class NFTSalesBot {
               }
 
               try {
+                const tweetText = await composeTweet({
+                  collection: currentCollection.collection,
+                  purchase: tokenSales[1],
+                  sale: tokenSales[0],
+                  coinbaseAPI: this.coinbaseAPI,
+                  floorPrice: currentCollection.floorPrice
+                })
+
                 // This is the twitter mediaId that we'll include with the tweet
                 let mediaId = undefined
                 
@@ -226,14 +234,6 @@ export default class NFTSalesBot {
                     `Oops! Unable to download image from ${tokenSales[0].asset.image}\n`
                   )
                 }
-
-                const tweetText = await composeTweet({
-                  collection: currentCollection.collection,
-                  purchase: tokenSales[1],
-                  sale: tokenSales[0],
-                  coinbaseAPI: this.coinbaseAPI,
-                  floorPrice: currentCollection.floorPrice
-                })
 
                 // Post a tweet with sale information
                 await this.twitterAPI.postTweet(tweetText, mediaId)
