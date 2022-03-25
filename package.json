@@ -6,11 +6,10 @@
   "scripts": {
     "clean": "rm -rf build && mkdir build",
     "clean-install": "rm -rf node_modules && yarn clean && yarn",
-    "build": "npm run clean && babel -d ./build ./src -s --extensions '.js,.ts,.tsx'",
-    "tsc": "tsc",
-    "start": "node build/salesbot.js",
+    "gql-gen": "graphql-codegen --require dotenv/config --config codegen.yml",
     "dev": "nodemon --exec babel-node src/salesbot.ts --extensions '.js,.ts,.tsx'",
-    "gql-gen": "graphql-codegen --require dotenv/config --config codegen.yml"
+    "build": "npm run clean && babel -d ./build ./src -s --extensions '.js,.ts,.tsx'",
+    "start": "node build/salesbot.js"
   },
   "repository": {
     "type": "git",
@@ -20,21 +19,20 @@
   "license": "ISC",
   "homepage": "https://github.com/Monte9/nft-sales-bot#readme",
   "dependencies": {
-    "@babel/cli": "^7.14.5",
-    "@babel/plugin-transform-runtime": "^7.14.5",
     "@babel/runtime": "^7.14.6",
     "dotenv": "^10.0.0",
     "graphql": "^16.2.0",
     "graphql-request": "^3.7.0",
+    "magic-bytes.js": "^1.0.8",
     "moment-timezone": "^0.5.33",
     "node-fetch": "^2.6.1",
-    "twitter-api-v2": "^1.3.0",
-    "web3": "^1.5.2",
-    "yargs": "^17.2.1"
+    "twitter-api-v2": "^1.11.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.17.6",
     "@babel/core": "^7.14.6",
     "@babel/node": "^7.14.7",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-typescript": "^7.14.5",
     "@graphql-codegen/cli": "2.3.0",

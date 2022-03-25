@@ -1,4 +1,4 @@
-import { addCommas } from "../../shared/Formatters"
+import { addCommas } from "../../utils/String"
 
 export const FlipInfoUSD = (flipPercentageUSD, flipValueUSD) => {
   if (flipPercentageUSD === 0 || flipValueUSD === 0) {

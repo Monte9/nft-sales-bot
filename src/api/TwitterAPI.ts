@@ -1,10 +1,11 @@
 import TwitterApi from 'twitter-api-v2';
-import TwitterApiv1ReadWrite from 'twitter-api-v2/dist/v1/client.v1.write';
+import TwitterApiv2ReadWrite from 'twitter-api-v2/dist/v2/client.v2.write';
 
-import { getCurrentDateTime } from '../shared/Formatters';
+import { IS_PRODUCTION } from '../shared/Constants';
+import { getCurrentDateTime } from '../utils/DateTime';
 
 export default class TwitterAPI {
-  twitterV1: TwitterApiv1ReadWrite = null
+  private twitterClientV2: TwitterApiv2ReadWrite
 
   constructor(apiKey, apiSecretKey, accessToken, accessTokenSecret) {
     // Instantiate the TwitterAPI
@@ -15,17 +16,17 @@ export default class TwitterAPI {
       accessSecret: accessTokenSecret,
     });
 
-    this.twitterV1 = twitterClient.v1;
+    this.twitterClientV2 = twitterClient.v2;
   }
 
   async postTweet(content) {
     try {
-      // In DEVELOPMENT environment we don't want to post a tweet
-      if (process.env.NODE_ENV === "DEVELOPMENT") {
-        console.log(content)
+      if (IS_PRODUCTION) {
+        const tweet = await this.twitterClientV2.tweet(content)
+        console.log(`Tweet Posted @ ${getCurrentDateTime()}:`, `https://twitter.com/dearearth_/status/${tweet.data.id}`)
       } else {
-        const tweet = await this.twitterV1.tweet(content)
-        console.log(`Tweet Posted @ ${getCurrentDateTime()}:`, `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
+        // In DEVELOPMENT environment we don't want to post a tweet
+        console.log(content)
       }
     } catch (error) {
       console.log("Error:", error.message)

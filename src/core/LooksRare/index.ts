@@ -3,8 +3,8 @@ import moment from "moment-timezone";
 import CoinbaseAPI from "../../api/CoinbaseAPI";
 import { TweetStatus } from "../Twitter/TweetStatus";
 import { LooksRareTransaction } from "../../types";
-import { getLooksRareTokenURL } from "../../shared/Helpers";
-import { addCommas } from "../../shared/Formatters";
+import { getLooksRareTokenURL } from "../../utils/LooksRare";
+import { addCommas } from "../../utils/String";
 
 interface ComposeLooksRareTweetParams {
   transaction: LooksRareTransaction,

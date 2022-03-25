@@ -1,7 +1,7 @@
 import { Collection, Asset, User, PaymentToken, Sale } from "../types";
-
-import { rounded } from "../shared/Formatters";
 import { CollectionSlug } from "../shared/Constants";
+import { rounded } from "../utils/Number";
+import { BAYC_MINT_PRICE_WEI, CLONE_X_MINT_PRICE_WEI, DEFAULT_WALLET_ADDRESS } from "../utils/Crypto";
 
 export function parseSales(saleEvents): Sale[] {
   return saleEvents.reduce((acc, saleEvent) => {
@@ -28,12 +28,12 @@ export function parseSales(saleEvents): Sale[] {
       }
 
       let buyer: User = {
-        address: saleEvent.winner_account && saleEvent.winner_account.address || "0x0000000000000000000000000000000000000000",
+        address: saleEvent.winner_account && saleEvent.winner_account.address || DEFAULT_WALLET_ADDRESS,
         username: saleEvent.winner_account && saleEvent.winner_account.user && saleEvent.winner_account.user.username
       }
 
       let seller: User = {
-        address: saleEvent.seller && saleEvent.seller.address || "0x0000000000000000000000000000000000000000",
+        address: saleEvent.seller && saleEvent.seller.address || DEFAULT_WALLET_ADDRESS,
         username: saleEvent.seller && saleEvent.seller.user && saleEvent.seller.user.username
       }
 
@@ -48,12 +48,12 @@ export function parseSales(saleEvents): Sale[] {
         } 
       }
 
-      // Default to 0.08 ETH as the mint price
-      let mintPrice = 80000000000000000
+      // The default mint price is BAYC
+      let mintPrice = BAYC_MINT_PRICE_WEI
 
-      // For RTFKT CLONE X use the mint cost as 2 ETH
+      // For CloneX set the default mint price
       if (collection.slug === CollectionSlug.clonex) {
-        mintPrice = 2000000000000000000
+        mintPrice = CLONE_X_MINT_PRICE_WEI
       }
 
       // Get the sales price or the mint price

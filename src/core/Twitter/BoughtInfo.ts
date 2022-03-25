@@ -1,4 +1,4 @@
-import { addCommas } from "../../shared/Formatters"
+import { addCommas } from "../../utils/String"
 
 export const BoughtInfo = (boughtPriceETH, sale) => {
   // Get formatted bought ETH price 

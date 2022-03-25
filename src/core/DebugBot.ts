@@ -4,13 +4,12 @@ import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
 import LooksRareAPI from '../api/LooksRareAPI';
 import CoinMarketCapAPI from '../api/CoinMarketCapAPI';
-
 import { composeTweet } from './Twitter';
 import { getCollectionData } from './SalesBot';
 import { composeLooksRareTweet } from './LooksRare';
 import { CollectionSlug } from '../shared/Constants';
-import { getCollectionFromSlug } from '../shared/Helpers';
-import { getCurrentUnixTimeMinusFifteenMinutes } from '../shared/Formatters';
+import { getCollectionFromSlug } from '../utils/OpenSea';
+import { getCurrentUnixTimeMinusFifteenMinutes } from '../utils/DateTime';
 
 export async function runDebugBot(
   openSeaAPI: OpenSeaAPI,
@@ -34,7 +33,7 @@ export async function runDebugBot(
 
     // Get a cryptocurrency quote from CoinMarketCapAPI
     const apeCoinData = await coinMarketCapAPI.getLatestQuote()
-    console.log(apeCoinData)
+    // console.log(apeCoinData)
     
     // If only 1 sale exists, get the token mint sale event
     if (tokenSales.length < 2) {

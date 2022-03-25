@@ -1,11 +1,8 @@
-import moment from 'moment-timezone';
-
 import CoinbaseAPI from "../api/CoinbaseAPI"
-
 import { Sale, SaleData } from "../types"
-
 import { SUPPORTED_PAYMENT_TOKEN_SYMBOLS } from "../shared/Constants"
-import { getTotalDaysBetween, rounded } from "../shared/Formatters"
+import { rounded } from "../utils/Number"
+import { getTotalDaysBetween } from "../utils/DateTime"
 
 interface SaleDataParams {
   purchase: Sale

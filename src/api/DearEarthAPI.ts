@@ -13,29 +13,6 @@ export default class DearEarthAPI {
     },
   })
 
-  async fetchCollections() {
-    const query = gql`
-      query Collections {
-        collection {
-          address
-          created_at
-          floorPrice
-          name
-          profitThreshold
-          slug
-          symbol
-          twitterUsername
-          updated_at
-          displaySymbol
-        }
-      }
-    `
-
-    const data = await this.graphQLClient.request(query)
-    const collections: Collection[] = data.collection
-    // console.log(collections.length)
-  }
-
   async saveCollectionData(collection: Collection, floorPrice: number, profitThreshold: number) {    
     const UPSERT_COLLECTION = gql`
       mutation UpsertCollection($collection: [collection_insert_input!]!, $updateCollectionRow: [collection_update_column!]!) {

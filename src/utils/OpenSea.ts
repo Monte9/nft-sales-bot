@@ -1,13 +1,6 @@
 import FloorAPI from "../api/FloorAPI";
+import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from "../shared/Constants";
 import { Collection, FloorPrice } from "../types";
-import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from "./Constants";
-
-// https://stackoverflow.com/a/61958148
-export function isError(obj) {
-  if (!obj) { return false }
-
-  return Object.prototype.toString.call(obj) === "[object Error]";
-}
 
 export function getCollectionFromSlug(slug: CollectionSlug) {
   return ACTIVE_NFT_COLLECTIONS.find(collection => collection.slug === slug);
@@ -39,9 +32,4 @@ export async function getFloorPriceForCollection(collection: Collection): Promis
   }
   
   return emptyFloorPrice
-}
-
-export function getLooksRareTokenURL(collectionAddress: string, tokenId: string) {
-  const looksRareBaseURL = "https://looksrare.org/collections/"
-  return `${looksRareBaseURL}/${collectionAddress}/${tokenId}#activity`
 }

@@ -54,6 +54,7 @@ export type Collection = {
   __typename?: 'collection';
   address: Scalars['String'];
   created_at: Scalars['timestamptz'];
+  displaySymbol?: Maybe<Scalars['String']>;
   floorPrice: Scalars['numeric'];
   name: Scalars['String'];
   profitThreshold: Scalars['numeric'];
@@ -107,6 +108,7 @@ export type Collection_Bool_Exp = {
   _or?: InputMaybe<Array<Collection_Bool_Exp>>;
   address?: InputMaybe<String_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  displaySymbol?: InputMaybe<String_Comparison_Exp>;
   floorPrice?: InputMaybe<Numeric_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   profitThreshold?: InputMaybe<Numeric_Comparison_Exp>;
@@ -132,6 +134,7 @@ export type Collection_Inc_Input = {
 export type Collection_Insert_Input = {
   address?: InputMaybe<Scalars['String']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
+  displaySymbol?: InputMaybe<Scalars['String']>;
   floorPrice?: InputMaybe<Scalars['numeric']>;
   name?: InputMaybe<Scalars['String']>;
   profitThreshold?: InputMaybe<Scalars['numeric']>;
@@ -146,6 +149,7 @@ export type Collection_Max_Fields = {
   __typename?: 'collection_max_fields';
   address?: Maybe<Scalars['String']>;
   created_at?: Maybe<Scalars['timestamptz']>;
+  displaySymbol?: Maybe<Scalars['String']>;
   floorPrice?: Maybe<Scalars['numeric']>;
   name?: Maybe<Scalars['String']>;
   profitThreshold?: Maybe<Scalars['numeric']>;
@@ -160,6 +164,7 @@ export type Collection_Min_Fields = {
   __typename?: 'collection_min_fields';
   address?: Maybe<Scalars['String']>;
   created_at?: Maybe<Scalars['timestamptz']>;
+  displaySymbol?: Maybe<Scalars['String']>;
   floorPrice?: Maybe<Scalars['numeric']>;
   name?: Maybe<Scalars['String']>;
   profitThreshold?: Maybe<Scalars['numeric']>;
@@ -189,6 +194,7 @@ export type Collection_On_Conflict = {
 export type Collection_Order_By = {
   address?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
+  displaySymbol?: InputMaybe<Order_By>;
   floorPrice?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   profitThreshold?: InputMaybe<Order_By>;
@@ -210,6 +216,8 @@ export enum Collection_Select_Column {
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
+  DisplaySymbol = 'displaySymbol',
+  /** column name */
   FloorPrice = 'floorPrice',
   /** column name */
   Name = 'name',
@@ -229,6 +237,7 @@ export enum Collection_Select_Column {
 export type Collection_Set_Input = {
   address?: InputMaybe<Scalars['String']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
+  displaySymbol?: InputMaybe<Scalars['String']>;
   floorPrice?: InputMaybe<Scalars['numeric']>;
   name?: InputMaybe<Scalars['String']>;
   profitThreshold?: InputMaybe<Scalars['numeric']>;
@@ -272,6 +281,8 @@ export enum Collection_Update_Column {
   Address = 'address',
   /** column name */
   CreatedAt = 'created_at',
+  /** column name */
+  DisplaySymbol = 'displaySymbol',
   /** column name */
   FloorPrice = 'floorPrice',
   /** column name */
@@ -631,6 +642,7 @@ export type CachedDirectiveResolver<Result, Parent, ContextType = any, Args = Ca
 export type CollectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['collection'] = ResolversParentTypes['collection']> = {
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   created_at?: Resolver<ResolversTypes['timestamptz'], ParentType, ContextType>;
+  displaySymbol?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   floorPrice?: Resolver<ResolversTypes['numeric'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   profitThreshold?: Resolver<ResolversTypes['numeric'], ParentType, ContextType>;
@@ -671,6 +683,7 @@ export type Collection_Avg_FieldsResolvers<ContextType = any, ParentType extends
 export type Collection_Max_FieldsResolvers<ContextType = any, ParentType extends ResolversParentTypes['collection_max_fields'] = ResolversParentTypes['collection_max_fields']> = {
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   created_at?: Resolver<Maybe<ResolversTypes['timestamptz']>, ParentType, ContextType>;
+  displaySymbol?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   floorPrice?: Resolver<Maybe<ResolversTypes['numeric']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profitThreshold?: Resolver<Maybe<ResolversTypes['numeric']>, ParentType, ContextType>;
@@ -684,6 +697,7 @@ export type Collection_Max_FieldsResolvers<ContextType = any, ParentType extends
 export type Collection_Min_FieldsResolvers<ContextType = any, ParentType extends ResolversParentTypes['collection_min_fields'] = ResolversParentTypes['collection_min_fields']> = {
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   created_at?: Resolver<Maybe<ResolversTypes['timestamptz']>, ParentType, ContextType>;
+  displaySymbol?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   floorPrice?: Resolver<Maybe<ResolversTypes['numeric']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profitThreshold?: Resolver<Maybe<ResolversTypes['numeric']>, ParentType, ContextType>;

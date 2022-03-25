@@ -1,5 +1,4 @@
 import CoinbaseAPI from "../../api/CoinbaseAPI";
-
 import { TweetIntro } from "./TweetIntro";
 import { TweetStatus } from "./TweetStatus";
 import { BoughtInfo } from "./BoughtInfo";
@@ -8,9 +7,7 @@ import { HodlInfo } from "./HodlInfo";
 import { FlipInfoETH } from "./FlipInfoETH";
 import { BuyInUSD } from "./BuyInUSD";
 import { FlipInfoUSD } from "./FlipInfoUSD";
-
 import { getProfitThresholdETH, getSaleData } from "../SaleData";
-
 import { Collection, Sale, SaleData } from "../../types";
 
 interface ComposeTweetParams {
@@ -39,7 +36,7 @@ export async function composeTweet({ collection, purchase, sale, coinbaseAPI, fl
   const {
     tokenId, openSeaLink, isProfit, 
     boughtPriceETH, boughtDate, boughtDateETHPrice,
-    soldPriceETH, soldDate, soldDateETHPrice,
+    soldPriceETH, soldDate,
     hodlDays, profitLossETH, 
     flipValueUSD, flipPercentageUSD
   } = salesData

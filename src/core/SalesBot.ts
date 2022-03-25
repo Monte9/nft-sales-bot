@@ -7,17 +7,15 @@ import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
 import LooksRareAPI from '../api/LooksRareAPI';
 import CoinMarketCapAPI from '../api/CoinMarketCapAPI';
-
 import { runDebugBot } from './DebugBot';
 import { getProfitThresholdETH } from './SaleData';
 import { composeTweet } from './Twitter';
 import { composeLooksRareTweet } from './LooksRare';
-
-import { Collection, Sale, SalesBot } from '../types';
-
-import { getCurrentDateTime, getCurrentUnixTimeMinusFifteenMinutes, rounded } from '../shared/Formatters';
 import { ACTIVE_NFT_COLLECTIONS } from '../shared/Constants';
-import { getFloorPriceForCollection } from '../shared/Helpers';
+import { getCurrentDateTime, getCurrentUnixTimeMinusFifteenMinutes } from '../utils/DateTime';
+import { getFloorPriceForCollection } from '../utils/OpenSea';
+import { rounded } from '../utils/Number';
+import { Collection, Sale, SalesBot } from '../types';
 
 export default class NFTSalesBot {
   coinbaseAPI: CoinbaseAPI = null

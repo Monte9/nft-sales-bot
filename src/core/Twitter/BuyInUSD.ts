@@ -1,4 +1,5 @@
-import { addCommas, getShortDate } from "../../shared/Formatters"
+import { getShortDate } from "../../utils/DateTime"
+import { addCommas } from "../../utils/String"
 
 export const BuyInUSD = (flipPercentageUSD, boughtPriceETH, boughtDateETHPrice, boughtDate) => {
   if (flipPercentageUSD === 0) {

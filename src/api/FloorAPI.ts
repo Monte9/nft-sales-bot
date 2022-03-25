@@ -1,8 +1,7 @@
 import fetch from 'node-fetch';
 
 import { FloorPrice } from '../types';
-
-import { isError } from '../shared/Helpers';
+import { isError } from '../utils/API';
 
 export default class FloorAPI {
   // The URL for the /floor endpoint

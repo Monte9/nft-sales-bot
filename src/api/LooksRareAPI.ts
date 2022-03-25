@@ -3,7 +3,7 @@ import { LooksRareTransaction } from '../types';
 
 // https://thegraph.com/hosted-service/subgraph/looksrare/exchange
 // DOCS: https://docs.looksrare.org/developers/subgraph-documentation/exchange
-// Graphiql Playground: https://api.thegraph.com/subgraphs/name/looksrare/exchange/graphql 
+// GraphiQL Playground: https://api.thegraph.com/subgraphs/name/looksrare/exchange/graphql 
 export default class LooksRareAPI {
  // The GraphQL Client for making the request
  graphQLClient = new GraphQLClient('https://api.thegraph.com/subgraphs/name/looksrare/exchange')

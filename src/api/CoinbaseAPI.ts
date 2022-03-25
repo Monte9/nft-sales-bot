@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
-
-import { isError } from '../shared/Helpers';
+import { isError } from '../utils/API';
 
 export default class CoinbaseAPI {
   // The URL for the /spot-price endpoint on Coinbase

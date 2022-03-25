@@ -1,9 +1,8 @@
 import fetch from 'node-fetch';
 
 import { parseSales } from '../core/OpenSea';
-import { isError } from '../shared/Helpers';
-
 import { Sale } from '../types';
+import { isError } from '../utils/API';
 
 export default class OpenSeaAPI {
   // The URL for the /events endpoint on OpenSea

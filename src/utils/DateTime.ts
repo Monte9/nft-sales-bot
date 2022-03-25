@@ -1,13 +1,5 @@
 import moment from 'moment-timezone';
 
-export function addCommas(value: number): String {
-  return value && value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") || '0'
-}
-
-export function rounded(value: number): number {
-  return Math.round(value * 100) / 100 || 0
-}
-
 export const getCurrentDateTime = (format: string = "MMM Do, hh:mm A"): string => {
   return moment.tz('America/Chicago').format(format)
 }
@@ -15,10 +7,6 @@ export const getCurrentDateTime = (format: string = "MMM Do, hh:mm A"): string =
 // Get UNIX Timestamp: https://timestamp.online/timestamp/1645856871
 export const getCurrentUnixTimeMinusFifteenMinutes = (): number => {
   return moment().subtract(15, 'minutes').unix()
-}
-
-export const getShortWalletAddress = (address): string => {
-  return address.slice(0, 6) + '..' + address.substr(address.length - 4)
 }
 
 export const getShortDate = (date: string): string => {

@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
-
-import { isError } from '../shared/Helpers';
+import { isError } from '../utils/API';
 
 export default class CoinMarketCapAPI {
   // The URL for the /quotes endpoint on CoinMarketCap
