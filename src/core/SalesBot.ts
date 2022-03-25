@@ -6,7 +6,6 @@ import DearEarthAPI from '../api/DearEarthAPI';
 import OpenSeaAPI from '../api/OpenSeaAPI';
 import TwitterAPI from '../api/TwitterAPI';
 import LooksRareAPI from '../api/LooksRareAPI';
-import CoinMarketCapAPI from '../api/CoinMarketCapAPI';
 import { runDebugBot } from './DebugBot';
 import { getProfitThresholdETH } from './SaleData';
 import { composeTweet } from './Twitter';
@@ -16,6 +15,7 @@ import { getCurrentDateTime, getCurrentUnixTimeMinusFifteenMinutes } from '../ut
 import { getFloorPriceForCollection } from '../utils/OpenSea';
 import { rounded } from '../utils/Number';
 import { Collection, Sale, SalesBot } from '../types';
+import { cleanupDownloadedImages, downloadImage } from '../utils/Image';
 
 export default class NFTSalesBot {
   coinbaseAPI: CoinbaseAPI = null
@@ -24,7 +24,6 @@ export default class NFTSalesBot {
   twitterAPI: TwitterAPI = null
   dearEarthAPI: DearEarthAPI = null
   looksRareAPI: LooksRareAPI = null
-  coinMarketCapAPI: CoinMarketCapAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI();
@@ -32,7 +31,6 @@ export default class NFTSalesBot {
     this.floorAPI = new FloorAPI();
     this.dearEarthAPI = new DearEarthAPI();
     this.looksRareAPI = new LooksRareAPI();
-    this.coinMarketCapAPI = new CoinMarketCapAPI();
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
@@ -47,7 +45,7 @@ export default class NFTSalesBot {
 
     // Run debug bot if it's not in production
     if (!IS_PRODUCTION) {
-      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.dearEarthAPI, this.looksRareAPI, this.coinMarketCapAPI)
+      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.dearEarthAPI, this.looksRareAPI)
       return
     }
 
@@ -71,6 +69,9 @@ export default class NFTSalesBot {
       const dateTime = getCurrentDateTime('YYYY-MM-DDTHH:mm')
       const formattedDateTime = getCurrentDateTime()
       const hourMark = dateTime.split(':')[1]
+
+      // The file path of the downloaded collection image
+      let filePath = undefined
 
       // 5 mins before the 15 mins mark, toggle the shouldFetchLooksRareTransactions bool value
       if (shouldFetchLooksRareTransactions === false && (hourMark === '55' || hourMark === '10' || hourMark === '25' || hourMark === '40')) {
@@ -207,6 +208,25 @@ export default class NFTSalesBot {
               }
 
               try {
+                // This is the twitter mediaId that we'll include with the tweet
+                let mediaId = undefined
+                
+                try {
+                  // Download the collection image to the file path
+                  filePath = await downloadImage(
+                    tokenSales[0].asset.image,
+                    tokenSales[0].asset.collection.slug
+                  )
+
+                  // Upload the collection image to Twitter
+                  // get a Twitter mediaId to include in the tweet
+                  mediaId = await this.twitterAPI.uploadImage(filePath)
+                } catch (error) {
+                  console.log(
+                    `Oops! Unable to download image from ${tokenSales[0].asset.image}\n`
+                  )
+                }
+
                 const tweetText = await composeTweet({
                   collection: currentCollection.collection,
                   purchase: tokenSales[1],
@@ -216,9 +236,15 @@ export default class NFTSalesBot {
                 })
 
                 // Post a tweet with sale information
-                await this.twitterAPI.postTweet(tweetText)
+                await this.twitterAPI.postTweet(tweetText, mediaId)
               } catch (error) {
                 console.log(`Unable to post Tweet for ${currentCollection.collection.symbol} ${tokenID}:`, error.message)
+              } finally {
+                // If file path exists, then go ahead and delete it
+                if (filePath) {
+                  await cleanupDownloadedImages([filePath])
+                  filePath = undefined
+                }
               }
             } catch (error) {
               console.log(`Unable to get Sales Events for ${currentCollection.collection.symbol} #${tokenID}:`, error.message)
