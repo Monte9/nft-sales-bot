@@ -1,8 +1,8 @@
-import CoinbaseAPI from "../api/CoinbaseAPI"
-import { Sale, SaleData } from "../types"
-import { SUPPORTED_PAYMENT_TOKEN_SYMBOLS } from "../shared/Constants"
-import { rounded } from "../utils/Number"
-import { getTotalDaysBetween } from "../utils/DateTime"
+import CoinbaseAPI from '../api/CoinbaseAPI'
+import { Sale, SaleData } from '../types'
+import { SUPPORTED_PAYMENT_TOKEN_SYMBOLS } from '../shared/Constants'
+import { rounded } from '../utils/Number'
+import { getTotalDaysBetween } from '../utils/DateTime'
 
 interface SaleDataParams {
   purchase: Sale
@@ -10,7 +10,11 @@ interface SaleDataParams {
   coinbaseAPI: CoinbaseAPI
 }
 
-export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParams): Promise<SaleData> {
+export async function getSaleData({
+  purchase,
+  sale,
+  coinbaseAPI
+}: SaleDataParams): Promise<SaleData> {
   // Get Token ID & OpenSea Link
   const tokenId = Number(sale.asset.tokenId)
   const openSeaLink = sale.asset.link
@@ -20,8 +24,9 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   const sellerAddress = seller.address
   const sellerUsername = seller.username
 
-  const purchaseToken = purchase.paymentToken && purchase.paymentToken.symbol || 'ETH'
-  const saleToken = sale.paymentToken && sale.paymentToken.symbol || 'ETH'
+  const purchaseToken =
+    (purchase.paymentToken && purchase.paymentToken.symbol) || 'ETH'
+  const saleToken = (sale.paymentToken && sale.paymentToken.symbol) || 'ETH'
 
   // Currently we only support ETH & WETH
   // For any other paymentToken, throw an error
@@ -58,7 +63,9 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
     var boughtDateETHPrice = await coinbaseAPI.getUSDPriceForETH(boughtDate)
     var soldDateETHPrice = await coinbaseAPI.getUSDPriceForETH(soldDate)
   } catch (error) {
-    throw new Error(`unable to fetch ETH price for Bought date ${boughtDate} or Sold date ${soldDate} | ${sale.asset.link}`)
+    throw new Error(
+      `unable to fetch ETH price for Bought date ${boughtDate} or Sold date ${soldDate} | ${sale.asset.link}`
+    )
   }
 
   // Get the bought & sold prices in USD
@@ -71,8 +78,8 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
   } else {
     flipValueUSD = Math.round(soldPriceUSD - boughtPriceUSD)
   }
-  
-  const flipPercentageUSD = Math.round(flipValueUSD / boughtPriceUSD * 100)
+
+  const flipPercentageUSD = Math.round((flipValueUSD / boughtPriceUSD) * 100)
 
   return {
     tokenId,
@@ -91,7 +98,7 @@ export async function getSaleData({ purchase, sale, coinbaseAPI }: SaleDataParam
     profitLossETH,
     hodlDays,
     flipValueUSD,
-    flipPercentageUSD,
+    flipPercentageUSD
   }
 }
 

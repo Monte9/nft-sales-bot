@@ -2,16 +2,19 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "prettier"
   ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
   ],
   "rules": {
     "no-console": 1, // Means warning
     "no-constant-condition": 1, // Means warning
-    "no-var": 1 // Means warning
+    "no-var": 1, // Means warning
+    "prettier/prettier": 2 // Means error
   }
 }

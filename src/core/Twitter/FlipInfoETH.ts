@@ -1,4 +1,4 @@
-import { addCommas } from "../../utils/String"
+import { addCommas } from '../../utils/String'
 
 export const FlipInfoETH = (isProfit, absoluteProfitLossETH) => {
   // Get the Profit/Loss labels

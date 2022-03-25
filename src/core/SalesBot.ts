@@ -1,21 +1,24 @@
-import 'dotenv/config';
+import 'dotenv/config'
 
-import CoinbaseAPI from '../api/CoinbaseAPI';
-import FloorAPI from '../api/FloorAPI';
-import DearEarthAPI from '../api/DearEarthAPI';
-import OpenSeaAPI from '../api/OpenSeaAPI';
-import TwitterAPI from '../api/TwitterAPI';
-import LooksRareAPI from '../api/LooksRareAPI';
-import { runDebugBot } from './DebugBot';
-import { getProfitThresholdETH } from './SaleData';
-import { composeTweet } from './Twitter';
-import { composeLooksRareTweet } from './LooksRare';
-import { ACTIVE_NFT_COLLECTIONS, IS_PRODUCTION } from '../shared/Constants';
-import { getCurrentDateTime, getCurrentUnixTimeMinusFifteenMinutes } from '../utils/DateTime';
-import { getFloorPriceForCollection } from '../utils/OpenSea';
-import { rounded } from '../utils/Number';
-import { Collection, Sale, SalesBot } from '../types';
-import { cleanupDownloadedImages, downloadImage } from '../utils/Image';
+import CoinbaseAPI from '../api/CoinbaseAPI'
+import FloorAPI from '../api/FloorAPI'
+import DearEarthAPI from '../api/DearEarthAPI'
+import OpenSeaAPI from '../api/OpenSeaAPI'
+import TwitterAPI from '../api/TwitterAPI'
+import LooksRareAPI from '../api/LooksRareAPI'
+import { runDebugBot } from './DebugBot'
+import { getProfitThresholdETH } from './SaleData'
+import { composeTweet } from './Twitter'
+import { composeLooksRareTweet } from './LooksRare'
+import { ACTIVE_NFT_COLLECTIONS, IS_PRODUCTION } from '../shared/Constants'
+import {
+  getCurrentDateTime,
+  getCurrentUnixTimeMinusFifteenMinutes
+} from '../utils/DateTime'
+import { getFloorPriceForCollection } from '../utils/OpenSea'
+import { rounded } from '../utils/Number'
+import { Collection, Sale, SalesBot } from '../types'
+import { cleanupDownloadedImages, downloadImage } from '../utils/Image'
 
 export default class NFTSalesBot {
   coinbaseAPI: CoinbaseAPI = null
@@ -26,18 +29,18 @@ export default class NFTSalesBot {
   looksRareAPI: LooksRareAPI = null
 
   constructor() {
-    this.coinbaseAPI = new CoinbaseAPI();
-    this.openSeaAPI = new OpenSeaAPI();
-    this.floorAPI = new FloorAPI();
-    this.dearEarthAPI = new DearEarthAPI();
-    this.looksRareAPI = new LooksRareAPI();
+    this.coinbaseAPI = new CoinbaseAPI()
+    this.openSeaAPI = new OpenSeaAPI()
+    this.floorAPI = new FloorAPI()
+    this.dearEarthAPI = new DearEarthAPI()
+    this.looksRareAPI = new LooksRareAPI()
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
       process.env.TWITTER_API_SECRET_KEY,
       process.env.TWITTER_ACCESS_TOKEN,
-      process.env.TWITTER_ACCESS_TOKEN_SECRET,
-    );
+      process.env.TWITTER_ACCESS_TOKEN_SECRET
+    )
   }
 
   async start() {
@@ -45,11 +48,20 @@ export default class NFTSalesBot {
 
     // Run debug bot if it's not in production
     if (!IS_PRODUCTION) {
-      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI, this.dearEarthAPI, this.looksRareAPI)
+      runDebugBot(
+        this.openSeaAPI,
+        this.coinbaseAPI,
+        this.twitterAPI,
+        this.dearEarthAPI,
+        this.looksRareAPI
+      )
       return
     }
 
-    const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI, this.dearEarthAPI)
+    const collectionsData = await getCollectionsDataFromOpenSea(
+      this.openSeaAPI,
+      this.dearEarthAPI
+    )
     console.log('\nInitial Collections', collectionsData)
 
     let currentIndex = 0
@@ -60,7 +72,7 @@ export default class NFTSalesBot {
     // Tweets about the sale using Twitter API
     // Wait for 30 seconds
     // Increments to the next collection
-    while(true) {
+    while (true) {
       // Get the index within the bounds of collectionData
       const collectionIndex = currentIndex % collectionsData.length
       const currentCollection = collectionsData[collectionIndex]
@@ -74,36 +86,67 @@ export default class NFTSalesBot {
       let filePath = undefined
 
       // 5 mins before the 15 mins mark, toggle the shouldFetchLooksRareTransactions bool value
-      if (shouldFetchLooksRareTransactions === false && (hourMark === '55' || hourMark === '10' || hourMark === '25' || hourMark === '40')) {
+      if (
+        shouldFetchLooksRareTransactions === false &&
+        (hourMark === '55' ||
+          hourMark === '10' ||
+          hourMark === '25' ||
+          hourMark === '40')
+      ) {
         shouldFetchLooksRareTransactions = true
-        console.log(`LooksRare API Transactions @ ${formattedDateTime} - shouldFetchLooksRareTransactions: ${shouldFetchLooksRareTransactions}`)
+        console.log(
+          `LooksRare API Transactions @ ${formattedDateTime} - shouldFetchLooksRareTransactions: ${shouldFetchLooksRareTransactions}`
+        )
       }
 
       // Get LooksRare Transactions every 15 mins
-      if (shouldFetchLooksRareTransactions && (hourMark === '00' || hourMark === '15' || hourMark === '30' || hourMark === '45')) {
+      if (
+        shouldFetchLooksRareTransactions &&
+        (hourMark === '00' ||
+          hourMark === '15' ||
+          hourMark === '30' ||
+          hourMark === '45')
+      ) {
         shouldFetchLooksRareTransactions = false
-        console.log(`LooksRare API Transactions @ ${formattedDateTime} - shouldFetchLooksRareTransactions: ${shouldFetchLooksRareTransactions}`)
+        console.log(
+          `LooksRare API Transactions @ ${formattedDateTime} - shouldFetchLooksRareTransactions: ${shouldFetchLooksRareTransactions}`
+        )
 
         try {
           // Fetch transactions from LooksRareAPI
-          const transactions = await this.looksRareAPI.fetchTransactions(getCurrentUnixTimeMinusFifteenMinutes())
-          console.log(`LooksRare API Transactions @ ${formattedDateTime} since ${getCurrentUnixTimeMinusFifteenMinutes()}: ${transactions.length}`)
+          const transactions = await this.looksRareAPI.fetchTransactions(
+            getCurrentUnixTimeMinusFifteenMinutes()
+          )
+          console.log(
+            `LooksRare API Transactions @ ${formattedDateTime} since ${getCurrentUnixTimeMinusFifteenMinutes()}: ${
+              transactions.length
+            }`
+          )
 
           await Promise.all(
-            transactions.map(async transaction => {
+            transactions.map(async (transaction) => {
               try {
                 // Post a tweet for LooksRare Transction
-                const looksRareSaleTweet = await composeLooksRareTweet({ transaction: transaction, coinbaseAPI: this.coinbaseAPI})
+                const looksRareSaleTweet = await composeLooksRareTweet({
+                  transaction: transaction,
+                  coinbaseAPI: this.coinbaseAPI
+                })
                 return await this.twitterAPI.postTweet(looksRareSaleTweet)
               } catch (error) {
-                console.log(`Unable to post Tweet for LooksRare collection ${transaction.collection.id}/${transaction.tokenId}:`, error.message)
+                console.log(
+                  `Unable to post Tweet for LooksRare collection ${transaction.collection.id}/${transaction.tokenId}:`,
+                  error.message
+                )
               }
             })
           )
 
           continue
         } catch (error) {
-          console.log(`Unable to get Sales Events for LooksRare API:`, error.message)
+          console.log(
+            `Unable to get Sales Events for LooksRare API:`,
+            error.message
+          )
           continue
         }
       }
@@ -111,7 +154,7 @@ export default class NFTSalesBot {
       if (!currentCollection) {
         // Delay the next OpenSea API call by 30 seconds
         console.log(`Waiting for 30 secs...`)
-        await new Promise(resolve => setTimeout(resolve, 30000));
+        await new Promise((resolve) => setTimeout(resolve, 30000))
 
         // Increment currentIndex to got to the next collection
         currentIndex = currentIndex + 1
@@ -121,14 +164,20 @@ export default class NFTSalesBot {
       // -------- Step 1
       // Make sure we have oldSaleIds for the currect collection
       if (currentCollection.oldSalesIds.length <= 0) {
-        console.log(`Missing oldSalesIds for ${currentCollection.collection.name}`)
+        console.log(
+          `Missing oldSalesIds for ${currentCollection.collection.name}`
+        )
 
         // Update the missing collection again
-        collectionsData[collectionIndex] = await getCollectionData(currentCollection.collection, this.openSeaAPI, this.dearEarthAPI)
+        collectionsData[collectionIndex] = await getCollectionData(
+          currentCollection.collection,
+          this.openSeaAPI,
+          this.dearEarthAPI
+        )
 
         // Delay the next OpenSea API call by 30 seconds
         console.log(`Waiting for 30 secs...`)
-        await new Promise(resolve => setTimeout(resolve, 30000));
+        await new Promise((resolve) => setTimeout(resolve, 30000))
 
         // Increment currentIndex to go to the next collection
         currentIndex = currentIndex + 1
@@ -138,22 +187,31 @@ export default class NFTSalesBot {
 
       // -------- Step 2
       // Get the NEW sale events for the current collection
-      let newSales: Sale[] = null;
+      let newSales: Sale[] = null
       const newSalesIds: number[] = []
 
-      console.log(`Getting sales events for ${currentCollection.collection.name}`)
+      console.log(
+        `Getting sales events for ${currentCollection.collection.name}`
+      )
       try {
-        newSales = await this.openSeaAPI.fetchSaleEventsForCollection(currentCollection.collection.slug)
+        newSales = await this.openSeaAPI.fetchSaleEventsForCollection(
+          currentCollection.collection.slug
+        )
 
-        newSales.map(newSale => {
+        newSales.map((newSale) => {
           newSalesIds.push(newSale.openseaSaleId)
         })
       } catch (error) {
-        console.log(`Unable to get new sales events for ${currentCollection.collection.symbol} @ ${getCurrentDateTime()}:`, error.message)
+        console.log(
+          `Unable to get new sales events for ${
+            currentCollection.collection.symbol
+          } @ ${getCurrentDateTime()}:`,
+          error.message
+        )
 
         // Delay the next OpenSea API call by 30 seconds
         console.log(`Waiting for 30 secs...`)
-        await new Promise(resolve => setTimeout(resolve, 30000));
+        await new Promise((resolve) => setTimeout(resolve, 30000))
 
         // Increment currentIndex to got to the next collection
         currentIndex = currentIndex + 1
@@ -164,8 +222,13 @@ export default class NFTSalesBot {
       // -------- Step 3
       // Get the LATEST sale events for the current collection
       // If not events found, go to next collection
-      const latestSalesIds: number[] = newSalesIds.filter(id => !currentCollection.oldSalesIds.includes(id))
-        .concat(currentCollection.oldSalesIds.filter(id => !newSalesIds.includes(id)));
+      const latestSalesIds: number[] = newSalesIds
+        .filter((id) => !currentCollection.oldSalesIds.includes(id))
+        .concat(
+          currentCollection.oldSalesIds.filter(
+            (id) => !newSalesIds.includes(id)
+          )
+        )
 
       if (latestSalesIds.length < 1) {
         console.log(`${getCurrentDateTime()} - No new sales!`)
@@ -175,7 +238,7 @@ export default class NFTSalesBot {
 
         // Delay the next OpenSea API call by 30 seconds
         console.log(`Waiting for 30 secs...`)
-        await new Promise(resolve => setTimeout(resolve, 30000));
+        await new Promise((resolve) => setTimeout(resolve, 30000))
 
         // Increment currentIndex to got to the next collection
         currentIndex = currentIndex + 1
@@ -185,25 +248,36 @@ export default class NFTSalesBot {
 
       // -------- Step 4
       // Loops through each latest sale event and tweets it
-      for (let i=0; i<latestSalesIds.length; i++) {
-
-        for (let j=0; j<newSales.length; j++) {
+      for (let i = 0; i < latestSalesIds.length; i++) {
+        for (let j = 0; j < newSales.length; j++) {
           const asset = newSales[j].asset
           const tokenID = Number(asset.tokenId)
 
           // Make sure the latest sale ID is part of the new sales array
           if (latestSalesIds[i] === newSales[j].openseaSaleId) {
-            console.log(`${currentCollection.collection.name} @ ${getCurrentDateTime()} - New Sale ID#${latestSalesIds[i]}`)
+            console.log(
+              `${
+                currentCollection.collection.name
+              } @ ${getCurrentDateTime()} - New Sale ID#${latestSalesIds[i]}`
+            )
 
             // Fetches all the sale events for the token
             try {
-              const tokenSales = await this.openSeaAPI.fetchSaleEventsForToken(currentCollection.collection.address, tokenID)
+              const tokenSales = await this.openSeaAPI.fetchSaleEventsForToken(
+                currentCollection.collection.address,
+                tokenID
+              )
 
               // If only 1 sale exists, get the token mint sale event
               if (tokenSales.length < 2) {
-                const transferEvents = await this.openSeaAPI.fetchSaleEventsForToken(currentCollection.collection.address, tokenID, 'transfer')
+                const transferEvents =
+                  await this.openSeaAPI.fetchSaleEventsForToken(
+                    currentCollection.collection.address,
+                    tokenID,
+                    'transfer'
+                  )
 
-                const mintSale = transferEvents[transferEvents.length-1]
+                const mintSale = transferEvents[transferEvents.length - 1]
                 tokenSales.push(mintSale)
               }
 
@@ -218,7 +292,7 @@ export default class NFTSalesBot {
 
                 // This is the twitter mediaId that we'll include with the tweet
                 let mediaId = undefined
-                
+
                 try {
                   // Download the collection image to the file path
                   filePath = await downloadImage(
@@ -238,7 +312,10 @@ export default class NFTSalesBot {
                 // Post a tweet with sale information
                 await this.twitterAPI.postTweet(tweetText, mediaId)
               } catch (error) {
-                console.log(`Unable to post Tweet for ${currentCollection.collection.symbol} ${tokenID}:`, error.message)
+                console.log(
+                  `Unable to post Tweet for ${currentCollection.collection.symbol} ${tokenID}:`,
+                  error.message
+                )
               } finally {
                 // If file path exists, then go ahead and delete it
                 if (filePath) {
@@ -247,11 +324,14 @@ export default class NFTSalesBot {
                 }
               }
             } catch (error) {
-              console.log(`Unable to get Sales Events for ${currentCollection.collection.symbol} #${tokenID}:`, error.message)
+              console.log(
+                `Unable to get Sales Events for ${currentCollection.collection.symbol} #${tokenID}:`,
+                error.message
+              )
 
               // Delay the next OpenSea API call by 30 seconds
               console.log(`Waiting for 30 secs...`)
-              await new Promise(resolve => setTimeout(resolve, 30000));
+              await new Promise((resolve) => setTimeout(resolve, 30000))
 
               // Increment currentIndex to got to the next collection
               currentIndex = currentIndex + 1
@@ -267,7 +347,7 @@ export default class NFTSalesBot {
 
       // Delay the next OpenSea API call by 30 seconds
       console.log(`Waiting for 30 secs...`)
-      await new Promise(resolve => setTimeout(resolve, 30000));
+      await new Promise((resolve) => setTimeout(resolve, 30000))
 
       // Increment currentIndex to got to the next collection
       currentIndex = currentIndex + 1
@@ -277,7 +357,10 @@ export default class NFTSalesBot {
 
 // Gets the oldSales events for all Collections
 // Used to initialize the bot and build a Collection object
-export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI, dearEarthAPI: DearEarthAPI): Promise<SalesBot[]> {
+export async function getCollectionsDataFromOpenSea(
+  openSeaAPI: OpenSeaAPI,
+  dearEarthAPI: DearEarthAPI
+): Promise<SalesBot[]> {
   return await Promise.all(
     ACTIVE_NFT_COLLECTIONS.map(async (collection): Promise<SalesBot> => {
       return getCollectionData(collection, openSeaAPI, dearEarthAPI)
@@ -287,8 +370,12 @@ export async function getCollectionsDataFromOpenSea(openSeaAPI: OpenSeaAPI, dear
 
 // Gets the oldSales events for all Collections
 // Used to initialize the bot and build a Collection object
-export async function getCollectionData(collection: Collection, openSeaAPI: OpenSeaAPI, dearEarthAPI: DearEarthAPI): Promise<SalesBot> {
-  let oldSales: Sale[] = null;
+export async function getCollectionData(
+  collection: Collection,
+  openSeaAPI: OpenSeaAPI,
+  dearEarthAPI: DearEarthAPI
+): Promise<SalesBot> {
+  let oldSales: Sale[] = null
   const oldSalesIds: number[] = []
 
   const salesBot: SalesBot = {
@@ -298,7 +385,7 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
 
   try {
     oldSales = await openSeaAPI.fetchSaleEventsForCollection(collection.slug)
-    for (let i=0; i<oldSales.length; i++) {
+    for (let i = 0; i < oldSales.length; i++) {
       oldSalesIds.push(oldSales[i].openseaSaleId)
     }
 
@@ -319,7 +406,11 @@ export async function getCollectionData(collection: Collection, openSeaAPI: Open
   const profitThreshold = getProfitThresholdETH(currentFloorPrice)
 
   // Save the Sale in the DearEarth database
-  await dearEarthAPI.saveCollectionData(collection, currentFloorPrice, profitThreshold)
+  await dearEarthAPI.saveCollectionData(
+    collection,
+    currentFloorPrice,
+    profitThreshold
+  )
 
   // Return the salesBot data
   return salesBot

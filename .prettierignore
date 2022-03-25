@@ -1,0 +1,5 @@
+# Ignore the GraphQL generated file
+src/graphql/generated.ts
+
+# Ignore the build folder
+build

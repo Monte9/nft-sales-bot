@@ -1,4 +1,4 @@
-import { getYMDaysBetween } from "../../utils/DateTime"
+import { getYMDaysBetween } from '../../utils/DateTime'
 
 export const HodlInfo = (soldDate, boughtDate) => {
   // Get HODL Duration

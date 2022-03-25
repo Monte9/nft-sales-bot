@@ -1,6 +1,12 @@
-import { getShortWalletAddress } from "../../utils/Crypto"
+import { getShortWalletAddress } from '../../utils/Crypto'
 
-export const TweetIntro = (collection, tokenId, isProfit, sellerAddress, sellerUsername) => {
+export const TweetIntro = (
+  collection,
+  tokenId,
+  isProfit,
+  sellerAddress,
+  sellerUsername
+) => {
   // Get Sale type
   const saleTypeTitle = isProfit ? '↗️ flipped ↗️' : '↘️ fumbled ↘️'
 

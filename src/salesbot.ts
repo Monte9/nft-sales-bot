@@ -1,4 +1,4 @@
-import SalesBot from "./core/SalesBot"
+import SalesBot from './core/SalesBot'
 
 // Run Twitter NFT Sales Bot
 const flipMcBot = new SalesBot()

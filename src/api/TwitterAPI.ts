@@ -1,9 +1,9 @@
-import TwitterApi from 'twitter-api-v2';
-import TwitterApiv1ReadWrite from 'twitter-api-v2/dist/v1/client.v1.write';
-import TwitterApiv2ReadWrite from 'twitter-api-v2/dist/v2/client.v2.write';
+import TwitterApi from 'twitter-api-v2'
+import TwitterApiv1ReadWrite from 'twitter-api-v2/dist/v1/client.v1.write'
+import TwitterApiv2ReadWrite from 'twitter-api-v2/dist/v2/client.v2.write'
 
-import { IS_PRODUCTION } from '../shared/Constants';
-import { getCurrentDateTime } from '../utils/DateTime';
+import { IS_PRODUCTION } from '../shared/Constants'
+import { getCurrentDateTime } from '../utils/DateTime'
 
 export const MISSING_IMAGE_ID = 'missing_image_id'
 
@@ -17,11 +17,11 @@ export default class TwitterAPI {
       appKey: apiKey,
       appSecret: apiSecretKey,
       accessToken: accessToken,
-      accessSecret: accessTokenSecret,
-    });
+      accessSecret: accessTokenSecret
+    })
 
-    this.twitterClientV1 = twitterClient.v1;
-    this.twitterClientV2 = twitterClient.v2;
+    this.twitterClientV1 = twitterClient.v1
+    this.twitterClientV2 = twitterClient.v2
   }
 
   // https://github.com/PLhery/node-twitter-api-v2/blob/cc79c6040d0b786b9ff1d93e3c73ad05bad08efe/src/types/v2/tweet.v2.types.ts
@@ -46,7 +46,7 @@ export default class TwitterAPI {
         console.log('Post Tweet', media, contentDebug, '\n')
       }
     } catch (error) {
-      console.log("Error:", error.message)
+      console.log('Error:', error.message)
     }
   }
 

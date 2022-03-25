@@ -1,4 +1,4 @@
-import { CollectionSlug } from "../shared/Constants";
+import { CollectionSlug } from '../shared/Constants'
 
 // SALES BOT
 
@@ -27,9 +27,9 @@ export interface Sale {
   buyer: User
   paymentToken?: PaymentToken
   salePrice: number
-  openseaSaleId: number,
-  timestamp: string,
-  transactionHash: string,
+  openseaSaleId: number
+  timestamp: string
+  transactionHash: string
 }
 
 export interface Asset {
