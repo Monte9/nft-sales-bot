@@ -29,7 +29,7 @@ To get Twitter API keys you need to submit a new application at https://develope
 Once you have the Twitter API keys, you need to open up the `.env` file at the root and replace all `TODO_REPLACE_THIS` instances with the appropriate values.
 
 ```
-NODE_ENV=DEVELOPMENT
+NODE_ENV=development
 OPENSEA_API_KEY=
 TWITTER_API_KEY=
 TWITTER_API_SECRET_KEY=

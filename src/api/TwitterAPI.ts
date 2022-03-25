@@ -25,7 +25,7 @@ export default class TwitterAPI {
         const tweet = await this.twitterClientV2.tweet(content)
         console.log(`Tweet Posted @ ${getCurrentDateTime()}:`, `https://twitter.com/dearearth_/status/${tweet.data.id}`)
       } else {
-        // In DEVELOPMENT environment we don't want to post a tweet
+        // In development we don't want to post a tweet
         console.log(content)
       }
     } catch (error) {

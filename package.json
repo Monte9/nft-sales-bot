@@ -12,13 +12,11 @@
     "build": "yarn clean && yarn gql-gen && babel -d ./build ./src -s --extensions '.js,.ts,.tsx'",
     "start": "node build/salesbot.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com:Monte9/nft-sales-bot.git"
+  "engines": {
+    "node": "^16.9.0",
+    "npm": "^8.3.1",
+    "yarn": "^1.22.17"
   },
-  "author": "monte9",
-  "license": "ISC",
-  "homepage": "https://github.com/Monte9/nft-sales-bot#readme",
   "dependencies": {
     "@babel/runtime": "^7.14.6",
     "dotenv": "^10.0.0",
