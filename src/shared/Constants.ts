@@ -15,6 +15,7 @@ export enum CollectionSlug {
   anonymice = 'anonymice',
   autoglyphs = 'autoglyphs',
   archetypebykjetilgolid = 'archetype-by-kjetil-golid',
+  azuki = 'azuki',
   chromiesquigglebysnowfro = 'chromie-squiggle-by-snowfro',
   boredapechemistryclub = 'bored-ape-chemistry-club',
   boredapekennelclub = 'bored-ape-kennel-club',
@@ -101,6 +102,13 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     name: 'Autoglyphs',
     slug: CollectionSlug.autoglyphs,
     symbol: 'AUTOGLYPHS',
+    twitterUsername: null
+  },
+  {
+    address: '0xed5af388653567af2f388e6224dc7c4b3241c544',
+    name: 'Azuki',
+    slug: CollectionSlug.azuki,
+    symbol: 'AZUKI',
     twitterUsername: null
   },
   {
