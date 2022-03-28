@@ -29,6 +29,7 @@ export enum CollectionSlug {
   mutantapeyachtclub = 'mutant-ape-yacht-club',
   pudgypenguins = 'pudgypenguins',
   ringersbydmitricherniak = 'ringers-by-dmitri-cherniak',
+  sandbox = 'sandbox',
   sneakyvampiresyndicate = 'sneaky-vampire-syndicate',
   supducks = 'supducks',
   timepiececommunity = 'timepiece-community',
@@ -158,6 +159,13 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     twitterUsername: 'deadfellaznft'
   },
   {
+    address: '0x8a90cab2b38dba80c64b7734e58ee1db38b8992e',
+    name: 'Doodles',
+    slug: CollectionSlug.doodlesofficial,
+    symbol: 'DOODLE',
+    twitterUsername: 'doodles'
+  },
+  {
     address: '0xedb61f74b0d09b2558f1eeb79b247c1f363ae452',
     name: 'Gutter Cat Gang',
     slug: CollectionSlug.guttercatgang,
@@ -188,11 +196,11 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     twitterUsername: 'sartoshi_nft'
   },
   {
-    address: '0x8a90cab2b38dba80c64b7734e58ee1db38b8992e',
-    name: 'Doodles',
-    slug: CollectionSlug.doodlesofficial,
-    symbol: 'DOODLE',
-    twitterUsername: 'doodles'
+    address: '0x5cc5b05a8a13e3fbdb0bb9fccd98d38e50f90c38',
+    name: 'The Sandbox',
+    slug: CollectionSlug.sandbox,
+    symbol: 'LAND',
+    twitterUsername: 'thesandboxgame'
   },
   {
     address: '0xa3aee8bce55beea1951ef834b99f3ac60d1abeeb',
