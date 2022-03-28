@@ -16,8 +16,9 @@ export enum CollectionSlug {
   autoglyphs = 'autoglyphs',
   archetypebykjetilgolid = 'archetype-by-kjetil-golid',
   chromiesquigglebysnowfro = 'chromie-squiggle-by-snowfro',
-  boredapeyachtclub = 'boredapeyachtclub',
+  boredapechemistryclub = 'bored-ape-chemistry-club',
   boredapekennelclub = 'bored-ape-kennel-club',
+  boredapeyachtclub = 'boredapeyachtclub',
   clonex = 'clonex',
   coolcatsnft = 'cool-cats-nft',
   creatures = 'creature-world-collection',
@@ -99,16 +100,22 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     address: '0xd4e4078ca3495de5b1d4db434bebc5a986197782',
     name: 'Autoglyphs',
     slug: CollectionSlug.autoglyphs,
-    symbol: '☵',
-    displaySymbol: 'AUTOGLYPHS',
-    twitterUsername: 'larvalabs'
+    symbol: 'AUTOGLYPHS',
+    twitterUsername: null
+  },
+  {
+    address: '0x22c36bfdcef207f9c0cc941936eff94d4246d14a',
+    name: 'Bored Ape Chemistry Club',
+    slug: CollectionSlug.boredapechemistryclub,
+    symbol: 'SERUM',
+    twitterUsername: 'BoredApeYC'
   },
   {
     address: '0xba30e5f9bb24caa003e9f2f0497ad287fdf95623',
     name: 'Bored Ape Kennel Club',
     slug: CollectionSlug.boredapekennelclub,
     symbol: 'BAKC',
-    twitterUsername: 'boredapeyc'
+    twitterUsername: 'BoredApeYC'
   },
   {
     address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
@@ -139,7 +146,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.cryptopunks,
     symbol: 'PUNK',
     displaySymbol: 'CRYPTOPUNK',
-    twitterUsername: 'larvalabs'
+    twitterUsername: 'BoredApeYC'
   },
   {
     address: '0x57a204aa1042f6e66dd7730813f4024114d74f37',
@@ -194,7 +201,7 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.meebits,
     symbol: 'MEEBITS',
     displaySymbol: 'MEEBIT',
-    twitterUsername: 'larvalabs'
+    twitterUsername: 'BoredApeYC'
   },
   {
     address: '0x8a90cab2b38dba80c64b7734e58ee1db38b8992e',
