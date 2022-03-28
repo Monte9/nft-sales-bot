@@ -10,7 +10,8 @@ import { runDebugBot } from './DebugBot'
 import { getProfitThresholdETH } from './SaleData'
 import { composeTweet } from './Twitter'
 import { composeLooksRareTweet } from './LooksRare'
-import { ACTIVE_NFT_COLLECTIONS, IS_PRODUCTION } from '../shared/Constants'
+import { IS_PRODUCTION } from '../shared/Constants'
+import { ACTIVE_NFT_COLLECTIONS } from '../shared/Collections'
 import {
   getCurrentDateTime,
   getCurrentUnixTimeMinusFifteenMinutes

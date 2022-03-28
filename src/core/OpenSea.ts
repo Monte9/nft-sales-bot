@@ -1,5 +1,5 @@
 import { Collection, Asset, User, PaymentToken, Sale } from '../types'
-import { CollectionSlug } from '../shared/Constants'
+import { CollectionSlug } from '../shared/Collections'
 import { rounded } from '../utils/Number'
 import {
   BAYC_MINT_PRICE_WEI,
@@ -12,7 +12,7 @@ export function parseSales(saleEvents): Sale[] {
     // Sometimes asset can be empty
     if (saleEvent.asset && saleEvent.transaction) {
       // Uncomment the line below when adding a new collection
-      // console.log(saleEvent.asset)
+      console.log(saleEvent.asset)
 
       const collection: Collection = {
         address: saleEvent.asset.asset_contract.address,

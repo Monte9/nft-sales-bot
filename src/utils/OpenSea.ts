@@ -1,5 +1,5 @@
 import FloorAPI from '../api/FloorAPI'
-import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from '../shared/Constants'
+import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from '../shared/Collections'
 import { Collection, FloorPrice } from '../types'
 
 export function getCollectionFromSlug(slug: CollectionSlug) {

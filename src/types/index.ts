@@ -1,4 +1,4 @@
-import { CollectionSlug } from '../shared/Constants'
+import { CollectionSlug } from '../shared/Collections'
 
 // SALES BOT
 
