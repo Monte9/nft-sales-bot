@@ -25,6 +25,7 @@ export enum CollectionSlug {
   lazylions = 'lazy-lions',
   meebits = 'meebits',
   mekaverse = 'mekaverse',
+  mfers = 'mfers',
   mutantapeyachtclub = 'mutant-ape-yacht-club',
   pudgypenguins = 'pudgypenguins',
   ringersbydmitricherniak = 'ringers-by-dmitri-cherniak',
@@ -178,6 +179,13 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     symbol: 'MEEBITS',
     displaySymbol: 'MEEBIT',
     twitterUsername: 'BoredApeYC'
+  },
+  {
+    address: '0x79fcdef22feed20eddacbb2587640e45491b757f',
+    name: 'mfers',
+    slug: CollectionSlug.mfers,
+    symbol: 'MFER',
+    twitterUsername: 'sartoshi_nft'
   },
   {
     address: '0x8a90cab2b38dba80c64b7734e58ee1db38b8992e',

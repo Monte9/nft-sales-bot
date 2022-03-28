@@ -19,13 +19,13 @@ export async function runDebugBot(
   looksRareAPI: LooksRareAPI
 ) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug(CollectionSlug.azuki)
+  const collection = getCollectionFromSlug(CollectionSlug.mfers)
   const collectionData = await getCollectionData(
     collection,
     openSeaAPI,
     dearEarthAPI
   )
-  const tokenID = 8795
+  const tokenID = 904
 
   // Don't debug the OpenSea sale & tweet
   const TWEET_OPENSEA_SALE = true
