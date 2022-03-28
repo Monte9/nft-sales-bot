@@ -19,13 +19,13 @@ export async function runDebugBot(
   looksRareAPI: LooksRareAPI
 ) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug(CollectionSlug.sandbox)
+  const collection = getCollectionFromSlug(CollectionSlug.nftworlds)
   const collectionData = await getCollectionData(
     collection,
     openSeaAPI,
     dearEarthAPI
   )
-  const tokenID = 55005
+  const tokenID = 1485
 
   // Don't debug the OpenSea sale & tweet
   const TWEET_OPENSEA_SALE = true

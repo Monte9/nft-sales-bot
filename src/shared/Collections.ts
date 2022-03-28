@@ -27,6 +27,7 @@ export enum CollectionSlug {
   mekaverse = 'mekaverse',
   mfers = 'mfers',
   mutantapeyachtclub = 'mutant-ape-yacht-club',
+  nftworlds = 'nft-worlds',
   pudgypenguins = 'pudgypenguins',
   ringersbydmitricherniak = 'ringers-by-dmitri-cherniak',
   sandbox = 'sandbox',
@@ -194,6 +195,14 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     slug: CollectionSlug.mfers,
     symbol: 'MFER',
     twitterUsername: 'sartoshi_nft'
+  },
+  {
+    address: '0xbd4455da5929d5639ee098abfaa3241e9ae111af',
+    name: 'NFT Worlds',
+    slug: CollectionSlug.nftworlds,
+    symbol: 'NFT Worlds',
+    displaySymbol: 'WORLDS',
+    twitterUsername: 'nftworldsNFT'
   },
   {
     address: '0x5cc5b05a8a13e3fbdb0bb9fccd98d38e50f90c38',
