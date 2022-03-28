@@ -13,6 +13,7 @@ export const PNG_FILE_EXTENSION = 'png'
 export enum CollectionSlug {
   alienfrensnft = 'alienfrensnft',
   anonymice = 'anonymice',
+  autoglyphs = 'autoglyphs',
   archetypebykjetilgolid = 'archetype-by-kjetil-golid',
   chromiesquigglebysnowfro = 'chromie-squiggle-by-snowfro',
   boredapeyachtclub = 'boredapeyachtclub',
@@ -93,6 +94,14 @@ export const ACTIVE_NFT_COLLECTIONS: Collection[] = [
     symbol: 'MICE',
     displaySymbol: 'ANONYMICE',
     twitterUsername: 'AnonymiceNFT'
+  },
+  {
+    address: '0xd4e4078ca3495de5b1d4db434bebc5a986197782',
+    name: 'Autoglyphs',
+    slug: CollectionSlug.autoglyphs,
+    symbol: '☵',
+    displaySymbol: 'AUTOGLYPHS',
+    twitterUsername: 'larvalabs'
   },
   {
     address: '0xba30e5f9bb24caa003e9f2f0497ad287fdf95623',
