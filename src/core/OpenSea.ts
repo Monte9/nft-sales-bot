@@ -12,7 +12,7 @@ export function parseSales(saleEvents): Sale[] {
     // Sometimes asset can be empty
     if (saleEvent.asset && saleEvent.transaction) {
       // Uncomment the line below when adding a new collection
-      console.log(saleEvent.asset)
+      // console.log(saleEvent.asset)
 
       const collection: Collection = {
         address: saleEvent.asset.asset_contract.address,
