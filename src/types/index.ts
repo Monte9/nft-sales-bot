@@ -84,18 +84,3 @@ export interface SaleData {
   flipValueUSD: number
   flipPercentageUSD: number
 }
-
-// LOOKSRARE TRANSACTION
-
-export interface LooksRareTransaction {
-  id: string
-  date: string
-  tokenId: string
-  price: string
-  collection: {
-    id: string
-    totalRoyaltyPaid: string
-    totalTransactions: string
-    totalVolume: string
-  }
-}

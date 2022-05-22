@@ -4,11 +4,6 @@ export const getCurrentDateTime = (format = 'MMM Do, hh:mm A'): string => {
   return moment.tz('America/Chicago').format(format)
 }
 
-// Get UNIX Timestamp: https://timestamp.online/timestamp/1645856871
-export const getCurrentUnixTimeMinusFifteenMinutes = (): number => {
-  return moment().subtract(15, 'minutes').unix()
-}
-
 export const getShortDate = (date: string): string => {
   const momentDate = moment(date)
   return momentDate.format('MM/YYYY')

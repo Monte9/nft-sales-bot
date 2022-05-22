@@ -5,17 +5,12 @@ import FloorAPI from '../api/FloorAPI'
 import DearEarthAPI from '../api/DearEarthAPI'
 import OpenSeaAPI from '../api/OpenSeaAPI'
 import TwitterAPI from '../api/TwitterAPI'
-import LooksRareAPI from '../api/LooksRareAPI'
 import { runDebugBot } from './DebugBot'
 import { getProfitThresholdETH } from './SaleData'
 import { composeTweet } from './Twitter'
-import { composeLooksRareTweet } from './LooksRare'
 import { IS_PRODUCTION } from '../shared/Constants'
 import { ACTIVE_NFT_COLLECTIONS } from '../shared/Collections'
-import {
-  getCurrentDateTime,
-  getCurrentUnixTimeMinusFifteenMinutes
-} from '../utils/DateTime'
+import { getCurrentDateTime } from '../utils/DateTime'
 import { getFloorPriceForCollection } from '../utils/OpenSea'
 import { rounded } from '../utils/Number'
 import { Collection, Sale, SalesBot } from '../types'
@@ -27,14 +22,12 @@ export default class NFTSalesBot {
   openSeaAPI: OpenSeaAPI = null
   twitterAPI: TwitterAPI = null
   dearEarthAPI: DearEarthAPI = null
-  looksRareAPI: LooksRareAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI()
     this.openSeaAPI = new OpenSeaAPI()
     this.floorAPI = new FloorAPI()
     this.dearEarthAPI = new DearEarthAPI()
-    this.looksRareAPI = new LooksRareAPI()
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
@@ -53,8 +46,7 @@ export default class NFTSalesBot {
         this.openSeaAPI,
         this.coinbaseAPI,
         this.twitterAPI,
-        this.dearEarthAPI,
-        this.looksRareAPI
+        this.dearEarthAPI
       )
       return
     }
@@ -66,7 +58,6 @@ export default class NFTSalesBot {
     console.log('\nInitial Collections', collectionsData)
 
     let currentIndex = 0
-    let shouldFetchLooksRareTransactions = true
 
     // Loops through event collection
     // Gets new sale events from OpenSea API
@@ -78,79 +69,8 @@ export default class NFTSalesBot {
       const collectionIndex = currentIndex % collectionsData.length
       const currentCollection = collectionsData[collectionIndex]
 
-      // Date Time data for LooksRare API
-      const dateTime = getCurrentDateTime('YYYY-MM-DDTHH:mm')
-      const formattedDateTime = getCurrentDateTime()
-      const hourMark = dateTime.split(':')[1]
-
       // The file path of the downloaded collection image
       let filePath = undefined
-
-      // 5 mins before the 15 mins mark, toggle the shouldFetchLooksRareTransactions bool value
-      if (
-        shouldFetchLooksRareTransactions === false &&
-        (hourMark === '55' ||
-          hourMark === '10' ||
-          hourMark === '25' ||
-          hourMark === '40')
-      ) {
-        shouldFetchLooksRareTransactions = true
-        console.log(
-          `LooksRare API Transactions @ ${formattedDateTime} - shouldFetchLooksRareTransactions: ${shouldFetchLooksRareTransactions}`
-        )
-      }
-
-      // Get LooksRare Transactions every 15 mins
-      if (
-        shouldFetchLooksRareTransactions &&
-        (hourMark === '00' ||
-          hourMark === '15' ||
-          hourMark === '30' ||
-          hourMark === '45')
-      ) {
-        shouldFetchLooksRareTransactions = false
-        console.log(
-          `LooksRare API Transactions @ ${formattedDateTime} - shouldFetchLooksRareTransactions: ${shouldFetchLooksRareTransactions}`
-        )
-
-        try {
-          // Fetch transactions from LooksRareAPI
-          const transactions = await this.looksRareAPI.fetchTransactions(
-            getCurrentUnixTimeMinusFifteenMinutes()
-          )
-          console.log(
-            `LooksRare API Transactions @ ${formattedDateTime} since ${getCurrentUnixTimeMinusFifteenMinutes()}: ${
-              transactions.length
-            }`
-          )
-
-          await Promise.all(
-            transactions.map(async (transaction) => {
-              try {
-                // Post a tweet for LooksRare Transction
-                const looksRareSaleTweet = await composeLooksRareTweet({
-                  transaction: transaction,
-                  coinbaseAPI: this.coinbaseAPI
-                })
-                return await this.twitterAPI.postTweet(looksRareSaleTweet)
-              } catch (error) {
-                console.log(
-                  `Unable to post Tweet for LooksRare collection ${transaction.collection.id}/${transaction.tokenId}:`,
-                  error.message
-                )
-              }
-            })
-          )
-
-          continue
-        } catch (error) {
-          console.log(
-            `Unable to get Sales Events for LooksRare API:`,
-            error.message
-          )
-          continue
-        }
-      }
 
       if (!currentCollection) {
         // Delay the next OpenSea API call by 30 seconds
