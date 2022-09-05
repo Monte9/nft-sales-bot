@@ -22,8 +22,8 @@ export async function runDebugBot(
   dearEarthAPI: DearEarthAPI
 ) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug('moonbirds-oddities')
-  const tokenId = 2655
+  const collection = getCollectionFromSlug('xcopy')
+  const tokenId = 33500010004
   const collectionData = await getCollectionData(
     collection,
     openSeaAPI,

@@ -62,6 +62,12 @@ export const ALLOWLISTED_COLLECTIONS: Collection[] = [
     twitterUsername: 'coolcatsnft'
   },
   {
+    address: '0x905e7e152ecd7315f03d8d671578ea72684cca99',
+    name: 'XCOPY',
+    slug: 'xcopy',
+    symbol: 'XCOPY'
+  },
+  {
     address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
     name: 'CryptoPunks',
     slug: 'cryptopunks',
@@ -154,6 +160,12 @@ export const ALLOWLISTED_COLLECTIONS: Collection[] = [
     name: 'Otherdeed for Otherside',
     slug: 'otherdeed',
     symbol: 'OTHR'
+  },
+  {
+    address: '0xbd3531da5cf5857e7cfaa92426877b022e612cf8',
+    name: 'Pudgy Penguins',
+    slug: 'pudgypenguins',
+    symbol: 'PPG'
   },
   {
     address: '0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270',
