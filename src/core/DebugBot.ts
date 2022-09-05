@@ -13,7 +13,7 @@ import { cleanupDownloadedImages, downloadImage } from '../utils/Image'
 import { rounded } from '../utils/Number'
 
 const TWEET_OPENSEA_SALE = true
-const CHECK_ALLOWLIST_FLOOR_PRICES = false
+const CHECK_ALLOWLIST_FLOOR_PRICES = true
 
 export async function runDebugBot(
   openSeaAPI: OpenSeaAPI,
@@ -22,8 +22,8 @@ export async function runDebugBot(
   dearEarthAPI: DearEarthAPI
 ) {
   // Get the Collection Data
-  const tokenId = 1282
-  const collection = getCollectionFromSlug('guttercatgang')
+  const collection = getCollectionFromSlug('otherdeed')
+  const tokenId = 9470
   const collectionData = await getCollectionData(
     collection,
     openSeaAPI,
@@ -95,14 +95,14 @@ export async function runDebugBot(
         filePath = undefined
       }
     }
+  }
 
-    if (CHECK_ALLOWLIST_FLOOR_PRICES) {
-      ALLOWLISTED_COLLECTIONS.map(async (collection) => {
-        // Set the floor price for the collection
-        const floorPrice = await getFloorPriceForCollection(collection)
-        const currentFloorPrice = rounded(floorPrice.currentFloor || 0)
-        console.log(collection.name, currentFloorPrice)
-      })
-    }
+  if (CHECK_ALLOWLIST_FLOOR_PRICES) {
+    ALLOWLISTED_COLLECTIONS.map(async (collection) => {
+      // Set the floor price for the collection
+      const floorPrice = await getFloorPriceForCollection(collection)
+      const currentFloorPrice = rounded(floorPrice.currentFloor || 0)
+      console.log(collection.name, currentFloorPrice)
+    })
   }
 }

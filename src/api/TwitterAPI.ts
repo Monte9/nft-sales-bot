@@ -3,7 +3,6 @@ import TwitterApiv1ReadWrite from 'twitter-api-v2/dist/v1/client.v1.write'
 import TwitterApiv2ReadWrite from 'twitter-api-v2/dist/v2/client.v2.write'
 
 import { IS_PRODUCTION } from '../shared/Constants'
-import { getCurrentDateTime } from '../utils/DateTime'
 
 export const MISSING_IMAGE_ID = 'missing_image_id'
 

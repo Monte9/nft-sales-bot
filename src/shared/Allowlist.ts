@@ -1,5 +1,13 @@
 import { Collection } from '../types'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const tempCollection = {
+  address: '0xd1258db6ac08eb0e625b75b371c023da478e94a9',
+  name: '',
+  slug: '',
+  symbol: ''
+}
+
 export const ALLOWLISTED_COLLECTIONS: Collection[] = [
   {
     address: '0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270',
@@ -93,6 +101,12 @@ export const ALLOWLISTED_COLLECTIONS: Collection[] = [
     twitterUsername: 'doodles'
   },
   {
+    address: '0xd1258db6ac08eb0e625b75b371c023da478e94a9',
+    name: 'DigiDaigaku Genesis',
+    slug: 'digidaigaku',
+    symbol: 'DIDA'
+  },
+  {
     address: '0xedb61f74b0d09b2558f1eeb79b247c1f363ae452',
     name: 'Gutter Cat Gang',
     slug: 'guttercatgang',
@@ -122,6 +136,12 @@ export const ALLOWLISTED_COLLECTIONS: Collection[] = [
     symbol: 'MEEBITS',
     displaySymbol: 'MEEBIT',
     twitterUsername: 'BoredApeYC'
+  },
+  {
+    address: '0x34d85c9cdeb23fa97cb08333b511ac86e1c4e258',
+    name: 'Otherdeed for Otherside',
+    slug: 'otherdeed',
+    symbol: 'OTHR'
   },
   {
     address: '0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270',
