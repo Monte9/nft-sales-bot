@@ -80,7 +80,7 @@ export default class DearEarthAPI {
 
       console.log(`DearEarth API: Collection ${updatedCollection.slug} updated`)
     } catch (error) {
-      console.log(
+      console.error(
         `DearEarth API: ERROR unable to save ${collection.slug} collection -`,
         error.message
       )

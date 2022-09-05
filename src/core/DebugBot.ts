@@ -72,7 +72,7 @@ export async function runDebugBot(
         // get a Twitter mediaId to include in the tweet
         mediaId = await twitterAPI.uploadImage(filePath)
       } catch (error) {
-        console.log(
+        console.error(
           `Oops! Unable to download image from ${tokenSales[0].asset.image}\n`
         )
       }
@@ -80,7 +80,7 @@ export async function runDebugBot(
       // Post a tweet with sale information
       await twitterAPI.postTweet(tweetText, mediaId)
     } catch (error) {
-      console.log(
+      console.error(
         `Unable to post Tweet for ${collection.symbol} ${tokenID}:`,
         error.message
       )

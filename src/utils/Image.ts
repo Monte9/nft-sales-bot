@@ -40,9 +40,9 @@ export async function downloadImage(
 
   // Creates folders recursively regardless of whether it exists or not
   await fs.mkdir(collectionImagesDirectory, { recursive: true }, (err) => {
-    if (err) throw err
-
-    console.log('Folder created:', collectionImagesDirectory)
+    if (err) {
+      throw err
+    }
   })
 
   // Get file path based on folder + name + extension
@@ -87,8 +87,10 @@ export async function downloadImage(
     const splitFilePath = downloadedFilePath.split('.')
     const newFilePath = `${splitFilePath[0]}.${extension}`
 
-    await fs.rename(downloadedFilePath, newFilePath, () => {
-      console.log('File renamed with extension:', extension)
+    await fs.rename(downloadedFilePath, newFilePath, (err) => {
+      if (err) {
+        throw err
+      }
     })
 
     // Update the filePath to have the new filePath
@@ -102,8 +104,9 @@ export async function cleanupDownloadedImages(filePaths: string[]) {
   // Go through each file and delete it
   for (const file of filePaths) {
     fs.unlink(file, (err) => {
-      if (err) throw err
-      console.log(`Deleted image at`, file)
+      if (err) {
+        throw err
+      }
     })
   }
 }

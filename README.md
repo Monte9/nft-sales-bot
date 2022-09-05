@@ -26,18 +26,7 @@ In order to post a tweet, you will need access to the Twitter Developer account.
 
 To get Twitter API keys you need to submit a new application at https://developer.twitter.com/en/apps. It typically takes them 1-2 days to get back to you.
 
-Once you have the Twitter API keys, you need to open up the `.env` file at the root and replace all `TODO_REPLACE_THIS` instances with the appropriate values.
-
-```
-NODE_ENV=development
-OPENSEA_API_KEY=
-TWITTER_API_KEY=
-TWITTER_API_SECRET_KEY=
-TWITTER_ACCESS_TOKEN=
-TWITTER_ACCESS_TOKEN_SECRET=
-```
-
-Once you update the file with your API keys, you can ignore the file from showing up in git diffs with `git update-index --assume-unchanged .env`
+Once you have the Twitter API keys, create a new file called `.env`. Then copy the contents over from the `.env.example` file and replace all the `TODO_REPLACE_THIS` instances with the appropriate values.
 
 ### Release
 

@@ -46,7 +46,8 @@ export default class TwitterAPI {
         console.log('Post Tweet', media, contentDebug, '\n')
       }
     } catch (error) {
-      console.log('Error:', error.message)
+      // eslint-disable-next-line no-console
+      console.error('Error posting tweet:', error.message)
     }
   }
 
@@ -60,7 +61,7 @@ export default class TwitterAPI {
         return MISSING_IMAGE_ID
       }
     } catch (error: any) {
-      console.log('Error uploading media to Twitter:', error.message)
+      console.error('Error uploading media to Twitter:', error.message)
     }
   }
 }

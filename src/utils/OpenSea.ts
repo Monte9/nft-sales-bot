@@ -16,7 +16,7 @@ export async function getFloorPriceForCollection(
   try {
     floorPrices = await floorAPI.getFloorPrices()
   } catch (error) {
-    console.log(`Unable to get floor prices: ${error}`)
+    console.error(`Unable to get floor prices: ${error}`)
     return { currentFloor: 0 }
   }
 
