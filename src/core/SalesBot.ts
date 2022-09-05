@@ -83,10 +83,6 @@ export default class NFTSalesBot {
       // -------- Step 1
       // Make sure we have oldSaleIds for the currect collection
       if (currentCollection.oldSalesIds.length <= 0) {
-        console.error(
-          `Missing oldSalesIds for ${currentCollection.collection.name}`
-        )
-
         // Update the missing collection again
         collectionsData[collectionIndex] = await getCollectionData(
           currentCollection.collection,
@@ -162,21 +158,21 @@ export default class NFTSalesBot {
       for (let i = 0; i < latestSalesIds.length; i++) {
         for (let j = 0; j < newSales.length; j++) {
           const asset = newSales[j].asset
-          const tokenID = Number(asset.tokenId)
+          const tokenId = Number(asset.tokenId)
 
           // Make sure the latest sale ID is part of the new sales array
           if (latestSalesIds[i] === newSales[j].openseaSaleId) {
             console.log(
-              `${
-                currentCollection.collection.name
-              } @ ${getCurrentDateTime()} - New Sale ID#${latestSalesIds[i]}`
+              `New Sale ID# ${latestSalesIds[i]} @ ${getCurrentDateTime()} - ${
+                currentCollection.collection.symbol
+              } #${tokenId}`
             )
 
             // Fetches all the sale events for the token
             try {
               const tokenSales = await this.openSeaAPI.fetchSaleEventsForToken(
                 currentCollection.collection.address,
-                tokenID
+                tokenId
               )
 
               // If only 1 sale exists, get the token mint sale event
@@ -184,7 +180,7 @@ export default class NFTSalesBot {
                 const transferEvents =
                   await this.openSeaAPI.fetchSaleEventsForToken(
                     currentCollection.collection.address,
-                    tokenID,
+                    tokenId,
                     'transfer'
                   )
 
@@ -221,10 +217,15 @@ export default class NFTSalesBot {
                 }
 
                 // Post a tweet with sale information
-                await this.twitterAPI.postTweet(tweetText, mediaId)
+                await this.twitterAPI.postTweet(
+                  tweetText,
+                  mediaId,
+                  currentCollection.collection.symbol,
+                  tokenId
+                )
               } catch (error) {
                 console.error(
-                  `Unable to post Tweet for ${currentCollection.collection.symbol} ${tokenID}:`,
+                  `Unable to post Tweet for ${currentCollection.collection.symbol} ${tokenId}:`,
                   error.message
                 )
               } finally {
@@ -236,7 +237,7 @@ export default class NFTSalesBot {
               }
             } catch (error) {
               console.error(
-                `Unable to get Sales Events for ${currentCollection.collection.symbol} #${tokenID}:`,
+                `Unable to get Sales Events for ${currentCollection.collection.symbol} #${tokenId}:`,
                 error.message
               )
 

@@ -26,7 +26,12 @@ export default class TwitterAPI {
 
   // https://github.com/PLhery/node-twitter-api-v2/blob/cc79c6040d0b786b9ff1d93e3c73ad05bad08efe/src/types/v2/tweet.v2.types.ts
   // Users may attach up to four photos or one GIF, video, poll, or quote tweet without losing any characters.
-  async postTweet(content: string, media_id?: string) {
+  async postTweet(
+    content: string,
+    media_id?: string,
+    collectionSymbol?: string,
+    tokenId?: number
+  ) {
     try {
       if (IS_PRODUCTION) {
         const media = media_id ? { media_ids: [media_id] } : undefined
@@ -36,7 +41,7 @@ export default class TwitterAPI {
         )
 
         console.log(
-          `Tweet Posted @ ${getCurrentDateTime()} CST:`,
+          `Tweet Posted for ${collectionSymbol} #${tokenId}:`,
           `https://twitter.com/dearearth_/status/${createdTweet.id}`
         )
       } else {

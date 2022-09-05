@@ -12,6 +12,9 @@ import {
 import { cleanupDownloadedImages, downloadImage } from '../utils/Image'
 import { rounded } from '../utils/Number'
 
+const TWEET_OPENSEA_SALE = true
+const CHECK_ALLOWLIST_FLOOR_PRICES = false
+
 export async function runDebugBot(
   openSeaAPI: OpenSeaAPI,
   coinbaseAPI: CoinbaseAPI,
@@ -19,33 +22,23 @@ export async function runDebugBot(
   dearEarthAPI: DearEarthAPI
 ) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug('cyberkongz')
+  const tokenId = 1282
+  const collection = getCollectionFromSlug('guttercatgang')
   const collectionData = await getCollectionData(
     collection,
     openSeaAPI,
     dearEarthAPI
   )
-  const tokenID = 1485
-
-  // Don't debug the OpenSea sale & tweet
-  const TWEET_OPENSEA_SALE = true
 
   // The file path of the downloaded collection image
   let filePath = undefined
-
-  ALLOWLISTED_COLLECTIONS.map(async (collection) => {
-    // Set the floor price for the collection
-    const floorPrice = await getFloorPriceForCollection(collection)
-    const currentFloorPrice = rounded(floorPrice.currentFloor || 0)
-    console.log(collection.name, currentFloorPrice)
-  })
 
   if (TWEET_OPENSEA_SALE) {
     try {
       // Fetch transactions from OpenSeaAPI
       const tokenSales = await openSeaAPI.fetchSaleEventsForToken(
         collection.address,
-        tokenID,
+        tokenId,
         'successful'
       )
 
@@ -53,7 +46,7 @@ export async function runDebugBot(
       if (tokenSales.length < 2) {
         const transferEvents = await openSeaAPI.fetchSaleEventsForToken(
           collection.address,
-          tokenID,
+          tokenId,
           'transfer'
         )
 
@@ -89,10 +82,10 @@ export async function runDebugBot(
       }
 
       // Post a tweet with sale information
-      await twitterAPI.postTweet(tweetText, mediaId)
+      await twitterAPI.postTweet(tweetText, mediaId, collection.symbol, tokenId)
     } catch (error) {
       console.error(
-        `Unable to post Tweet for ${collection.symbol} ${tokenID}:`,
+        `Unable to post Tweet for ${collection.symbol} ${tokenId}:`,
         error.message
       )
     } finally {
@@ -101,6 +94,15 @@ export async function runDebugBot(
         await cleanupDownloadedImages([filePath])
         filePath = undefined
       }
+    }
+
+    if (CHECK_ALLOWLIST_FLOOR_PRICES) {
+      ALLOWLISTED_COLLECTIONS.map(async (collection) => {
+        // Set the floor price for the collection
+        const floorPrice = await getFloorPriceForCollection(collection)
+        const currentFloorPrice = rounded(floorPrice.currentFloor || 0)
+        console.log(collection.name, currentFloorPrice)
+      })
     }
   }
 }
