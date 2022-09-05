@@ -123,6 +123,18 @@ export const ALLOWLISTED_COLLECTIONS: Collection[] = [
     twitterUsername: null
   },
   {
+    address: '0x23581767a106ae21c074b2276d25e5c3e136a68b',
+    name: 'Moonbirds',
+    slug: 'proof-moonbirds',
+    symbol: 'MOONBIRD'
+  },
+  {
+    address: '0x1792a96e5668ad7c167ab804a100ce42395ce54d',
+    name: 'Moonbirds Oddities',
+    slug: 'moonbirds-oddities',
+    symbol: 'ODDITIES'
+  },
+  {
     address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
     name: 'Mutant Ape Yacht Club',
     slug: 'mutant-ape-yacht-club',
