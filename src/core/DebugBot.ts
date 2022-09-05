@@ -4,9 +4,13 @@ import OpenSeaAPI from '../api/OpenSeaAPI'
 import TwitterAPI from '../api/TwitterAPI'
 import { composeTweet } from './Twitter'
 import { getCollectionData } from './SalesBot'
-import { CollectionSlug } from '../shared/Collections'
-import { getCollectionFromSlug } from '../utils/OpenSea'
+import { ALLOWLISTED_COLLECTIONS } from '../shared/Allowlist'
+import {
+  getCollectionFromSlug,
+  getFloorPriceForCollection
+} from '../utils/OpenSea'
 import { cleanupDownloadedImages, downloadImage } from '../utils/Image'
+import { rounded } from '../utils/Number'
 
 export async function runDebugBot(
   openSeaAPI: OpenSeaAPI,
@@ -15,7 +19,7 @@ export async function runDebugBot(
   dearEarthAPI: DearEarthAPI
 ) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug(CollectionSlug.nftworlds)
+  const collection = getCollectionFromSlug('cyberkongz')
   const collectionData = await getCollectionData(
     collection,
     openSeaAPI,
@@ -28,6 +32,13 @@ export async function runDebugBot(
 
   // The file path of the downloaded collection image
   let filePath = undefined
+
+  ALLOWLISTED_COLLECTIONS.map(async (collection) => {
+    // Set the floor price for the collection
+    const floorPrice = await getFloorPriceForCollection(collection)
+    const currentFloorPrice = rounded(floorPrice.currentFloor || 0)
+    console.log(collection.name, currentFloorPrice)
+  })
 
   if (TWEET_OPENSEA_SALE) {
     try {

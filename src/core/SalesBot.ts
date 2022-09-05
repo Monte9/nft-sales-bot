@@ -9,7 +9,7 @@ import { runDebugBot } from './DebugBot'
 import { getProfitThresholdETH } from './SaleData'
 import { composeTweet } from './Twitter'
 import { IS_PRODUCTION } from '../shared/Constants'
-import { ACTIVE_NFT_COLLECTIONS } from '../shared/Collections'
+import { ALLOWLISTED_COLLECTIONS } from '../shared/Allowlist'
 import { getCurrentDateTime } from '../utils/DateTime'
 import { getFloorPriceForCollection } from '../utils/OpenSea'
 import { rounded } from '../utils/Number'
@@ -271,7 +271,7 @@ export async function getCollectionsDataFromOpenSea(
   dearEarthAPI: DearEarthAPI
 ): Promise<SalesBot[]> {
   return await Promise.all(
-    ACTIVE_NFT_COLLECTIONS.map(async (collection): Promise<SalesBot> => {
+    ALLOWLISTED_COLLECTIONS.map(async (collection): Promise<SalesBot> => {
       return getCollectionData(collection, openSeaAPI, dearEarthAPI)
     })
   )

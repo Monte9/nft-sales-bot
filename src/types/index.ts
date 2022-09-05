@@ -1,5 +1,3 @@
-import { CollectionSlug } from '../shared/Collections'
-
 // SALES BOT
 
 export interface SalesBot {
@@ -13,7 +11,7 @@ export interface SalesBot {
 export interface Collection {
   address: string
   name: string
-  slug: CollectionSlug
+  slug: string
   symbol: string
   displaySymbol?: string
   twitterUsername?: string

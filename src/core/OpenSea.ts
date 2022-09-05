@@ -1,5 +1,4 @@
 import { Collection, Asset, User, PaymentToken, Sale } from '../types'
-import { CollectionSlug } from '../shared/Collections'
 import { rounded } from '../utils/Number'
 import {
   BAYC_MINT_PRICE_WEI,
@@ -65,7 +64,7 @@ export function parseSales(saleEvents): Sale[] {
       let mintPrice = BAYC_MINT_PRICE_WEI
 
       // For CloneX set the default mint price
-      if (collection.slug === CollectionSlug.clonex) {
+      if (collection.slug === 'clonex') {
         mintPrice = CLONE_X_MINT_PRICE_WEI
       }
 

@@ -1,9 +1,9 @@
 import FloorAPI from '../api/FloorAPI'
-import { ACTIVE_NFT_COLLECTIONS, CollectionSlug } from '../shared/Collections'
+import { ALLOWLISTED_COLLECTIONS } from '../shared/Allowlist'
 import { Collection, FloorPrice } from '../types'
 
-export function getCollectionFromSlug(slug: CollectionSlug) {
-  return ACTIVE_NFT_COLLECTIONS.find((collection) => collection.slug === slug)
+export function getCollectionFromSlug(slug: string) {
+  return ALLOWLISTED_COLLECTIONS.find((collection) => collection.slug === slug)
 }
 
 export async function getFloorPriceForCollection(
@@ -21,9 +21,9 @@ export async function getFloorPriceForCollection(
   }
 
   if (floorPrices && floorPrices.length > 0) {
-    const result = floorPrices.find(
-      (floorPrice) => collection.name === floorPrice.name
-    )
+    const result = floorPrices.find((floorPrice) => {
+      return collection.name === floorPrice.name
+    })
 
     // If we found the floor price for the collection just return it
     if (result) {
