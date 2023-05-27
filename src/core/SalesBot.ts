@@ -6,7 +6,7 @@ import OpenSeaAPI from '../api/OpenSeaAPI'
 import TwitterAPI from '../api/TwitterAPI'
 import { runDebugBot } from './DebugBot'
 import { composeTweet } from './Twitter'
-import { IS_PRODUCTION } from '../shared/Constants'
+import { IS_PRODUCTION, TIMEOUT_SECONDS } from '../shared/Constants'
 import { ALLOWLISTED_COLLECTIONS } from '../shared/Allowlist'
 import { getCurrentDateTime } from '../utils/DateTime'
 import { getFloorPriceForCollection } from '../utils/OpenSea'
@@ -131,8 +131,14 @@ export default class NFTSalesBot {
         // Update the oldSalesIds to prevent duplicates in the next iteration
         currentCollection.oldSalesIds = newSalesIds
 
+        console.log(
+          `No new sales for ${currentCollection.collection.symbol}. Waiting ${TIMEOUT_SECONDS} seconds...`
+        )
+
         // Delay the next OpenSea API call by 30 seconds
-        await new Promise((resolve) => setTimeout(resolve, 30000))
+        await new Promise((resolve) =>
+          setTimeout(resolve, TIMEOUT_SECONDS * 1000)
+        )
 
         // Increment currentIndex to got to the next collection
         currentIndex = currentIndex + 1

@@ -6,3 +6,6 @@ export const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
 // File extension for PNG images
 export const PNG_FILE_EXTENSION = 'png'
+
+// The timeout seconds for the OpenSea API calls
+export const TIMEOUT_SECONDS = 30
