@@ -2,11 +2,9 @@ import 'dotenv/config'
 
 import CoinbaseAPI from '../api/CoinbaseAPI'
 import FloorAPI from '../api/FloorAPI'
-import DearEarthAPI from '../api/DearEarthAPI'
 import OpenSeaAPI from '../api/OpenSeaAPI'
 import TwitterAPI from '../api/TwitterAPI'
 import { runDebugBot } from './DebugBot'
-import { getProfitThresholdETH } from './SaleData'
 import { composeTweet } from './Twitter'
 import { IS_PRODUCTION } from '../shared/Constants'
 import { ALLOWLISTED_COLLECTIONS } from '../shared/Allowlist'
@@ -21,13 +19,11 @@ export default class NFTSalesBot {
   floorAPI: FloorAPI = null
   openSeaAPI: OpenSeaAPI = null
   twitterAPI: TwitterAPI = null
-  dearEarthAPI: DearEarthAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI()
     this.openSeaAPI = new OpenSeaAPI()
     this.floorAPI = new FloorAPI()
-    this.dearEarthAPI = new DearEarthAPI()
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
@@ -42,19 +38,11 @@ export default class NFTSalesBot {
 
     // Run debug bot if it's not in production
     if (!IS_PRODUCTION) {
-      runDebugBot(
-        this.openSeaAPI,
-        this.coinbaseAPI,
-        this.twitterAPI,
-        this.dearEarthAPI
-      )
+      runDebugBot(this.openSeaAPI, this.coinbaseAPI, this.twitterAPI)
       return
     }
 
-    const collectionsData = await getCollectionsDataFromOpenSea(
-      this.openSeaAPI,
-      this.dearEarthAPI
-    )
+    const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI)
 
     let currentIndex = 0
 
@@ -86,8 +74,7 @@ export default class NFTSalesBot {
         // Update the missing collection again
         collectionsData[collectionIndex] = await getCollectionData(
           currentCollection.collection,
-          this.openSeaAPI,
-          this.dearEarthAPI
+          this.openSeaAPI
         )
 
         // Delay the next OpenSea API call by 30 seconds
@@ -268,12 +255,11 @@ export default class NFTSalesBot {
 // Gets the oldSales events for all Collections
 // Used to initialize the bot and build a Collection object
 export async function getCollectionsDataFromOpenSea(
-  openSeaAPI: OpenSeaAPI,
-  dearEarthAPI: DearEarthAPI
+  openSeaAPI: OpenSeaAPI
 ): Promise<SalesBot[]> {
   return await Promise.all(
     ALLOWLISTED_COLLECTIONS.map(async (collection): Promise<SalesBot> => {
-      return getCollectionData(collection, openSeaAPI, dearEarthAPI)
+      return getCollectionData(collection, openSeaAPI)
     })
   )
 }
@@ -282,8 +268,7 @@ export async function getCollectionsDataFromOpenSea(
 // Used to initialize the bot and build a Collection object
 export async function getCollectionData(
   collection: Collection,
-  openSeaAPI: OpenSeaAPI,
-  dearEarthAPI: DearEarthAPI
+  openSeaAPI: OpenSeaAPI
 ): Promise<SalesBot> {
   let oldSales: Sale[] = null
   const oldSalesIds: number[] = []
@@ -309,16 +294,6 @@ export async function getCollectionData(
   const floorPrice = await getFloorPriceForCollection(collection)
   const currentFloorPrice = rounded(floorPrice.currentFloor || 0)
   salesBot.floorPrice = currentFloorPrice
-
-  // Calculate the profit threshold for the collection
-  const profitThreshold = getProfitThresholdETH(currentFloorPrice)
-
-  // Save the Sale in the DearEarth database
-  await dearEarthAPI.saveCollectionData(
-    collection,
-    currentFloorPrice,
-    profitThreshold
-  )
 
   // Return the salesBot data
   return salesBot

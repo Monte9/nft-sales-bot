@@ -13,6 +13,9 @@ export async function getFloorPriceForCollection(
   let floorPrices: FloorPrice[] = []
   const emptyFloorPrice = { currentFloor: 0 }
 
+  // TODO: need to fix the API to get real floor price
+  return emptyFloorPrice
+
   try {
     floorPrices = await floorAPI.getFloorPrices()
   } catch (error) {

@@ -1,6 +1,6 @@
 import TwitterApi from 'twitter-api-v2'
-import TwitterApiv1ReadWrite from 'twitter-api-v2/dist/v1/client.v1.write'
-import TwitterApiv2ReadWrite from 'twitter-api-v2/dist/v2/client.v2.write'
+import TwitterApiv1ReadWrite from 'twitter-api-v2/dist/esm/v1/client.v1.write'
+import TwitterApiv2ReadWrite from 'twitter-api-v2/dist/esm/v2/client.v2.write'
 
 import { IS_PRODUCTION } from '../shared/Constants'
 

@@ -1,5 +1,4 @@
 import CoinbaseAPI from '../api/CoinbaseAPI'
-import DearEarthAPI from '../api/DearEarthAPI'
 import OpenSeaAPI from '../api/OpenSeaAPI'
 import TwitterAPI from '../api/TwitterAPI'
 import { composeTweet } from './Twitter'
@@ -13,22 +12,17 @@ import { cleanupDownloadedImages, downloadImage } from '../utils/Image'
 import { rounded } from '../utils/Number'
 
 const TWEET_OPENSEA_SALE = true
-const CHECK_ALLOWLIST_FLOOR_PRICES = true
+const CHECK_ALLOWLIST_FLOOR_PRICES = false
 
 export async function runDebugBot(
   openSeaAPI: OpenSeaAPI,
   coinbaseAPI: CoinbaseAPI,
-  twitterAPI: TwitterAPI,
-  dearEarthAPI: DearEarthAPI
+  twitterAPI: TwitterAPI
 ) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug('xcopy')
-  const tokenId = 33500010004
-  const collectionData = await getCollectionData(
-    collection,
-    openSeaAPI,
-    dearEarthAPI
-  )
+  const collection = getCollectionFromSlug('boredapeyachtclub')
+  const tokenId = 4541
+  const collectionData = await getCollectionData(collection, openSeaAPI)
 
   // The file path of the downloaded collection image
   let filePath = undefined
