@@ -1,7 +1,6 @@
 import 'dotenv/config'
 
 import CoinbaseAPI from '../api/CoinbaseAPI'
-import FloorAPI from '../api/FloorAPI'
 import OpenSeaAPI from '../api/OpenSeaAPI'
 import TwitterAPI from '../api/TwitterAPI'
 import { runDebugBot } from './DebugBot'
@@ -9,21 +8,17 @@ import { composeTweet } from './Twitter'
 import { IS_PRODUCTION, TIMEOUT_SECONDS } from '../shared/Constants'
 import { ALLOWLISTED_COLLECTIONS } from '../shared/Allowlist'
 import { getCurrentDateTime } from '../utils/DateTime'
-import { getFloorPriceForCollection } from '../utils/OpenSea'
-import { rounded } from '../utils/Number'
 import { Collection, Sale, SalesBot } from '../types'
 import { cleanupDownloadedImages, downloadImage } from '../utils/Image'
 
 export default class NFTSalesBot {
   coinbaseAPI: CoinbaseAPI = null
-  floorAPI: FloorAPI = null
   openSeaAPI: OpenSeaAPI = null
   twitterAPI: TwitterAPI = null
 
   constructor() {
     this.coinbaseAPI = new CoinbaseAPI()
     this.openSeaAPI = new OpenSeaAPI()
-    this.floorAPI = new FloorAPI()
 
     this.twitterAPI = new TwitterAPI(
       process.env.TWITTER_API_KEY,
@@ -43,7 +38,6 @@ export default class NFTSalesBot {
     }
 
     const collectionsData = await getCollectionsDataFromOpenSea(this.openSeaAPI)
-
     let currentIndex = 0
 
     // Loops through event collection
@@ -186,8 +180,7 @@ export default class NFTSalesBot {
                   collection: currentCollection.collection,
                   purchase: tokenSales[1],
                   sale: tokenSales[0],
-                  coinbaseAPI: this.coinbaseAPI,
-                  floorPrice: currentCollection.floorPrice
+                  coinbaseAPI: this.coinbaseAPI
                 })
 
                 // This is the twitter mediaId that we'll include with the tweet
@@ -295,11 +288,6 @@ export async function getCollectionData(
 
   // Update the oldSalesId on the salesBot
   salesBot.oldSalesIds = oldSalesIds
-
-  // Set the floor price for the collection
-  const floorPrice = await getFloorPriceForCollection(collection)
-  const currentFloorPrice = rounded(floorPrice.currentFloor || 0)
-  salesBot.floorPrice = currentFloorPrice
 
   // Return the salesBot data
   return salesBot

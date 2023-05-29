@@ -3,7 +3,6 @@
 export interface SalesBot {
   collection: Collection
   oldSalesIds: number[]
-  floorPrice?: number
 }
 
 // COLLECTION
@@ -49,16 +48,6 @@ export interface PaymentToken {
   imageUrl: string
   decimals: number
   usdPrice: number
-}
-
-// FLOOR PRICE
-
-export interface FloorPrice {
-  name?: string
-  currentFloor: number
-  lastUpdated?: string
-  activityUrl?: string
-  url?: string
 }
 
 // SALES DATA

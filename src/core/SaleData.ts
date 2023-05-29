@@ -101,37 +101,3 @@ export async function getSaleData({
     flipPercentageUSD
   }
 }
-
-export function getProfitThresholdETH(floorPrice: number): number {
-  // If no floor price available for collection
-  // Default to 1 ETH profit threshold
-  if (!floorPrice || floorPrice == 0) {
-    return 1
-  }
-
-  if (floorPrice > 100) {
-    return rounded(floorPrice * 0.1)
-  }
-
-  if (floorPrice > 75) {
-    return rounded(floorPrice * 0.15)
-  }
-
-  if (floorPrice > 50) {
-    return rounded(floorPrice * 0.2)
-  }
-
-  if (floorPrice > 25) {
-    return rounded(floorPrice * 0.25)
-  }
-
-  if (floorPrice > 10) {
-    return rounded(floorPrice * 0.3)
-  }
-
-  if (floorPrice > 5) {
-    return rounded(floorPrice * 0.4)
-  }
-
-  return rounded(floorPrice * 0.5)
-}

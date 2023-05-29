@@ -44,10 +44,10 @@ export default class TwitterAPI {
           `https://twitter.com/dearearth_/status/${createdTweet.id}`
         )
       } else {
-        const contentDebug = '\ncontent:\n' + content
-        const media = media_id ? `\nmedia_id: ${media_id}` : ''
+        const contentLog = '\ncontent:\n' + content
+        const mediaLog = media_id ? `\nmedia_id: ${media_id}` : ''
 
-        console.log('Post Tweet', media, contentDebug, '\n')
+        console.log('\nPost Tweet', mediaLog, '\n', contentLog)
       }
     } catch (error) {
       // eslint-disable-next-line no-console

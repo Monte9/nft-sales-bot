@@ -7,14 +7,13 @@ import { HodlInfo } from './HodlInfo'
 import { FlipInfoETH } from './FlipInfoETH'
 import { BuyInUSD } from './BuyInUSD'
 import { FlipInfoUSD } from './FlipInfoUSD'
-import { getProfitThresholdETH, getSaleData } from '../SaleData'
+import { getSaleData } from '../SaleData'
 import { Collection, Sale, SaleData } from '../../types'
 
 interface ComposeTweetParams {
   collection: Collection
   purchase: Sale
   sale: Sale
-  floorPrice?: number
   coinbaseAPI: CoinbaseAPI
 }
 
@@ -23,8 +22,7 @@ export async function composeTweet({
   collection,
   purchase,
   sale,
-  coinbaseAPI,
-  floorPrice = 0
+  coinbaseAPI
 }: ComposeTweetParams): Promise<string> {
   // When the sale price is missing, we default to 0.08
   // This happens when PUNKS interact with a smart contract
@@ -59,18 +57,12 @@ export async function composeTweet({
     )
   }
 
-  // Dynamically get the Profit Threshold for the collection based on floor prices
-  const profitThresholdETH = getProfitThresholdETH(floorPrice)
-
-  // Ignore sales that are less than profitThresholdETH for the collection
-  if (isProfit && profitLossETH < profitThresholdETH) {
+  // Ignore sales that are less than 1 ETH in profit for the collection
+  if (isProfit && profitLossETH < 1) {
     throw new Error(
-      `${profitLossETH} ETH flip (threshold ${profitThresholdETH} ETH) | ${openSeaLink}`
+      `${profitLossETH} ETH flip (threshold 1 ETH) | ${openSeaLink}`
     )
   }
-
-  // Check whether they sold below floor - accepted a bot offer
-  // const didSellBelowFloor = sale.salePrice < floorPrice
 
   // Return Tweet content
   return (
