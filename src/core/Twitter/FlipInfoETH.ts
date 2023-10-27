@@ -4,7 +4,6 @@ export const FlipInfoETH = (isProfit, absoluteProfitLossETH) => {
   // Get the Profit/Loss labels
   const isETHProfitLoss = isProfit ? ' Ξ  profit' : ' Ξ  loss'
   const profitLossSymbol = isProfit ? '+' : '-'
-  const profitLossEmoji = isProfit ? '🔥' : '❌'
 
   if (absoluteProfitLossETH == 0) {
     return ''
@@ -12,5 +11,5 @@ export const FlipInfoETH = (isProfit, absoluteProfitLossETH) => {
 
   // Get the profitLossETH value
   const absoluteProfitLossETHFormatted = addCommas(absoluteProfitLossETH)
-  return `${isETHProfitLoss}: ${profitLossSymbol}${absoluteProfitLossETHFormatted} ETH ${profitLossEmoji}\n`
+  return `${isETHProfitLoss}: ${profitLossSymbol}${absoluteProfitLossETHFormatted} ETH\n`
 }

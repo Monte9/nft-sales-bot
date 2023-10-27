@@ -1,8 +1,7 @@
 import CoinbaseAPI from '../../api/CoinbaseAPI'
 import { TweetIntro } from './TweetIntro'
 import { TweetStatus } from './TweetStatus'
-import { BoughtInfo } from './BoughtInfo'
-import { SoldInfo } from './SoldInfo'
+import { BoughtSoldInfo } from './BoughtSoldInfo'
 import { HodlInfo } from './HodlInfo'
 import { FlipInfoETH } from './FlipInfoETH'
 import { BuyInUSD } from './BuyInUSD'
@@ -77,18 +76,17 @@ export async function composeTweet({
     '\n\n' +
     TweetStatus(isProfit, profitLossETH, hodlDays, flipValueUSD) +
     '\n' +
-    BoughtInfo(boughtPriceETH, sale) +
-    SoldInfo(soldPriceETH, sale) +
-    HodlInfo(soldDate, boughtDate) +
-    '\n' +
-    FlipInfoETH(isProfit, absoluteProfitLossETH) +
-    '\n' +
     BuyInUSD(
       flipPercentageUSD,
       boughtPriceETH,
       boughtDateETHPrice,
       boughtDate
     ) +
-    FlipInfoUSD(flipPercentageUSD, flipValueUSD)
+    '\n' +
+    FlipInfoUSD(flipPercentageUSD, flipValueUSD) +
+    '\n' +
+    BoughtSoldInfo(boughtPriceETH, soldPriceETH, sale) +
+    '\n' +
+    HodlInfo(soldDate, boughtDate)
   )
 }

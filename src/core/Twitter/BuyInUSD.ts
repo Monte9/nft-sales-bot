@@ -11,9 +11,8 @@ export const BuyInUSD = (
     return ''
   }
 
-  const isUSDProfitLoss = flipPercentageUSD >= 0 ? '💲paid' : '💲spent'
   const buyInUSD = addCommas(Math.round(boughtPriceETH * boughtDateETHPrice))
   const formattedDate = getShortDate(boughtDate)
 
-  return `${isUSDProfitLoss}: $${buyInUSD} (${formattedDate})\n`
+  return `💸 paid: $${buyInUSD} (${formattedDate})`
 }

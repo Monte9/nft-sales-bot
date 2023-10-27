@@ -1,10 +1,8 @@
 import fetch from 'node-fetch'
 import { isError } from '../utils/API'
+import { getStandardDate } from '../utils/DateTime'
 
 export default class CoinbaseAPI {
-  // The URL for the /spot-price endpoint on Coinbase
-  spotPriceURL = 'https://api.coinbase.com/v2/prices/ETH-USD/spot'
-
   // The request options for making a GET request
   // Includes the x-api-key for OpenSea to bypass the rate limiting
   getOptions = {
@@ -14,16 +12,17 @@ export default class CoinbaseAPI {
     }
   }
 
-  // API: /v2/prices/ETH-USD/spot
-  // https://developers.coinbase.com/api/v2#get-spot-price
-
   async getUSDPriceForETH(date: string): Promise<number> {
-    const params = `date=${date}`
+    // https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/api-prices#get-spot-price
+    const spotPriceURL = 'https://api.coinbase.com/v2/prices/ETH-USD/spot'
 
-    const response = await fetch(
-      `${this.spotPriceURL}?${params}`,
-      this.getOptions
-    )
+    // Get the date for the price
+    const formattedDate = getStandardDate(date)
+
+    // The current date in YYYY-MM-DD format
+    const params = `date=${formattedDate}`
+
+    const response = await fetch(`${spotPriceURL}?${params}`, this.getOptions)
       .then((response) => {
         if (response.status >= 200 && response.status <= 299) {
           return response.json()

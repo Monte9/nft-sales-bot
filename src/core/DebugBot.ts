@@ -11,8 +11,8 @@ export async function runDebugBot(
   twitterAPI: TwitterAPI
 ) {
   // Get the Collection Data
-  const collection = getCollectionFromSlug('proof-moonbirds')
-  const tokenId = 1473
+  const collection = getCollectionFromSlug('mutant-ape-yacht-club')
+  const tokenId = 18012
 
   // The file path of the downloaded collection image
   let filePath = undefined

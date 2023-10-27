@@ -41,7 +41,7 @@ export default class TwitterAPI {
 
         console.log(
           `Tweet Posted for ${collectionSymbol} #${tokenId}:`,
-          `https://twitter.com/dearearth_/status/${createdTweet.id}`
+          `https://twitter.com/nftsalesbot/status/${createdTweet.id}`
         )
       } else {
         const contentLog = '\ncontent:\n' + content

@@ -6,18 +6,13 @@ export function TweetStatus(
 ) {
   const status = '🏆 status: '
 
-  // If HODL is more than 8 months
-  if (hodlDays >= 240) {
-    return status + 'Diamond Hands'
-  }
-
   // If ETH profit but dollar loss
   if (flipValueUSD < 0 && isProfit) {
     return status + 'Tax Loss Harvesting'
   }
 
   if (profitLossETH < -10) {
-    return status + 'No Hands'
+    return status + 'No hands'
   }
 
   if (profitLossETH < -5) {
@@ -25,40 +20,49 @@ export function TweetStatus(
   }
 
   if (profitLossETH < -2) {
+    return status + 'Paper Hands'
+  }
+
+  if (profitLossETH < -1) {
     return status + 'Weak Hands'
   }
 
-  if (profitLossETH > 300) {
-    return status + 'Legend'
+  // If HODL is more than 1 year
+  if (profitLossETH > 10 && hodlDays >= 360) {
+    return status + 'Diamond Hands'
+  }
+
+  if (profitLossETH > 100) {
+    return status + 'Bruhhhhhhhhhhhhhhh'
   }
 
   if (profitLossETH > 150) {
-    return status + 'Master'
+    return status + 'Bruhhhhhhhhhhhh'
   }
 
   if (profitLossETH > 75) {
-    return status + 'Elite'
+    return status + 'Bruhhhhhhhhh'
   }
 
   if (profitLossETH > 50) {
-    return status + 'Diamond'
+    return status + 'Bruhhhhhh'
   }
 
   if (profitLossETH > 25) {
-    return status + 'Emerald'
+    return status + 'Bruhhh'
   }
 
   if (profitLossETH > 10) {
-    return status + 'Gold'
+    return status + 'Bruh'
   }
 
   if (profitLossETH > 5) {
-    return status + 'Silver'
+    return status + 'Noice'
   }
 
   if (profitLossETH > 2) {
-    return status + 'Bronze'
+    return status + 'Meh'
   }
 
-  return status + 'Rookie'
+  return status + 'Noob'
 }

@@ -6,7 +6,12 @@ export const getCurrentDateTime = (format = 'MMM Do, hh:mm A'): string => {
 
 export const getShortDate = (date: string): string => {
   const momentDate = moment(date)
-  return momentDate.format('MM/YYYY')
+  return momentDate.format('MMM YYYY')
+}
+
+export const getStandardDate = (date: string): string => {
+  const momentDate = moment(date)
+  return momentDate.format('YYYY-MM-DD')
 }
 
 export const getYMDaysBetween = (start: string, end: string): string => {

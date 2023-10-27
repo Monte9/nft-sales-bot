@@ -5,8 +5,8 @@ export const FlipInfoUSD = (flipPercentageUSD, flipValueUSD) => {
     return ''
   }
 
-  const isUSDProfitLoss = flipPercentageUSD >= 0 ? '💲made' : '💲lost'
-  const isProfitLossPercentageEmoji = flipPercentageUSD >= 0 ? '📈 +' : '📉 -'
+  const isUSDProfitLoss = flipPercentageUSD >= 0 ? '🤑 made' : '🤑 lost'
+  const isProfitLossPercentageEmoji = flipPercentageUSD >= 0 ? '+' : '-'
   const isUSDProfitLossSymbol = flipPercentageUSD >= 0 ? '' : '-'
 
   // Get formatted Profit/Loss value in USD
