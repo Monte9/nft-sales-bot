@@ -14,8 +14,8 @@
     "prepare": "husky install"
   },
   "engines": {
-    "node": "^18.15.0",
-    "npm": "^9.5.0",
+    "node": ">=18",
+    "npm": ">=9",
     "yarn": "^1.22.19"
   },
   "dependencies": {
