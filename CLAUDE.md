@@ -19,7 +19,7 @@ yarn lint         # eslint --fix (console statements warn by design)
 yarn prettify     # prettier --write
 ```
 
-If `yarn` aborts with an `engine "node" is incompatible` error on a newer Node, prefix commands with `YARN_IGNORE_ENGINES=true` (the `engines.node` range has been relaxed to `>=18`, but yarn classic enforces it strictly).
+The repo targets **Node 20+** (pinned via `.nvmrc` = 22) and **Yarn 1.x** (pinned via the `packageManager` field for Corepack). If `yarn` aborts with an `engine "node" is incompatible` error on an older Node, prefix commands with `YARN_IGNORE_ENGINES=true`.
 
 ## Run modes
 

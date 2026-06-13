@@ -4,7 +4,7 @@
 
 [**@nftsalesbot**](https://twitter.com/nftsalesbot) — "Flip McBot" on X.
 
-![Status](https://img.shields.io/badge/status-legacy-orange) ![Node](https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-4.3-3178C6?logo=typescript&logoColor=white) [![X: @nftsalesbot](https://img.shields.io/badge/X-%40nftsalesbot-000000?logo=x&logoColor=white)](https://twitter.com/nftsalesbot)
+![Status](https://img.shields.io/badge/status-legacy-orange) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE) ![Node](https://img.shields.io/badge/node-%E2%89%A520-339933?logo=node.js&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-4.3-3178C6?logo=typescript&logoColor=white) [![X: @nftsalesbot](https://img.shields.io/badge/X-%40nftsalesbot-000000?logo=x&logoColor=white)](https://twitter.com/nftsalesbot)
 
 > [!NOTE]
 > **This is the _legacy_ bot.** It was built on OpenSea's v1 `/api/v1/events` REST API, which OpenSea has since retired — the endpoint now returns `410 Gone`. The project still builds, lints, and boots cleanly, but it can't fetch live sales until it's ported to the current OpenSea API (v2 / Stream API). See [Status](#status).
@@ -29,6 +29,8 @@ During the 2021–2022 NFT boom, the raw sale price was never the interesting pa
 NFT Sales Bot watches a curated set of blue-chip collections and, for every sale, reconstructs the whole trade: it finds the seller's original purchase, computes hold time and profit/loss in both ETH and USD, slaps a tongue-in-cheek "status" on it (Diamond Hands → Paper Hands), and posts the result as a single tweet with the NFT's image.
 
 ## Quick Start
+
+> Requires **Node 20+** (`.nvmrc` pins 22) and **Yarn 1.x** (pinned via `packageManager`).
 
 ```bash
 git clone https://github.com/Monte9/nft-sales-bot.git
@@ -138,4 +140,4 @@ This repo is preserved as a **legacy** project. The bot's logic is intact and ru
 
 ## License
 
-No license has been set yet, so the default of "all rights reserved" applies. If you'd like to make this reusable, add one (e.g. MIT).
+[MIT](LICENSE) © Monte Thakkar
