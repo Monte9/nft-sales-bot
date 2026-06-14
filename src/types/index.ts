@@ -2,7 +2,7 @@
 
 export interface SalesBot {
   collection: Collection
-  oldSalesIds: number[]
+  oldSalesIds: string[]
 }
 
 // COLLECTION
@@ -24,7 +24,7 @@ export interface Sale {
   buyer: User
   paymentToken?: PaymentToken
   salePrice: number
-  openseaSaleId: number
+  openseaSaleId: string
   timestamp: string
   transactionHash: string
 }
@@ -44,10 +44,10 @@ export interface User {
 
 export interface PaymentToken {
   symbol: string
-  name: string
-  imageUrl: string
+  name?: string
+  imageUrl?: string
   decimals: number
-  usdPrice: number
+  usdPrice?: number
 }
 
 // SALES DATA

@@ -1,62 +1,79 @@
 import { Collection, Asset, User, PaymentToken, Sale } from '../types'
-import { rounded } from '../utils/Number'
+import {
+  getCollectionFromAddress,
+  getCollectionFromSlug
+} from '../utils/OpenSea'
 import {
   BAYC_MINT_PRICE_WEI,
   CLONE_X_MINT_PRICE_WEI,
   DEFAULT_WALLET_ADDRESS
 } from '../utils/Crypto'
 
-export function parseSales(saleEvents): Sale[] {
-  return saleEvents.reduce((acc, saleEvent) => {
-    // Sometimes asset can be empty
-    if (saleEvent.asset && saleEvent.transaction) {
-      // Uncomment the line below when adding a new collection
-      // console.log(saleEvent.asset.collection)
+// Resolves the full allowlisted Collection for a v2 `nft` payload.
+// v2 events only carry the collection slug + contract address, so we look up
+// the rich metadata (symbol, name, twitter handle) from the Allowlist.
+function resolveCollection(nft, fallback?: Collection): Collection {
+  return (
+    (nft.collection && getCollectionFromSlug(nft.collection)) ||
+    (nft.contract && getCollectionFromAddress(nft.contract)) ||
+    fallback || {
+      address: nft.contract,
+      name: nft.collection,
+      slug: nft.collection,
+      symbol: nft.collection
+    }
+  )
+}
 
-      const collection: Collection = {
-        address: saleEvent.asset.asset_contract.address,
-        symbol: saleEvent.asset.asset_contract.symbol,
-        name: saleEvent.asset.collection.name,
-        twitterUsername: saleEvent.asset.collection.twitter_username,
-        slug: saleEvent.asset.collection.slug
-      }
+// Maps raw OpenSea v2 `asset_events` into the bot's Sale shape.
+// `fallbackCollection` is the allowlisted collection we queried for, used to
+// enrich metadata when an event can't be matched on its own slug/contract.
+export function parseSales(
+  saleEvents,
+  fallbackCollection?: Collection
+): Sale[] {
+  if (!saleEvents) {
+    return []
+  }
+
+  // v2 returns events newest-first, but sort defensively so callers can rely
+  // on [0] being the most recent sale and the last item the oldest event.
+  const sortedEvents = [...saleEvents].sort(
+    (a, b) =>
+      (b.event_timestamp || b.closing_date || 0) -
+      (a.event_timestamp || a.closing_date || 0)
+  )
+
+  return sortedEvents.reduce((acc, saleEvent) => {
+    const timestampSeconds = saleEvent.event_timestamp || saleEvent.closing_date
+
+    // A usable event needs the NFT, the on-chain transaction and a timestamp
+    if (saleEvent.nft && saleEvent.transaction && timestampSeconds) {
+      const collection = resolveCollection(saleEvent.nft, fallbackCollection)
 
       const asset: Asset = {
-        name: saleEvent.asset.name,
-        tokenId: Number(saleEvent.asset.token_id),
-        image: saleEvent.asset.image_url,
-        link: saleEvent.asset.permalink,
+        name: saleEvent.nft.name,
+        tokenId: Number(saleEvent.nft.identifier),
+        image: saleEvent.nft.display_image_url || saleEvent.nft.image_url,
+        link: saleEvent.nft.opensea_url,
         collection
       }
 
+      // v2 exposes seller/buyer as plain wallet addresses (no usernames)
       const buyer: User = {
-        address:
-          (saleEvent.winner_account && saleEvent.winner_account.address) ||
-          DEFAULT_WALLET_ADDRESS,
-        username:
-          saleEvent.winner_account &&
-          saleEvent.winner_account.user &&
-          saleEvent.winner_account.user.username
+        address: saleEvent.buyer || DEFAULT_WALLET_ADDRESS
       }
 
       const seller: User = {
-        address:
-          (saleEvent.seller && saleEvent.seller.address) ||
-          DEFAULT_WALLET_ADDRESS,
-        username:
-          saleEvent.seller &&
-          saleEvent.seller.user &&
-          saleEvent.seller.user.username
+        address: saleEvent.seller || DEFAULT_WALLET_ADDRESS
       }
 
+      // v2 groups price details under `payment` (absent for mint/transfer)
       let paymentToken: PaymentToken = null
-      if (saleEvent.payment_token !== null) {
+      if (saleEvent.payment) {
         paymentToken = {
-          symbol: saleEvent.payment_token.symbol,
-          name: saleEvent.payment_token.name,
-          imageUrl: saleEvent.payment_token.image_url,
-          decimals: saleEvent.payment_token.decimals,
-          usdPrice: rounded(Number(saleEvent.payment_token.usd_price))
+          symbol: saleEvent.payment.symbol,
+          decimals: saleEvent.payment.decimals
         }
       }
 
@@ -68,20 +85,21 @@ export function parseSales(saleEvents): Sale[] {
         mintPrice = CLONE_X_MINT_PRICE_WEI
       }
 
-      // Get the sales price or the mint price
-      const salePrice = Number(saleEvent.total_price) || mintPrice
+      // Get the sale price in wei, or fall back to the mint price
+      const salePriceWei =
+        Number(saleEvent.payment && saleEvent.payment.quantity) || mintPrice
+      const decimals = (paymentToken && paymentToken.decimals) || 18
 
-      const sale = {
+      const sale: Sale = {
         asset,
         buyer,
         seller,
         paymentToken,
-        salePrice:
-          salePrice /
-          Math.pow(10, (paymentToken && paymentToken.decimals) || 18),
-        openseaSaleId: saleEvent.id,
-        timestamp: saleEvent.transaction.timestamp,
-        transactionHash: saleEvent.transaction.transaction_hash
+        salePrice: salePriceWei / Math.pow(10, decimals),
+        // v2 has no numeric event id; build a stable key from tx + token id
+        openseaSaleId: `${saleEvent.transaction}:${saleEvent.nft.identifier}`,
+        timestamp: new Date(timestampSeconds * 1000).toISOString(),
+        transactionHash: saleEvent.transaction
       }
 
       acc.push(sale)

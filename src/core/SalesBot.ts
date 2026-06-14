@@ -83,7 +83,7 @@ export default class NFTSalesBot {
       // -------- Step 2
       // Get the NEW sale events for the current collection
       let newSales: Sale[] = null
-      const newSalesIds: number[] = []
+      const newSalesIds: string[] = []
 
       try {
         newSales = await this.openSeaAPI.fetchSaleEventsForCollection(
@@ -113,7 +113,7 @@ export default class NFTSalesBot {
       // -------- Step 3
       // Get the LATEST sale events for the current collection
       // If not events found, go to next collection
-      const latestSalesIds: number[] = newSalesIds
+      const latestSalesIds: string[] = newSalesIds
         .filter((id) => !currentCollection.oldSalesIds.includes(id))
         .concat(
           currentCollection.oldSalesIds.filter(
@@ -270,7 +270,7 @@ export async function getCollectionData(
   openSeaAPI: OpenSeaAPI
 ): Promise<SalesBot> {
   let oldSales: Sale[] = null
-  const oldSalesIds: number[] = []
+  const oldSalesIds: string[] = []
 
   const salesBot: SalesBot = {
     collection,
