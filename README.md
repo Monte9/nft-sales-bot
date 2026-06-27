@@ -1,10 +1,10 @@
 # NFT Sales Bot
 
-**A Twitter/X bot that turns every blue-chip NFT sale into a story — what the seller paid, what they sold for, how long they held, and the profit in ETH and USD — posted as one glanceable tweet with the art attached.**
+**Single-tweet stories of NFT flips & fumbles.** A Twitter/X bot that turns every blue-chip NFT sale into a story — what the seller paid, what they sold for, how long they held, and the profit or loss in ETH and USD — posted as one glanceable tweet with the art attached.
 
-[**@nftsalesbot**](https://twitter.com/nftsalesbot) — "Flip McBot" on X.
+[**@nftsalesbot**](https://twitter.com/nftsalesbot) — "Flip McBot" on X — **25k+ followers**, created by [@dearearth_](https://twitter.com/dearearth_).
 
-![Status](https://img.shields.io/badge/status-legacy-orange) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE) ![Node](https://img.shields.io/badge/node-%E2%89%A520-339933?logo=node.js&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-4.3-3178C6?logo=typescript&logoColor=white) [![X: @nftsalesbot](https://img.shields.io/badge/X-%40nftsalesbot-000000?logo=x&logoColor=white)](https://twitter.com/nftsalesbot)
+![Status](https://img.shields.io/badge/status-legacy-orange) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE) ![Node](https://img.shields.io/badge/node-%E2%89%A520-339933?logo=node.js&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-4.3-3178C6?logo=typescript&logoColor=white) [![X: @nftsalesbot](https://img.shields.io/badge/X-%40nftsalesbot-000000?logo=x&logoColor=white)](https://twitter.com/nftsalesbot) [![Followers](https://img.shields.io/badge/followers-25k%2B-000000?logo=x&logoColor=white)](https://twitter.com/nftsalesbot)
 
 > [!NOTE]
 > **This is the _legacy_ bot.** It was built on OpenSea's v1 `/api/v1/events` REST API, which OpenSea has since retired — the endpoint now returns `410 Gone`. The project still builds, lints, and boots cleanly, but it can't fetch live sales until it's ported to the current OpenSea API (v2 / Stream API). See [Status](#status).
@@ -21,6 +21,25 @@ https://opensea.io/assets/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8817
 🛒 3.5 WETH ➡️ 42 WETH
 ⏳ 8 months
 ```
+
+…and not every flip has a happy ending — a real @nftsalesbot post that went viral:
+
+```
+👀 0x4881..03a8 ↘️ fumbled ↘️ CRYPTOADZ #2155
+https://opensea.io/assets/ethereum/0x1cb1a5e65610aeff2551a50f76a87a7d3fb649c6/2155
+
+🏆 status: Diamond Hands
+🛒 in: 300 WETH
+💰 out: 6.9 WETH
+😬 hodl: 8 months 6 days
+
+Ξ loss: -293.1 ETH ❌
+
+💲 spent: $1,016,100 (10/2021)
+💲 lost: -$1,006,212 (📉 -99%)
+```
+
+> A real post — Jun 13, 2022 · 1,448 likes · 311 retweets · 322 quotes. The deadpan **"Diamond Hands"** label on a -99% loss is the bot's signature sarcasm.
 
 ## Why NFT Sales Bot?
 
@@ -136,7 +155,8 @@ This repo is preserved as a **legacy** project. The bot's logic is intact and ru
 
 ## Credits
 
-- [Monte Thakkar](https://github.com/Monte9): creator and maintainer
+- [@dearearth_](https://twitter.com/dearearth_): creator of [@nftsalesbot](https://twitter.com/nftsalesbot) (25k+ followers)
+- [Monte Thakkar](https://github.com/Monte9): creator and maintainer of this codebase
 
 ## License
 
